@@ -15,7 +15,8 @@ namespace w
 //void foo(HWND hwnd)
 //{
 //	w::TaskbarProgress tp;
-//	tp.init(hwnd);
+//	tp.init();
+//	tp.setHwnd(hwnd);
 //	tp.setRange(0, 100);
 //
 //	for (int i = 0; i < 100 + 1; ++i)
@@ -30,7 +31,8 @@ namespace w
 //void bar(HWND hwnd)
 //{
 //	w::TaskbarProgress tp;
-//	tp.init(hwnd);
+//	tp.init();
+//	tp.setHwnd(hwnd);
 //	tp.setRange(0, 100);
 //	tp.setStep(1);
 //
@@ -91,8 +93,11 @@ public:
 	TaskbarProgress &operator=(const TaskbarProgress &other);
 public:
 	// interface.
-	void init(HWND hwnd);
+	void init();
 	void release();
+
+	void setHwnd(HWND hwnd);
+	HWND getHwnd() const;
 
 	void setRange(unsigned min, unsigned max);
 	std::pair<unsigned, unsigned> getRange() const;
