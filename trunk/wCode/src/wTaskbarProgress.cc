@@ -19,15 +19,13 @@ TaskbarProgress::~TaskbarProgress()
 { CoUninitialize(); }
 
 // Interface.
-void TaskbarProgress::init(HWND hwnd)
+void TaskbarProgress::init()
 {
 	CoCreateInstance(CLSID_TaskbarList, 
 					 nullptr, 
 					 CLSCTX_ALL, 
 					 __uuidof(ITaskbarList3), 
 					 reinterpret_cast<void **>(&m_progress));
-
-	m_hwnd = hwnd;
 }
 void TaskbarProgress::release()
 {
@@ -41,6 +39,11 @@ void TaskbarProgress::release()
 	m_step = 0;
 	m_state = TBPF_NOPROGRESS;
 }
+
+void TaskbarProgress::setHwnd(HWND hwnd)
+{ m_hwnd = hwnd; }
+HWND TaskbarProgress::getHwnd() const
+{ return m_hwnd; }
 
 void TaskbarProgress::setRange(unsigned min, unsigned max)
 { m_min = min, m_max = max; }
