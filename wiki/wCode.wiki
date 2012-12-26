@@ -1,3 +1,9 @@
-w=C=ode is a open source project.
-This is mainly aimed to easy your coding by providing functions and classes. The functions and classes come from my over and over daily work.
-If any question, comments here or email me: walfud.s@gmail.com.
+=wCode is a open source project.=
+----
+ This is mainly aimed to easy your coding by providing functions and classes. The functions and classes come from my over and over daily work.
+
+ You can see my article at http://www.cnblogs.com/walfud.
+
+ If any question, comments here or email me: walfud.s@gmail.com.
+
+ <g:plusone size="medium"></g:plusone>.
