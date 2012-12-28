@@ -1,0 +1,36 @@
+// DropOnTarget.idl : IDL source for DropOnTarget
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (DropOnTarget.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(FC426711-F965-4385-90FF-F6C5C7AEB7D1),
+	dual,
+	nonextensible,
+	helpstring("IDropOnTargetImpl Interface"),
+	pointer_default(unique)
+]
+interface IDropOnTargetImpl : IDispatch{
+};
+[
+	uuid(803BB4D2-DE02-4DE0-A1ED-DDE618D398EF),
+	version(1.0),
+	helpstring("DropOnTarget 1.0 Type Library")
+]
+library DropOnTargetLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(AF3B3F45-2120-42CB-8F59-32206679B723),
+		helpstring("DropOnTargetImpl Class")
+	]
+	coclass DropOnTargetImpl
+	{
+		[default] interface IDropOnTargetImpl;
+	};
+};

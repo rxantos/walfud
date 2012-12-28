@@ -1,0 +1,36 @@
+// MenuEx.idl : IDL source for MenuEx
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (MenuEx.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(B7D4BE97-2F8B-470D-B441-7CBBDBC97FE8),
+	dual,
+	nonextensible,
+	helpstring("IMenuExImpl Interface"),
+	pointer_default(unique)
+]
+interface IMenuExImpl : IDispatch{
+};
+[
+	uuid(3477D492-0DA7-431B-867D-55877035134D),
+	version(1.0),
+	helpstring("MenuEx 1.0 Type Library")
+]
+library MenuExLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(A496BFF1-D90D-4B60-AEEE-A7D64A5E3956),
+		helpstring("MenuExImpl Class")
+	]
+	coclass MenuExImpl
+	{
+		[default] interface IMenuExImpl;
+	};
+};
