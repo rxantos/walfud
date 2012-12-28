@@ -1,0 +1,10 @@
+; MenuEx.def : Declares the module parameters.
+
+LIBRARY      "MenuEx.DLL"
+
+EXPORTS
+	DllCanUnloadNow		PRIVATE
+	DllGetClassObject	PRIVATE
+	DllRegisterServer	PRIVATE
+	DllUnregisterServer	PRIVATE
+	DllInstall		PRIVATE
