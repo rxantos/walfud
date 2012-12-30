@@ -163,4 +163,110 @@ bool strICmp(const string &a, const string &b)
 		   && !lexicographical_compare(b.begin(), b.end(), a.begin(), a.end(), [](const char a, const char b){ return tolower(a) < tolower(b); });
 }
 
+unsigned strContinuousCnt(const string &str, 
+						  const string &continuousStr, size_t pos, 
+						  bool reverse)
+{
+	unsigned cnt = 0;
+
+	while (0 <= pos && pos < str.length())
+	{
+		if (str.substr(pos, continuousStr.length()) == continuousStr)
+		{
+			pos += reverse ? -1*continuousStr.length() : continuousStr.length();
+
+			++cnt;
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	return cnt;
+}
+
+bool isEscaped(const string &str, size_t pos, const char *esc)
+{ return esc != nullptr && strContinuousCnt(str, esc, pos - strlen(esc), true) % 2 == 1; }
+
+size_t strFind(const string &str, 
+			   const string &toFind, size_t pos, 
+			   const char *esc, bool reverse)
+{
+	bool found = false;
+
+	for (; 0 <= pos && pos < str.length(); pos += reverse ? -1 : 1)
+	{
+		if (str.substr(pos, toFind.length()) == toFind)
+		{
+			// 'str[pos]' contains 'toFind', but is it be escaped?
+			if (!isEscaped(str, pos, esc))
+			{
+				// NOT escaped.
+				// Real 'toFind' is here.
+				found = true;
+				break;
+			}//if (esc
+		}//if (str.substr
+	}
+
+	return found ? pos : str.length();
+}
+
+size_t strPairSide(const string &str, const pair<string, string> &pairStr, 
+				   const string &toFind, size_t pos, 
+				   const char *esc, bool reverse)
+{
+	bool found = false;
+
+	const string &openStr = pairStr.first,
+				 &closeStr = pairStr.second;
+	for (unsigned openCnt = 0, closeCnt = 0; 0 <= pos && pos < str.length(); )
+	{
+		if (isEscaped(str, pos, esc))
+		{
+			pos += reverse ? -1 : 1;
+			continue;
+		}
+
+		// 
+		if (str.substr(pos, toFind.length()) == toFind)
+		{
+			if (openCnt == closeCnt)
+			{
+				// Get the first unpaired boundary string.
+				found = true;
+				break;
+			}
+		}
+
+		// 
+		if (str.substr(pos, openStr.length()) == openStr)
+		{
+			++openCnt;
+			pos += reverse ? -1*openStr.length() : openStr.length();
+		}
+		else if (str.substr(pos, closeStr.length()) == closeStr)
+		{
+			++closeCnt;
+			pos += reverse ? -1*closeStr.length() : closeStr.length();
+		}
+		else
+		{
+			pos += reverse ? -1 : 1;
+		}		
+	}//for (unsigned openCnt
+
+	return found ? pos : str.length();
+}
+
+pair<size_t, size_t> strPairAround(const string &str, 
+								   const string &openStr, const string &closeStr, size_t pos, 
+								   const char *esc)
+{
+	size_t openSidePos = strPairSide(str, make_pair(openStr, closeStr), openStr, pos, esc, true);
+	return make_pair(openSidePos == str.length() ? openSidePos : openSidePos + 1, 
+					 strPairSide(str, make_pair(openStr, closeStr), closeStr, pos, esc, false));
+}
+
 }
