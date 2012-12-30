@@ -227,6 +227,85 @@ std::vector<std::string> strSplit(const char *strBeg, const char *strEnd, const 
 	//}
 bool strICmp(const std::string &a, const std::string &b);
 
+/*
+ *		
+ *		Count the number of continuous string.
+ *
+ *	Param:
+ *		'str': String to search from.
+ *		'continuousStr': String to search for.
+ *		'pos': Zero based index, where to begin with.
+ *		'reverse': 'false' if go ahead, otherwise, go reversely.
+ *
+ */
+unsigned strContinuousCnt(const std::string &str, 
+						  const std::string &continuousStr, size_t pos, 
+						  bool reverse = false);
+
+/*
+ *
+ *		Is string at current position be escaped?
+ *
+ *	Rtn:
+ *		true: If 'esc' is nullptr or there is odd escape string behind;
+ *		false: Otherwise.
+ *
+ *	Note:
+ *		For argument 'esc', you should put 'nullptr' INSTAND of '""' for no escape string.
+ *
+ */
+bool isEscaped(const std::string &str, size_t pos, const char *esc);
+
+/*
+ *
+ *		Find a substring, take escape character into account.
+ *
+ */
+size_t strFind(const std::string &str, 
+			   const std::string &toFind, size_t pos, 
+			   const char *esc = nullptr, bool reverse = false);
+
+/*
+ *
+ */
+	////							 0         1         2         3         4         5
+	////							 01234567890123456789012345678901234567890123456789
+	//string strPairSide_tester = "012345<678<9_ab<<c~e>fgh_!@#$%>>>^&*()>>_____";
+
+	//cout <<w::strPairSide(strPairSide_tester, make_pair("<", ">"), "<", 8, nullptr, true) <<endl;
+	//cout <<w::strPairSide(strPairSide_tester, make_pair("<", ">"), "<", 22, nullptr, true) <<endl;
+	//cout <<w::strPairSide(strPairSide_tester, make_pair("<", ">"), "<", 22, "e", true) <<endl;
+	//cout <<w::strPairSide(strPairSide_tester, make_pair("<", ">"), "<", 22, "~e", true) <<endl;
+	//cout <<w::strPairSide(strPairSide_tester, make_pair("<", ">"), "<", 22, "z", true) <<endl;
+
+	//cout <<endl;
+
+	//cout <<w::strPairSide(strPairSide_tester, make_pair("<", ">"), ">", 0, nullptr, false) <<endl;
+	//cout <<w::strPairSide(strPairSide_tester, make_pair("<", ">"), ">", 0, "12345", false) <<endl;
+	//cout <<w::strPairSide(strPairSide_tester, make_pair("<", ">"), ">", 0, "#$%>", false) <<endl;
+	//cout <<w::strPairSide(strPairSide_tester, make_pair("<<", ">>"), ">>", 0, nullptr, false) <<endl;
+	//cout <<w::strPairSide(strPairSide_tester, make_pair("<<", ">>"), ">>", 0, "$%", false) <<endl;
+	//cout <<w::strPairSide(strPairSide_tester, make_pair("<<", ">>"), ">>", 0, "$%>", false) <<endl;
+size_t strPairSide(const std::string &str, const std::pair<std::string, std::string> &pairStr, 
+				   const std::string &toFind, size_t pos, 
+				   const char *esc = nullptr, bool reverse = false);
+
+/*
+ *
+ *		Find wrapper of the string indicated by 'pos'.
+ *
+ */
+	////							   0         1         2         3         4         5
+	////							   012345678901234567890123456789012345678901234567890123456789
+	//// '!' is escape character.
+	//string strPairAround_tester = "<beg> I miss you. ~!>!<~... </beg>";
+
+	//pair<size_t, size_t> pos = w::strPairAround(strPairAround_tester, ">", "<", 25, "!");
+	//cout <<pos.first <<" : " <<pos.second <<endl;
+std::pair<size_t, size_t> strPairAround(const std::string &str, 
+										const std::string &openStr, const std::string &closeStr, size_t pos, 
+										const char *esc = nullptr);
+
 
 }
 
