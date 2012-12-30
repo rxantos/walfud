@@ -6,7 +6,7 @@
 
 // CMenuExImpl
 CMenuExImpl::CMenuExImpl()
-	: m_bitmap(NULL)
+	: m_bitmap(nullptr)
 {
 	// 2. Initialize bitmap resource. (16 * 16 for vista or above)
 	// Get picture fullpath.(Same directory with dll file)
@@ -17,7 +17,7 @@ CMenuExImpl::CMenuExImpl()
 	OutputDebugString(iconFullpath);
 
 	// 2. Load image from file.
-	m_bitmap = reinterpret_cast<HBITMAP>(LoadImage(NULL, iconFullpath, IMAGE_BITMAP, 16, 16, LR_LOADFROMFILE));
+	m_bitmap = reinterpret_cast<HBITMAP>(LoadImage(nullptr, iconFullpath, IMAGE_BITMAP, 16, 16, LR_LOADFROMFILE));
 	// 2. Load image from inner source.
 	//m_bitmap = reinterpret_cast<HBITMAP>(LoadBitmap(_AtlModule.GetModuleInstance(), MAKEINTRESOURCE(IDB_BITMAP_ICON)));
 }
@@ -31,12 +31,12 @@ CMenuExImpl::~CMenuExImpl()
 HRESULT CMenuExImpl::Initialize(PCIDLIST_ABSOLUTE pidlFolder, IDataObject *pdtobj, HKEY hkeyProgID)
 {
 	// Get all selected item.
-	FORMATETC etc = {CF_HDROP, NULL, DVASPECT_CONTENT, -1, TYMED_HGLOBAL};
+	FORMATETC etc = {CF_HDROP, nullptr, DVASPECT_CONTENT, -1, TYMED_HGLOBAL};
 	STGMEDIUM stg = {TYMED_HGLOBAL};
 	pdtobj->GetData(&etc, &stg);
 	
 	HDROP hDrop = reinterpret_cast<HDROP>(stg.hGlobal);
-	for (unsigned i = 0; i < DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0); ++i)
+	for (unsigned i = 0; i < DragQueryFile(hDrop, -1, nullptr, 0); ++i)
 	{
 		wchar_t protecteeFullpath[MAX_PATH] = {};
 		DragQueryFile(hDrop, i, protecteeFullpath, sizeof(protecteeFullpath)/sizeof(protecteeFullpath[0]));
@@ -72,7 +72,7 @@ HRESULT CMenuExImpl::QueryContextMenu(HMENU hmenu, UINT indexMenu, UINT idCmdFir
 
 	// 2. Item with icon.	
 	InsertMenu(hmenu, indexMenu + i, MF_BYPOSITION, idCmdFirst + i, L"With icon.");
-	SetMenuItemBitmaps(hmenu, indexMenu + i, MF_BYPOSITION, m_bitmap, NULL);
+	SetMenuItemBitmaps(hmenu, indexMenu + i, MF_BYPOSITION, m_bitmap, nullptr);
 	++i;
 
 	return MAKE_HRESULT(SEVERITY_SUCCESS, FACILITY_NULL, i);
@@ -80,7 +80,7 @@ HRESULT CMenuExImpl::QueryContextMenu(HMENU hmenu, UINT indexMenu, UINT idCmdFir
 
 HRESULT CMenuExImpl::InvokeCommand(CMINVOKECOMMANDINFO *pici)
 {
-	MessageBox(NULL, L"", L"", MB_OK);
+	MessageBox(nullptr, L"", L"", MB_OK);
 	return S_OK;
 }
 

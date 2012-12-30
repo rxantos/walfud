@@ -27,13 +27,13 @@ HRESULT CDropOnTargetImpl::GetCurFile(LPOLESTR *ppszFileName){ return E_NOTIMPL;
 HRESULT CDropOnTargetImpl::DragEnter(IDataObject *pDataObj, DWORD grfKeyState, POINTL pt, DWORD *pdwEffect)
 {
 	// Get all dragee items.
-	FORMATETC etc = {CF_HDROP, NULL, DVASPECT_CONTENT, -1, TYMED_HGLOBAL};
+	FORMATETC etc = {CF_HDROP, nullptr, DVASPECT_CONTENT, -1, TYMED_HGLOBAL};
 	STGMEDIUM stg = {TYMED_HGLOBAL};
 	pDataObj->GetData(&etc, &stg);
 	
 	m_dropeesFullpath.clear();
 	HDROP hDrop = reinterpret_cast<HDROP>(stg.hGlobal);
-	for (unsigned i = 0; i < DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0); ++i)
+	for (unsigned i = 0; i < DragQueryFile(hDrop, -1, nullptr, 0); ++i)
 	{
 		wchar_t fileFullpath[MAX_PATH] = {};
 		DragQueryFile(hDrop, i, fileFullpath, sizeof(fileFullpath)/sizeof(fileFullpath[0]));

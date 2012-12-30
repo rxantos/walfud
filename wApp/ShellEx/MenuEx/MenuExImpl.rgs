@@ -37,4 +37,15 @@ HKCR
             }
         }
     }
+
+    NoRemove Folder
+    {
+        NoRemove ShellEx
+        {
+            NoRemove ContextMenuHandlers
+            {
+                ForceRemove ShellExtImpl = s '{A496BFF1-D90D-4B60-AEEE-A7D64A5E3956}'
+            }
+        }
+    }
 }

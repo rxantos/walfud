@@ -16,7 +16,7 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpRes
 }
 
 CMenuExModule::CMenuExModule()
-	: m_instance(NULL)
+	: m_instance(nullptr)
 {}
 CMenuExModule::~CMenuExModule()
 {}
