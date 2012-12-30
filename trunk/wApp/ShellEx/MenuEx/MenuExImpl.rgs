@@ -38,7 +38,7 @@ HKCR
         }
     }
 
-    NoRemove Folder
+    NoRemove Directory
     {
         NoRemove ShellEx
         {
