@@ -112,6 +112,7 @@
       <ModuleDefinitionFile>.\MenuEx.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <RegisterOutput>true</RegisterOutput>
+      <PerUserRedirection>true</PerUserRedirection>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y $(ProjectDir)icon.bmp $(OutputPath)icon.bmp</Command>

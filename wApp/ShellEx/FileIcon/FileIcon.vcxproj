@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{9F82C4C9-BBD1-412B-B7D0-8FE862CF4B10}</ProjectGuid>
+    <ProjectGuid>{EA78F552-C19B-4209-83D3-681CF750E8C5}</ProjectGuid>
     <Keyword>AtlProj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -94,11 +94,11 @@
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <HeaderFileName>DropOnTarget_i.h</HeaderFileName>
-      <InterfaceIdentifierFileName>DropOnTarget_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>DropOnTarget_p.c</ProxyFileName>
+      <HeaderFileName>FileIcon_i.h</HeaderFileName>
+      <InterfaceIdentifierFileName>FileIcon_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>FileIcon_p.c</ProxyFileName>
       <GenerateStublessProxies>true</GenerateStublessProxies>
-      <TypeLibraryName>$(IntDir)DropOnTarget.tlb</TypeLibraryName>
+      <TypeLibraryName>$(IntDir)FileIcon.tlb</TypeLibraryName>
       <DllDataFileName />
       <ValidateAllParameters>true</ValidateAllParameters>
     </Midl>
@@ -109,14 +109,11 @@
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <ModuleDefinitionFile>.\DropOnTarget.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>.\FileIcon.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <RegisterOutput>true</RegisterOutput>
       <PerUserRedirection>true</PerUserRedirection>
     </Link>
-    <PostBuildEvent>
-      <Command>echo "" &gt; $(OutputPath)testTarget.DropOnTarget</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -128,11 +125,11 @@
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <HeaderFileName>DropOnTarget_i.h</HeaderFileName>
-      <InterfaceIdentifierFileName>DropOnTarget_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>DropOnTarget_p.c</ProxyFileName>
+      <HeaderFileName>FileIcon_i.h</HeaderFileName>
+      <InterfaceIdentifierFileName>FileIcon_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>FileIcon_p.c</ProxyFileName>
       <GenerateStublessProxies>true</GenerateStublessProxies>
-      <TypeLibraryName>$(IntDir)DropOnTarget.tlb</TypeLibraryName>
+      <TypeLibraryName>$(IntDir)FileIcon.tlb</TypeLibraryName>
       <DllDataFileName>
       </DllDataFileName>
     </Midl>
@@ -143,13 +140,11 @@
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <ModuleDefinitionFile>.\DropOnTarget.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>.\FileIcon.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <RegisterOutput>true</RegisterOutput>
+      <PerUserRedirection>true</PerUserRedirection>
     </Link>
-    <PostBuildEvent>
-      <Command>echo "" &gt; $(OutputPath)testTarget.DropOnTarget</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -162,11 +157,11 @@
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <TargetEnvironment>Win32</TargetEnvironment>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <HeaderFileName>DropOnTarget_i.h</HeaderFileName>
-      <InterfaceIdentifierFileName>DropOnTarget_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>DropOnTarget_p.c</ProxyFileName>
+      <HeaderFileName>FileIcon_i.h</HeaderFileName>
+      <InterfaceIdentifierFileName>FileIcon_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>FileIcon_p.c</ProxyFileName>
       <GenerateStublessProxies>true</GenerateStublessProxies>
-      <TypeLibraryName>$(IntDir)DropOnTarget.tlb</TypeLibraryName>
+      <TypeLibraryName>$(IntDir)FileIcon.tlb</TypeLibraryName>
       <DllDataFileName />
       <ValidateAllParameters>true</ValidateAllParameters>
     </Midl>
@@ -177,15 +172,12 @@
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <ModuleDefinitionFile>.\DropOnTarget.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>.\FileIcon.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <RegisterOutput>true</RegisterOutput>
     </Link>
-    <PostBuildEvent>
-      <Command>$(OutputPath)echo "" &gt; $(OutputPath)testTarget.DropOnTarget</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -197,11 +189,11 @@
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <HeaderFileName>DropOnTarget_i.h</HeaderFileName>
-      <InterfaceIdentifierFileName>DropOnTarget_i.c</InterfaceIdentifierFileName>
-      <ProxyFileName>DropOnTarget_p.c</ProxyFileName>
+      <HeaderFileName>FileIcon_i.h</HeaderFileName>
+      <InterfaceIdentifierFileName>FileIcon_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>FileIcon_p.c</ProxyFileName>
       <GenerateStublessProxies>true</GenerateStublessProxies>
-      <TypeLibraryName>$(IntDir)DropOnTarget.tlb</TypeLibraryName>
+      <TypeLibraryName>$(IntDir)FileIcon.tlb</TypeLibraryName>
       <DllDataFileName>
       </DllDataFileName>
     </Midl>
@@ -212,15 +204,12 @@
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <ModuleDefinitionFile>.\DropOnTarget.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>.\FileIcon.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <RegisterOutput>true</RegisterOutput>
     </Link>
-    <PostBuildEvent>
-      <Command>$(OutputPath)echo "" &gt; $(OutputPath)testTarget.DropOnTarget</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -237,9 +226,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="DropOnTarget.cpp" />
-    <ClCompile Include="DropOnTargetImpl.cpp" />
-    <ClCompile Include="DropOnTarget_i.c">
+    <ClCompile Include="FileIcon.cpp" />
+    <ClCompile Include="FileIconImpl.cpp" />
+    <ClCompile Include="FileIcon_i.c">
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</CompileAsManaged>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -262,25 +251,25 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dllmain.h" />
-    <ClInclude Include="DropOnTargetImpl.h" />
-    <ClInclude Include="DropOnTarget_i.h" />
+    <ClInclude Include="FileIconImpl.h" />
+    <ClInclude Include="FileIcon_i.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="DropOnTarget.rc" />
+    <ResourceCompile Include="FileIcon.rc" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DropOnTarget.def" />
-    <None Include="DropOnTarget.rgs" />
-    <None Include="DropOnTargetImpl.rgs" />
+    <None Include="FileIcon.def" />
+    <None Include="FileIcon.rgs" />
+    <None Include="FileIconImpl.rgs" />
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="DropOnTarget.idl" />
+    <Midl Include="FileIcon.idl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
