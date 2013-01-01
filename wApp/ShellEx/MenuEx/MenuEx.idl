@@ -9,28 +9,26 @@ import "ocidl.idl";
 
 [
 	object,
-	uuid(B7D4BE97-2F8B-470D-B441-7CBBDBC97FE8),
+	uuid(EC292181-80E8-4FFC-8532-F90AE703EBF8),
 	dual,
 	nonextensible,
-	helpstring("IMenuExImpl Interface"),
 	pointer_default(unique)
 ]
 interface IMenuExImpl : IDispatch{
 };
 [
-	uuid(3477D492-0DA7-431B-867D-55877035134D),
+	uuid(FF381A0F-7990-4F44-9317-2BBB29A3A385),
 	version(1.0),
-	helpstring("MenuEx 1.0 Type Library")
 ]
 library MenuExLib
 {
 	importlib("stdole2.tlb");
 	[
-		uuid(A496BFF1-D90D-4B60-AEEE-A7D64A5E3956),
-		helpstring("MenuExImpl Class")
+		uuid(91F5582C-7E28-4AAD-8772-9F948EB64D91)		
 	]
 	coclass MenuExImpl
 	{
 		[default] interface IMenuExImpl;
 	};
 };
+

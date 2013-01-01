@@ -1,20 +1,24 @@
 HKCR
 {
-	DropOnTarget.DropOnTargetImpl.1 = s 'DropOnTargetImpl Class'
+	NoRemove CLSID
 	{
-		CLSID = s '{AF3B3F45-2120-42CB-8F59-32206679B723}'
+		ForceRemove {8B0A9875-C9E1-4C59-8C9A-0DF0D4754EAD} = s 'DropOnTargetImpl Class'
+		{
+			ForceRemove Programmable
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			TypeLib = s '{DFDCDE05-5B70-483F-8335-6338D8B0432C}'
+			Version = s '1.0'
+		}
 	}
-	DropOnTarget.DropOnTargetImpl = s 'DropOnTargetImpl Class'
-	{
-		CLSID = s '{AF3B3F45-2120-42CB-8F59-32206679B723}'
-		CurVer = s 'DropOnTarget.DropOnTargetImpl.1'
-	}
-	
-	ForceRemove .DropOnTarget = s 'CLSID\{AF3B3F45-2120-42CB-8F59-32206679B723}'
+
+	ForceRemove .DropOnTarget = s 'CLSID\{8B0A9875-C9E1-4C59-8C9A-0DF0D4754EAD}'
 	
 	NoRemove CLSID
 	{
-		ForceRemove {AF3B3F45-2120-42CB-8F59-32206679B723} = s 'Drop file on a target.'
+		ForceRemove {8B0A9875-C9E1-4C59-8C9A-0DF0D4754EAD} = s 'Drop file on a target.'
 		{
 			ProgID = s 'DropOnTarget.DropOnTargetImpl.1'
 			VersionIndependentProgID = s 'DropOnTarget.DropOnTargetImpl'
@@ -23,11 +27,11 @@ HKCR
 			{
 				val ThreadingModel = s 'Apartment'
 			}
-			'TypeLib' = s '{803BB4D2-DE02-4DE0-A1ED-DDE618D398EF}'
+			'TypeLib' = s '{8B0A9875-C9E1-4C59-8C9A-0DF0D4754EAD}'
 
 			shellex
 			{
-				ForceRemove DropHandler = s '{AF3B3F45-2120-42CB-8F59-32206679B723}'
+				ForceRemove DropHandler = s '{8B0A9875-C9E1-4C59-8C9A-0DF0D4754EAD}'
 			}
 		}
 	}

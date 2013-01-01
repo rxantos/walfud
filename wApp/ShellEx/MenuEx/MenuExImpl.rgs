@@ -1,39 +1,26 @@
 HKCR
 {
-	MenuEx.MenuExImpl.1 = s 'MenuExImpl Class'
-	{
-		CLSID = s '{A496BFF1-D90D-4B60-AEEE-A7D64A5E3956}'
-	}
-	MenuEx.MenuExImpl = s 'MenuExImpl Class'
-	{
-		CLSID = s '{A496BFF1-D90D-4B60-AEEE-A7D64A5E3956}'
-		CurVer = s 'MenuEx.MenuExImpl.1'
-	}
 	NoRemove CLSID
 	{
-		ForceRemove {A496BFF1-D90D-4B60-AEEE-A7D64A5E3956} = s 'Menu extension by explorer right click.'
+		ForceRemove {91F5582C-7E28-4AAD-8772-9F948EB64D91} = s 'MenuExImpl Class'
 		{
-			ProgID = s 'MenuEx.MenuExImpl.1'
-			VersionIndependentProgID = s 'MenuEx.MenuExImpl'
-			ForceRemove 'Programmable'
+			ForceRemove Programmable
 			InprocServer32 = s '%MODULE%'
 			{
 				val ThreadingModel = s 'Apartment'
 			}
-			'TypeLib' = s '{3477D492-0DA7-431B-867D-55877035134D}'
+			TypeLib = s '{FF381A0F-7990-4F44-9317-2BBB29A3A385}'
+			Version = s '1.0'
 		}
 	}
-}
 
-HKCR
-{
     NoRemove *
     {
         NoRemove ShellEx
         {
             NoRemove ContextMenuHandlers
             {
-                ForceRemove ShellExtImpl = s '{A496BFF1-D90D-4B60-AEEE-A7D64A5E3956}'
+                ForceRemove ShellExtImpl = s '{91F5582C-7E28-4AAD-8772-9F948EB64D91}'
             }
         }
     }
@@ -44,7 +31,7 @@ HKCR
         {
             NoRemove ContextMenuHandlers
             {
-                ForceRemove ShellExtImpl = s '{A496BFF1-D90D-4B60-AEEE-A7D64A5E3956}'
+                ForceRemove ShellExtImpl = s '{91F5582C-7E28-4AAD-8772-9F948EB64D91}'
             }
         }
     }

@@ -1,11 +1,3 @@
 HKCR
 {
-	NoRemove AppID
-	{
-		'%APPID%' = s 'MenuEx'
-		'MenuEx.DLL'
-		{
-			val AppID = s '%APPID%'
-		}
-	}
 }

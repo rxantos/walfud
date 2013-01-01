@@ -1,5 +1,5 @@
 
-LIBRARY      "DropOnTargetPS"
+LIBRARY
 
 EXPORTS
 	DllGetClassObject		PRIVATE
