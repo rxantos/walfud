@@ -1,6 +1,6 @@
 ; DropOnTarget.def : Declares the module parameters.
 
-LIBRARY      "DropOnTarget.DLL"
+LIBRARY
 
 EXPORTS
 	DllCanUnloadNow		PRIVATE

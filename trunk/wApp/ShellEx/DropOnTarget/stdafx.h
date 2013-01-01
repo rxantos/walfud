@@ -11,18 +11,15 @@
 #include "targetver.h"
 
 #define _ATL_APARTMENT_THREADED
+
 #define _ATL_NO_AUTOMATIC_NAMESPACE
 
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS	// some CString constructors will be explicit
 
-#include <afxwin.h>
-#ifndef _AFX_NO_OLE_SUPPORT
-#include <afxdisp.h>        // MFC Automation classes
-#endif // _AFX_NO_OLE_SUPPORT
+
+#define ATL_NO_ASSERT_ON_DESTROY_NONEXISTENT_WINDOW
 
 #include "resource.h"
 #include <atlbase.h>
 #include <atlcom.h>
 #include <atlctl.h>
-
-using namespace ATL;

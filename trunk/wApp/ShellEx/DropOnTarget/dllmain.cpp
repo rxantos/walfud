@@ -7,28 +7,9 @@
 
 CDropOnTargetModule _AtlModule;
 
-class CDropOnTargetApp : public CWinApp
+// DLL Entry Point
+extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {
-public:
-
-// Overrides
-	virtual BOOL InitInstance();
-	virtual int ExitInstance();
-
-	DECLARE_MESSAGE_MAP()
-};
-
-BEGIN_MESSAGE_MAP(CDropOnTargetApp, CWinApp)
-END_MESSAGE_MAP()
-
-CDropOnTargetApp theApp;
-
-BOOL CDropOnTargetApp::InitInstance()
-{
-	return CWinApp::InitInstance();
-}
-
-int CDropOnTargetApp::ExitInstance()
-{
-	return CWinApp::ExitInstance();
+	hInstance;
+	return _AtlModule.DllMain(dwReason, lpReserved); 
 }

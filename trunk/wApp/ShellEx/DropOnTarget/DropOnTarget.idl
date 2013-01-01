@@ -9,28 +9,26 @@ import "ocidl.idl";
 
 [
 	object,
-	uuid(FC426711-F965-4385-90FF-F6C5C7AEB7D1),
+	uuid(2AE1CD01-18EB-447E-B45A-FE2201CD222F),
 	dual,
 	nonextensible,
-	helpstring("IDropOnTargetImpl Interface"),
 	pointer_default(unique)
 ]
 interface IDropOnTargetImpl : IDispatch{
 };
 [
-	uuid(803BB4D2-DE02-4DE0-A1ED-DDE618D398EF),
+	uuid(DFDCDE05-5B70-483F-8335-6338D8B0432C),
 	version(1.0),
-	helpstring("DropOnTarget 1.0 Type Library")
 ]
 library DropOnTargetLib
 {
 	importlib("stdole2.tlb");
 	[
-		uuid(AF3B3F45-2120-42CB-8F59-32206679B723),
-		helpstring("DropOnTargetImpl Class")
+		uuid(8B0A9875-C9E1-4C59-8C9A-0DF0D4754EAD)		
 	]
 	coclass DropOnTargetImpl
 	{
 		[default] interface IDropOnTargetImpl;
 	};
 };
+
