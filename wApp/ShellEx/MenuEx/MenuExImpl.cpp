@@ -14,7 +14,6 @@ CMenuExImpl::CMenuExImpl()
 	GetModuleFileName(_AtlModule.GetModuleInstance(), iconFullpath, sizeof(iconFullpath)/sizeof(iconFullpath[0]));
 	PathRemoveFileSpec(iconFullpath);
 	PathAppend(iconFullpath, L"icon.bmp");
-	OutputDebugString(iconFullpath);
 
 	// 2. Load image from file.
 	m_bitmap = reinterpret_cast<HBITMAP>(LoadImage(nullptr, iconFullpath, IMAGE_BITMAP, 16, 16, LR_LOADFROMFILE));
