@@ -4,9 +4,9 @@
 
 
  /* File created by MIDL compiler version 8.00.0595 */
-/* at Tue Jan 01 17:09:21 2013
+/* at Tue Jan 01 17:08:56 2013
  */
-/* Compiler settings for DropOnTarget.idl:
+/* Compiler settings for FileIcon.idl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 8.00.0595 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
@@ -36,8 +36,8 @@
 #include "ole2.h"
 #endif /*COM_NO_WINDOWS_H*/
 
-#ifndef __DropOnTarget_i_h__
-#define __DropOnTarget_i_h__
+#ifndef __FileIcon_i_h__
+#define __FileIcon_i_h__
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1020)
 #pragma once
@@ -45,23 +45,23 @@
 
 /* Forward Declarations */ 
 
-#ifndef __IDropOnTargetImpl_FWD_DEFINED__
-#define __IDropOnTargetImpl_FWD_DEFINED__
-typedef interface IDropOnTargetImpl IDropOnTargetImpl;
+#ifndef __IFileIconImpl_FWD_DEFINED__
+#define __IFileIconImpl_FWD_DEFINED__
+typedef interface IFileIconImpl IFileIconImpl;
 
-#endif 	/* __IDropOnTargetImpl_FWD_DEFINED__ */
+#endif 	/* __IFileIconImpl_FWD_DEFINED__ */
 
 
-#ifndef __DropOnTargetImpl_FWD_DEFINED__
-#define __DropOnTargetImpl_FWD_DEFINED__
+#ifndef __FileIconImpl_FWD_DEFINED__
+#define __FileIconImpl_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class DropOnTargetImpl DropOnTargetImpl;
+typedef class FileIconImpl FileIconImpl;
 #else
-typedef struct DropOnTargetImpl DropOnTargetImpl;
+typedef struct FileIconImpl FileIconImpl;
 #endif /* __cplusplus */
 
-#endif 	/* __DropOnTargetImpl_FWD_DEFINED__ */
+#endif 	/* __FileIconImpl_FWD_DEFINED__ */
 
 
 /* header files for imported files */
@@ -73,19 +73,19 @@ extern "C"{
 #endif 
 
 
-#ifndef __IDropOnTargetImpl_INTERFACE_DEFINED__
-#define __IDropOnTargetImpl_INTERFACE_DEFINED__
+#ifndef __IFileIconImpl_INTERFACE_DEFINED__
+#define __IFileIconImpl_INTERFACE_DEFINED__
 
-/* interface IDropOnTargetImpl */
+/* interface IFileIconImpl */
 /* [unique][nonextensible][dual][uuid][object] */ 
 
 
-EXTERN_C const IID IID_IDropOnTargetImpl;
+EXTERN_C const IID IID_IFileIconImpl;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
-    MIDL_INTERFACE("2AE1CD01-18EB-447E-B45A-FE2201CD222F")
-    IDropOnTargetImpl : public IDispatch
+    MIDL_INTERFACE("A174FCD4-BB0D-49A0-A7A7-FAF0196FA27D")
+    IFileIconImpl : public IDispatch
     {
     public:
     };
@@ -93,34 +93,34 @@ EXTERN_C const IID IID_IDropOnTargetImpl;
     
 #else 	/* C style interface */
 
-    typedef struct IDropOnTargetImplVtbl
+    typedef struct IFileIconImplVtbl
     {
         BEGIN_INTERFACE
         
         HRESULT ( STDMETHODCALLTYPE *QueryInterface )( 
-            IDropOnTargetImpl * This,
+            IFileIconImpl * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
             _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
-            IDropOnTargetImpl * This);
+            IFileIconImpl * This);
         
         ULONG ( STDMETHODCALLTYPE *Release )( 
-            IDropOnTargetImpl * This);
+            IFileIconImpl * This);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfoCount )( 
-            IDropOnTargetImpl * This,
+            IFileIconImpl * This,
             /* [out] */ UINT *pctinfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetTypeInfo )( 
-            IDropOnTargetImpl * This,
+            IFileIconImpl * This,
             /* [in] */ UINT iTInfo,
             /* [in] */ LCID lcid,
             /* [out] */ ITypeInfo **ppTInfo);
         
         HRESULT ( STDMETHODCALLTYPE *GetIDsOfNames )( 
-            IDropOnTargetImpl * This,
+            IFileIconImpl * This,
             /* [in] */ REFIID riid,
             /* [size_is][in] */ LPOLESTR *rgszNames,
             /* [range][in] */ UINT cNames,
@@ -128,7 +128,7 @@ EXTERN_C const IID IID_IDropOnTargetImpl;
             /* [size_is][out] */ DISPID *rgDispId);
         
         /* [local] */ HRESULT ( STDMETHODCALLTYPE *Invoke )( 
-            IDropOnTargetImpl * This,
+            IFileIconImpl * This,
             /* [annotation][in] */ 
             _In_  DISPID dispIdMember,
             /* [annotation][in] */ 
@@ -147,11 +147,11 @@ EXTERN_C const IID IID_IDropOnTargetImpl;
             _Out_opt_  UINT *puArgErr);
         
         END_INTERFACE
-    } IDropOnTargetImplVtbl;
+    } IFileIconImplVtbl;
 
-    interface IDropOnTargetImpl
+    interface IFileIconImpl
     {
-        CONST_VTBL struct IDropOnTargetImplVtbl *lpVtbl;
+        CONST_VTBL struct IFileIconImplVtbl *lpVtbl;
     };
 
     
@@ -159,26 +159,26 @@ EXTERN_C const IID IID_IDropOnTargetImpl;
 #ifdef COBJMACROS
 
 
-#define IDropOnTargetImpl_QueryInterface(This,riid,ppvObject)	\
+#define IFileIconImpl_QueryInterface(This,riid,ppvObject)	\
     ( (This)->lpVtbl -> QueryInterface(This,riid,ppvObject) ) 
 
-#define IDropOnTargetImpl_AddRef(This)	\
+#define IFileIconImpl_AddRef(This)	\
     ( (This)->lpVtbl -> AddRef(This) ) 
 
-#define IDropOnTargetImpl_Release(This)	\
+#define IFileIconImpl_Release(This)	\
     ( (This)->lpVtbl -> Release(This) ) 
 
 
-#define IDropOnTargetImpl_GetTypeInfoCount(This,pctinfo)	\
+#define IFileIconImpl_GetTypeInfoCount(This,pctinfo)	\
     ( (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo) ) 
 
-#define IDropOnTargetImpl_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+#define IFileIconImpl_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
     ( (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo) ) 
 
-#define IDropOnTargetImpl_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+#define IFileIconImpl_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
     ( (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId) ) 
 
-#define IDropOnTargetImpl_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+#define IFileIconImpl_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     ( (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr) ) 
 
 
@@ -190,27 +190,27 @@ EXTERN_C const IID IID_IDropOnTargetImpl;
 
 
 
-#endif 	/* __IDropOnTargetImpl_INTERFACE_DEFINED__ */
+#endif 	/* __IFileIconImpl_INTERFACE_DEFINED__ */
 
 
 
-#ifndef __DropOnTargetLib_LIBRARY_DEFINED__
-#define __DropOnTargetLib_LIBRARY_DEFINED__
+#ifndef __FileIconLib_LIBRARY_DEFINED__
+#define __FileIconLib_LIBRARY_DEFINED__
 
-/* library DropOnTargetLib */
+/* library FileIconLib */
 /* [version][uuid] */ 
 
 
-EXTERN_C const IID LIBID_DropOnTargetLib;
+EXTERN_C const IID LIBID_FileIconLib;
 
-EXTERN_C const CLSID CLSID_DropOnTargetImpl;
+EXTERN_C const CLSID CLSID_FileIconImpl;
 
 #ifdef __cplusplus
 
-class DECLSPEC_UUID("8B0A9875-C9E1-4C59-8C9A-0DF0D4754EAD")
-DropOnTargetImpl;
+class DECLSPEC_UUID("1C16A911-78BF-4CA3-8660-DB368F98C612")
+FileIconImpl;
 #endif
-#endif /* __DropOnTargetLib_LIBRARY_DEFINED__ */
+#endif /* __FileIconLib_LIBRARY_DEFINED__ */
 
 /* Additional Prototypes for ALL interfaces */
 

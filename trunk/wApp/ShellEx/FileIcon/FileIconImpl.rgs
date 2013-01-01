@@ -1,0 +1,25 @@
+HKCR
+{
+	NoRemove CLSID
+	{
+		ForceRemove {1C16A911-78BF-4CA3-8660-DB368F98C612} = s 'FileIconImpl Class'
+		{
+			ForceRemove Programmable
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			TypeLib = s '{892FEF64-A30C-46D1-BC5E-7E2986E830EE}'
+			Version = s '1.0'
+		}
+	}
+
+    NoRemove txtfile
+    {
+        NoRemove DefaultIcon = s '%%1'
+        NoRemove ShellEx
+        {
+            ForceRemove IconHandler = s '{1C16A911-78BF-4CA3-8660-DB368F98C612}'
+        }
+    }
+}

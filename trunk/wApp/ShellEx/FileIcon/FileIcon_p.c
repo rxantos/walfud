@@ -4,9 +4,9 @@
 
 
  /* File created by MIDL compiler version 8.00.0595 */
-/* at Tue Jan 01 17:09:21 2013
+/* at Tue Jan 01 17:08:56 2013
  */
-/* Compiler settings for DropOnTarget.idl:
+/* Compiler settings for FileIcon.idl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 8.00.0595 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
@@ -47,7 +47,7 @@
 #endif /* __RPCPROXY_H_VERSION__ */
 
 
-#include "DropOnTarget_i.h"
+#include "FileIcon_i.h"
 
 #define TYPE_FORMAT_STRING_SIZE   3                                 
 #define PROC_FORMAT_STRING_SIZE   1                                 
@@ -55,39 +55,39 @@
 #define TRANSMIT_AS_TABLE_SIZE    0            
 #define WIRE_MARSHAL_TABLE_SIZE   0            
 
-typedef struct _DropOnTarget_MIDL_TYPE_FORMAT_STRING
+typedef struct _FileIcon_MIDL_TYPE_FORMAT_STRING
     {
     short          Pad;
     unsigned char  Format[ TYPE_FORMAT_STRING_SIZE ];
-    } DropOnTarget_MIDL_TYPE_FORMAT_STRING;
+    } FileIcon_MIDL_TYPE_FORMAT_STRING;
 
-typedef struct _DropOnTarget_MIDL_PROC_FORMAT_STRING
+typedef struct _FileIcon_MIDL_PROC_FORMAT_STRING
     {
     short          Pad;
     unsigned char  Format[ PROC_FORMAT_STRING_SIZE ];
-    } DropOnTarget_MIDL_PROC_FORMAT_STRING;
+    } FileIcon_MIDL_PROC_FORMAT_STRING;
 
-typedef struct _DropOnTarget_MIDL_EXPR_FORMAT_STRING
+typedef struct _FileIcon_MIDL_EXPR_FORMAT_STRING
     {
     long          Pad;
     unsigned char  Format[ EXPR_FORMAT_STRING_SIZE ];
-    } DropOnTarget_MIDL_EXPR_FORMAT_STRING;
+    } FileIcon_MIDL_EXPR_FORMAT_STRING;
 
 
 static const RPC_SYNTAX_IDENTIFIER  _RpcTransferSyntax = 
 {{0x8A885D04,0x1CEB,0x11C9,{0x9F,0xE8,0x08,0x00,0x2B,0x10,0x48,0x60}},{2,0}};
 
 
-extern const DropOnTarget_MIDL_TYPE_FORMAT_STRING DropOnTarget__MIDL_TypeFormatString;
-extern const DropOnTarget_MIDL_PROC_FORMAT_STRING DropOnTarget__MIDL_ProcFormatString;
-extern const DropOnTarget_MIDL_EXPR_FORMAT_STRING DropOnTarget__MIDL_ExprFormatString;
+extern const FileIcon_MIDL_TYPE_FORMAT_STRING FileIcon__MIDL_TypeFormatString;
+extern const FileIcon_MIDL_PROC_FORMAT_STRING FileIcon__MIDL_ProcFormatString;
+extern const FileIcon_MIDL_EXPR_FORMAT_STRING FileIcon__MIDL_ExprFormatString;
 
 
 extern const MIDL_STUB_DESC Object_StubDesc;
 
 
-extern const MIDL_SERVER_INFO IDropOnTargetImpl_ServerInfo;
-extern const MIDL_STUBLESS_PROXY_INFO IDropOnTargetImpl_ProxyInfo;
+extern const MIDL_SERVER_INFO IFileIconImpl_ServerInfo;
+extern const MIDL_STUBLESS_PROXY_INFO IFileIconImpl_ProxyInfo;
 
 
 
@@ -103,7 +103,7 @@ extern const MIDL_STUBLESS_PROXY_INFO IDropOnTargetImpl_ProxyInfo;
 #endif
 
 
-static const DropOnTarget_MIDL_PROC_FORMAT_STRING DropOnTarget__MIDL_ProcFormatString =
+static const FileIcon_MIDL_PROC_FORMAT_STRING FileIcon__MIDL_ProcFormatString =
     {
         0,
         {
@@ -112,7 +112,7 @@ static const DropOnTarget_MIDL_PROC_FORMAT_STRING DropOnTarget__MIDL_ProcFormatS
         }
     };
 
-static const DropOnTarget_MIDL_TYPE_FORMAT_STRING DropOnTarget__MIDL_TypeFormatString =
+static const FileIcon_MIDL_TYPE_FORMAT_STRING FileIcon__MIDL_TypeFormatString =
     {
         0,
         {
@@ -131,11 +131,11 @@ static const DropOnTarget_MIDL_TYPE_FORMAT_STRING DropOnTarget__MIDL_TypeFormatS
    GUID={0x00020400,0x0000,0x0000,{0xC0,0x00,0x00,0x00,0x00,0x00,0x00,0x46}} */
 
 
-/* Object interface: IDropOnTargetImpl, ver. 0.0,
-   GUID={0x2AE1CD01,0x18EB,0x447E,{0xB4,0x5A,0xFE,0x22,0x01,0xCD,0x22,0x2F}} */
+/* Object interface: IFileIconImpl, ver. 0.0,
+   GUID={0xA174FCD4,0xBB0D,0x49A0,{0xA7,0xA7,0xFA,0xF0,0x19,0x6F,0xA2,0x7D}} */
 
 #pragma code_seg(".orpc")
-static const unsigned short IDropOnTargetImpl_FormatStringOffsetTable[] =
+static const unsigned short IFileIconImpl_FormatStringOffsetTable[] =
     {
     (unsigned short) -1,
     (unsigned short) -1,
@@ -144,31 +144,31 @@ static const unsigned short IDropOnTargetImpl_FormatStringOffsetTable[] =
     0
     };
 
-static const MIDL_STUBLESS_PROXY_INFO IDropOnTargetImpl_ProxyInfo =
+static const MIDL_STUBLESS_PROXY_INFO IFileIconImpl_ProxyInfo =
     {
     &Object_StubDesc,
-    DropOnTarget__MIDL_ProcFormatString.Format,
-    &IDropOnTargetImpl_FormatStringOffsetTable[-3],
+    FileIcon__MIDL_ProcFormatString.Format,
+    &IFileIconImpl_FormatStringOffsetTable[-3],
     0,
     0,
     0
     };
 
 
-static const MIDL_SERVER_INFO IDropOnTargetImpl_ServerInfo = 
+static const MIDL_SERVER_INFO IFileIconImpl_ServerInfo = 
     {
     &Object_StubDesc,
     0,
-    DropOnTarget__MIDL_ProcFormatString.Format,
-    &IDropOnTargetImpl_FormatStringOffsetTable[-3],
+    FileIcon__MIDL_ProcFormatString.Format,
+    &IFileIconImpl_FormatStringOffsetTable[-3],
     0,
     0,
     0,
     0};
-CINTERFACE_PROXY_VTABLE(7) _IDropOnTargetImplProxyVtbl = 
+CINTERFACE_PROXY_VTABLE(7) _IFileIconImplProxyVtbl = 
 {
     0,
-    &IID_IDropOnTargetImpl,
+    &IID_IFileIconImpl,
     IUnknown_QueryInterface_Proxy,
     IUnknown_AddRef_Proxy,
     IUnknown_Release_Proxy ,
@@ -179,7 +179,7 @@ CINTERFACE_PROXY_VTABLE(7) _IDropOnTargetImplProxyVtbl =
 };
 
 
-static const PRPC_STUB_FUNCTION IDropOnTargetImpl_table[] =
+static const PRPC_STUB_FUNCTION IFileIconImpl_table[] =
 {
     STUB_FORWARDING_FUNCTION,
     STUB_FORWARDING_FUNCTION,
@@ -187,12 +187,12 @@ static const PRPC_STUB_FUNCTION IDropOnTargetImpl_table[] =
     STUB_FORWARDING_FUNCTION
 };
 
-CInterfaceStubVtbl _IDropOnTargetImplStubVtbl =
+CInterfaceStubVtbl _IFileIconImplStubVtbl =
 {
-    &IID_IDropOnTargetImpl,
-    &IDropOnTargetImpl_ServerInfo,
+    &IID_IFileIconImpl,
+    &IFileIconImpl_ServerInfo,
     7,
-    &IDropOnTargetImpl_table[-3],
+    &IFileIconImpl_table[-3],
     CStdStubBuffer_DELEGATING_METHODS
 };
 
@@ -206,7 +206,7 @@ static const MIDL_STUB_DESC Object_StubDesc =
     0,
     0,
     0,
-    DropOnTarget__MIDL_TypeFormatString.Format,
+    FileIcon__MIDL_TypeFormatString.Format,
     1, /* -error bounds_check flag */
     0x50002, /* Ndr library version */
     0,
@@ -220,37 +220,37 @@ static const MIDL_STUB_DESC Object_StubDesc =
     0
     };
 
-const CInterfaceProxyVtbl * const _DropOnTarget_ProxyVtblList[] = 
+const CInterfaceProxyVtbl * const _FileIcon_ProxyVtblList[] = 
 {
-    ( CInterfaceProxyVtbl *) &_IDropOnTargetImplProxyVtbl,
+    ( CInterfaceProxyVtbl *) &_IFileIconImplProxyVtbl,
     0
 };
 
-const CInterfaceStubVtbl * const _DropOnTarget_StubVtblList[] = 
+const CInterfaceStubVtbl * const _FileIcon_StubVtblList[] = 
 {
-    ( CInterfaceStubVtbl *) &_IDropOnTargetImplStubVtbl,
+    ( CInterfaceStubVtbl *) &_IFileIconImplStubVtbl,
     0
 };
 
-PCInterfaceName const _DropOnTarget_InterfaceNamesList[] = 
+PCInterfaceName const _FileIcon_InterfaceNamesList[] = 
 {
-    "IDropOnTargetImpl",
+    "IFileIconImpl",
     0
 };
 
-const IID *  const _DropOnTarget_BaseIIDList[] = 
+const IID *  const _FileIcon_BaseIIDList[] = 
 {
     &IID_IDispatch,
     0
 };
 
 
-#define _DropOnTarget_CHECK_IID(n)	IID_GENERIC_CHECK_IID( _DropOnTarget, pIID, n)
+#define _FileIcon_CHECK_IID(n)	IID_GENERIC_CHECK_IID( _FileIcon, pIID, n)
 
-int __stdcall _DropOnTarget_IID_Lookup( const IID * pIID, int * pIndex )
+int __stdcall _FileIcon_IID_Lookup( const IID * pIID, int * pIndex )
 {
     
-    if(!_DropOnTarget_CHECK_IID(0))
+    if(!_FileIcon_CHECK_IID(0))
         {
         *pIndex = 0;
         return 1;
@@ -259,13 +259,13 @@ int __stdcall _DropOnTarget_IID_Lookup( const IID * pIID, int * pIndex )
     return 0;
 }
 
-const ExtendedProxyFileInfo DropOnTarget_ProxyFileInfo = 
+const ExtendedProxyFileInfo FileIcon_ProxyFileInfo = 
 {
-    (PCInterfaceProxyVtblList *) & _DropOnTarget_ProxyVtblList,
-    (PCInterfaceStubVtblList *) & _DropOnTarget_StubVtblList,
-    (const PCInterfaceName * ) & _DropOnTarget_InterfaceNamesList,
-    (const IID ** ) & _DropOnTarget_BaseIIDList,
-    & _DropOnTarget_IID_Lookup, 
+    (PCInterfaceProxyVtblList *) & _FileIcon_ProxyVtblList,
+    (PCInterfaceStubVtblList *) & _FileIcon_StubVtblList,
+    (const PCInterfaceName * ) & _FileIcon_InterfaceNamesList,
+    (const IID ** ) & _FileIcon_BaseIIDList,
+    & _FileIcon_IID_Lookup, 
     1,
     2,
     0, /* table of [async_uuid] interfaces */

@@ -1,0 +1,34 @@
+// FileIcon.idl : IDL source for FileIcon
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (FileIcon.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(A174FCD4-BB0D-49A0-A7A7-FAF0196FA27D),
+	dual,
+	nonextensible,
+	pointer_default(unique)
+]
+interface IFileIconImpl : IDispatch{
+};
+[
+	uuid(892FEF64-A30C-46D1-BC5E-7E2986E830EE),
+	version(1.0),
+]
+library FileIconLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(1C16A911-78BF-4CA3-8660-DB368F98C612)		
+	]
+	coclass FileIconImpl
+	{
+		[default] interface IFileIconImpl;
+	};
+};
+
