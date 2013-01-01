@@ -6,10 +6,10 @@
 
 
  /* File created by MIDL compiler version 8.00.0595 */
-/* at Mon Dec 31 16:33:39 2012
+/* at Tue Jan 01 16:55:57 2013
  */
 /* Compiler settings for DropOnTarget.idl:
-    Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 8.00.0595 
+    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 8.00.0595 
     protocol : dce , ms_ext, c_ext, robust
     error checks: allocation ref bounds_check enum stub_data 
     VC __declspec() decoration level: 
