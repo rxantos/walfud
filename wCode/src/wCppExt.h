@@ -26,6 +26,7 @@
 #include "wDisk.h"
 #include "wFilePermission.h"
 #include "wTaskbarProgress.h"
+#include "wSync.h"
 
 #pragma warning(disable: 4800)						// 'BOOL' : forcing value to bool 'true' or 'false'.
 

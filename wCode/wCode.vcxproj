@@ -19,6 +19,7 @@
     <ClCompile Include="src\wHack.cc" />
     <ClCompile Include="src\wProcess.cc" />
     <ClCompile Include="src\wStrUtil.cc" />
+    <ClCompile Include="src\wSync.cc" />
     <ClCompile Include="src\wSysUtil.cc" />
     <ClCompile Include="src\wTaskbarProgress.cc" />
     <ClCompile Include="src\wTimeMeasurer.cc" />
@@ -31,6 +32,7 @@
     <ClInclude Include="src\wHack.h" />
     <ClInclude Include="src\wProcess.h" />
     <ClInclude Include="src\wStrUtil.h" />
+    <ClInclude Include="src\wSync.h" />
     <ClInclude Include="src\wSysUtil.h" />
     <ClInclude Include="src\wTaskbarProgress.h" />
     <ClInclude Include="src\wTimeMeasurer.h" />

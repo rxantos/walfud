@@ -42,6 +42,9 @@
     <ClCompile Include="src\wTaskbarProgress.cc">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\wSync.cc">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\wCppExt.h">
@@ -72,6 +75,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\wFilePermission.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wSync.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
