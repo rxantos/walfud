@@ -136,10 +136,10 @@ string getProcessName(DWORD id)
 
 DWORD getCurrentProcessId()
 { return ::GetCurrentProcessId(); }
-std::string getCurrentProcessName()
+string getCurrentProcessName()
 {
 	char moduleName[MAX_PATH] = {};
-	::GetModuleFileName(nullptr, moduleName, ArrLen(moduleName));
+	::GetModuleFileName(nullptr, moduleName, arrCnt(moduleName));
 
 	return moduleName;
 }

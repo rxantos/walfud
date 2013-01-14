@@ -51,36 +51,36 @@ string strMakeLeft(const string &str, const string &left)
 string strMakeRight(const string &str, const string &right)
 { return str + (str.empty() || str.length() < right.length() || str.rfind(right) != str.length() - right.length() ? right : ""); }
 
-std::wstring strToWStr(const std::string &str)
+wstring strToWStr(const string &str)
 {
 	wstring wstr;
 	wchar_t *buf = new wchar_t[str.size()];
 	fill(buf, buf + str.size(), L'\0');
 
-	if (const int len = MultiByteToWideChar(CP_ACP, 0,
+	if (const int size = MultiByteToWideChar(CP_ACP, 0,
 											str.c_str(), str.size(), 
 											buf, str.size()))
 	{
-		wstr.assign(buf, buf + len);
+		wstr.assign(buf, buf + size);
 	}
 	
 	delete []buf;
 	buf = nullptr;
 	return wstr;
 }
-std::string wStrToStr(const std::wstring &wstr)
+string wStrToStr(const wstring &wstr)
 {
 	string str;
-	const size_t bufLen = wstr.length() * 4;
-	char *buf = new char[bufLen];
-	fill(buf, buf + bufLen, '\0');
+	const size_t bufSize = wstr.length() * 4;
+	char *buf = new char[bufSize];
+	fill(buf, buf + bufSize, '\0');
 
-	if (const int len = WideCharToMultiByte(CP_ACP, 0, 
+	if (const int size = WideCharToMultiByte(CP_ACP, 0, 
 											wstr.c_str(), wstr.length(), 
-											buf, bufLen, 
+											buf, bufSize, 
 											nullptr, nullptr))
 	{
-		str.assign(buf, buf + len);
+		str.assign(buf, buf + size);
 	}
 	
 	delete []buf;
