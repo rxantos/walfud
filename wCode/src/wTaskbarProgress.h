@@ -67,7 +67,7 @@ namespace w
 //	Sleep(1000);			// Wait for taskbar creation.
 //
 //	char moduleFullpath[MAX_PATH] = {};
-//	GetModuleFileName(nullptr, moduleFullpath, arrLen(moduleFullpath));
+//	GetModuleFileName(nullptr, moduleFullpath, arrCnt(moduleFullpath));
 //	HWND hwnd = FindWindow(nullptr, moduleFullpath);
 //
 //	foo(hwnd);

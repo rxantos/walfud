@@ -42,7 +42,10 @@
     <ClCompile Include="src\wTaskbarProgress.cc">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\wSync.cc">
+    <ClCompile Include="src\wRpc.cc">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\wPipe.cc">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,8 +80,11 @@
     <ClInclude Include="src\wFilePermission.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\wSync.h">
+    <ClInclude Include="src\wRpc.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wPipe.h">
+      <Filter>interface</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -36,7 +36,7 @@ static vector<string> getSpecifiedFsDrivesName(const string &fs)
 			 {
 				 // Get volume information.
 				 char volName[MAX_PATH+1] = {}, fsName[MAX_PATH+1] = {};
-				 DWORD volNameLen = ArrLen(volName), fsNameLen = ArrLen(fsName);
+				 DWORD volNameLen = arrCnt(volName), fsNameLen = arrCnt(fsName);
 				 DWORD sn = 0, maxNameLen = 0, fsFlag = 0;
 				 GetVolumeInformation(w::strMakeRight(driveName, "\\").c_str(), volName, volNameLen, &sn, &maxNameLen, &fsFlag, fsName, fsNameLen);
 
@@ -55,15 +55,15 @@ vector<string> getDrivesName()
 	vector<string> drives;
 
 	// Allocate enough memory.
-	const size_t len = GetLogicalDriveStrings(0, nullptr) + CHARACTER_SIZE;
-	char *buf = new char[len];
-	fill(buf, buf + len, '\0');
+	const size_t size = GetLogicalDriveStrings(0, nullptr) + CHARACTER_SIZE;
+	char *buf = new char[size];
+	fill(buf, buf + size, '\0');
 
 	// Get valid drives in the system.
-	GetLogicalDriveStrings(len, buf);
+	GetLogicalDriveStrings(size, buf);
 
 	// Remove redundant '\0' on the end of 'buf'.
-	char *bufEnd = unique(buf, buf + len);
+	char *bufEnd = unique(buf, buf + size);
 
 	// Split into vector.
 	drives = w::strSplit(buf, bufEnd, '\0');

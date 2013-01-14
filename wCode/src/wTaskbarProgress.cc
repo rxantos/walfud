@@ -47,7 +47,7 @@ HWND TaskbarProgress::getHwnd() const
 
 void TaskbarProgress::setRange(unsigned min, unsigned max)
 { m_min = min, m_max = max; }
-std::pair<unsigned, unsigned> TaskbarProgress::getRange() const
+pair<unsigned, unsigned> TaskbarProgress::getRange() const
 { return make_pair(m_min, m_max); }
 
 void TaskbarProgress::setPos(unsigned cur)
