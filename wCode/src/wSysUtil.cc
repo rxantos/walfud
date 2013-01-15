@@ -39,5 +39,4 @@ bool isXpOrLater()
 bool is2000OrLater()
 { return osVerCondition(5, 0, VER_GREATER_EQUAL); }
 
-
 }

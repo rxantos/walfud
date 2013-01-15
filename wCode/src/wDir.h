@@ -107,11 +107,12 @@ std::unordered_set<std::string> traverseNextLevel(const std::unordered_set<std::
  *				1						d:\foo\a.exe
  *				1						d:\foo\b\
  *				1						d:\foo\c.obj
- *
  *				2						d:\foo\x\helloWorld.cc
  *				2						d:\foo\z\bar\
  *				2						d:\foo\b\my.doc
  *				2						d:\foo\b\boot.asm
+ *	-------------------------------------------------------------
+ *		Sequence is NOT guaranteed.
  *
  */
 std::unordered_multimap<unsigned, std::string> 
