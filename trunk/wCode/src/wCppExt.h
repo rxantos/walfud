@@ -18,6 +18,7 @@
 #include <utility>
 #include <iomanip>
 #include <algorithm>
+#include <numeric>
 #include <limits>
 #include <functional>
 #include <thread>

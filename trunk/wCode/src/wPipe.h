@@ -101,7 +101,7 @@ private:
  *		Message mode is read and write as different unit; byte mode treats all data in buffer as a whole stream. See my blog: TODO: .
  *
  */
-class NamedPipe
+class NamedPipe : public Pipe
 {
 protected:
 	// data.
@@ -109,12 +109,8 @@ protected:
 	static const unsigned ms_maxBufSize = 4 * 1024;
 
 public:
-	NamedPipe(const std::string &name, bool isClient = false, bool messageMode = false, bool async = false);
+	NamedPipe();
 	virtual ~NamedPipe();
-public:
-	// Interface.
-	virtual unsigned read(void *buf, unsigned size) = 0;
-	virtual unsigned write(void *buf, unsigned size) = 0;
 };
 
 class SyncPipe : public NamedPipe
@@ -128,73 +124,26 @@ public:
 	virtual unsigned write(void *buf, unsigned size);
 };
 
-class ASyncPipe : public NamedPipe
-{
-	// data.
-	std::packaged_task<void (void *)> m_readWorker, m_writeWorker;
-	std::function<void (void *)> m_connectCallback, m_readCallback, m_writeCallback;
-
-	bool m_quit;
-
-public:
-	ASyncPipe(const std::string &name, bool isClient = false, bool messageMode = false,
-			  std::function<void (void *)> connectCallback = nullptr,
-			  std::function<void (void *)> readCallback = nullptr, std::function<void (void *)> writeCallback = nullptr);
-	virtual ~ASyncPipe();
-public:
-	// Interface.
-	virtual unsigned read(void *buf, unsigned size);
-	virtual unsigned write(void *buf, unsigned size);
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//class SyncPipe : public NamedPipe
-//{
-//public:
-//	SyncPipe(const std::string &name, bool create = true, bool messageMode = false);
-//	virtual ~SyncPipe();
-//public:
-//	// Interface.
-//	virtual unsigned read(void *buf, unsigned size);
-//	virtual unsigned write(void *buf, unsigned size);
-//};
-//
 //class ASyncPipe : public NamedPipe
 //{
 //	// data.
 //	std::function<void (void *)> m_connectCallback, m_readCallback, m_writeCallback;
+//	OVERLAPPED m_overlappedOp;
 //
 //public:
-//	ASyncPipe(const std::string &name, bool create = true, bool messageMode = false, 
-//			  const std::function<void (void *)> &connectCallback = nullptr, 
-//			  const std::function<void (void *)> &readCallback = nullptr, const std::function<void (void *)> &writeCallback = nullptr);
+//	ASyncPipe(const std::string &name, bool isClient = false, bool messageMode = false,
+//			  std::function<void (void *)> connectCallback = nullptr,
+//			  std::function<void (void *)> readCallback = nullptr, std::function<void (void *)> writeCallback = nullptr);
 //	virtual ~ASyncPipe();
 //public:
 //	// Interface.
 //	virtual unsigned read(void *buf, unsigned size);
 //	virtual unsigned write(void *buf, unsigned size);
+//
+//private:
+//	// logic.
+//	static VOID WINAPI CompletedReadRoutine(DWORD dwErr, DWORD cbBytesRead, LPOVERLAPPED lpOverLap);
+//	static VOID WINAPI CompletedWriteRoutine(DWORD dwErr, DWORD cbBytesRead, LPOVERLAPPED lpOverLap);
 //};
 
 }
