@@ -23,8 +23,8 @@ struct ProcessInfo
 {
 	std::string name, path;
 
-	DWORD id, parentId;
-	std::vector<DWORD> threadsId;
+	int id, parentId;
+	std::vector<int> threadsId;
 
 	std::map<std::string, ModuleInfo> modules;
 };
@@ -39,8 +39,8 @@ struct ProcessInfo
  *
  */
 std::map<std::string, w::ModuleInfo> getModulesInfo(DWORD processId);
-std::vector<DWORD> getThreadsInfo(DWORD processId);
-std::map<DWORD, ProcessInfo> getProcessesInfo();
+std::vector<int> getThreadsInfo(DWORD processId);
+std::map<int, ProcessInfo> getProcessesInfo();
 
 /*
  *
@@ -50,10 +50,10 @@ std::map<DWORD, ProcessInfo> getProcessesInfo();
  *		One id maps to one process, while one name maps to one or more processes.
  *
  */
-std::vector<DWORD> getProcessId(const std::string &processName);
+std::vector<int> getProcessId(const std::string &processName);
 std::string getProcessName(DWORD id);
 
-DWORD getCurrentProcessId();
+int getCurrentProcessId();
 std::string getCurrentProcessName();
 
 /*

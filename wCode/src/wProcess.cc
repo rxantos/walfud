@@ -33,9 +33,9 @@ map<string, w::ModuleInfo> getModulesInfo(DWORD processId)
 
 	return modulesInfo;
 }
-vector<DWORD> getThreadsInfo(DWORD processId)
+vector<int> getThreadsInfo(DWORD processId)
 {
-	vector<DWORD> threadsId;
+	vector<int> threadsId;
 
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, processId);
 	THREADENTRY32 te = {};
@@ -53,9 +53,9 @@ vector<DWORD> getThreadsInfo(DWORD processId)
 	return threadsId;
 }
 
-map<DWORD, ProcessInfo> getProcessesInfo()
+map<int, ProcessInfo> getProcessesInfo()
 {
-	map<DWORD, ProcessInfo> res;
+	map<int, ProcessInfo> res;
 
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, 0);
 
@@ -79,13 +79,13 @@ map<DWORD, ProcessInfo> getProcessesInfo()
 	}
 
 	// Fill module information.
-	for (map<DWORD, ProcessInfo>::iterator it = res.begin(); it != res.end(); ++it)
+	for (map<int, ProcessInfo>::iterator it = res.begin(); it != res.end(); ++it)
 	{
 		it->second.modules = getModulesInfo(pe.th32ProcessID);		
 	}
 
 	// Fill thread information.
-	for (map<DWORD, ProcessInfo>::iterator it = res.begin(); it != res.end(); ++it)
+	for (map<int, ProcessInfo>::iterator it = res.begin(); it != res.end(); ++it)
 	{
 		it->second.threadsId = getThreadsInfo(pe.th32ProcessID);		
 	}
@@ -94,9 +94,9 @@ map<DWORD, ProcessInfo> getProcessesInfo()
 	return res;
 }
 
-static map<DWORD, string> getProcessesId()
+static map<int, string> getProcessesId()
 {
-	map<DWORD, string> idName;
+	map<int, string> idName;
 
 	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 	PROCESSENTRY32 pe = {};
@@ -113,12 +113,12 @@ static map<DWORD, string> getProcessesId()
 	CloseHandle(snapshot);
 	return idName;
 }
-vector<DWORD> getProcessId(const string &processName)
+vector<int> getProcessId(const string &processName)
 {
-	vector<DWORD> ids;
+	vector<int> ids;
 
-	map<DWORD, string> idNames = getProcessesId();
-	for (map<DWORD, string>::const_iterator it = idNames.begin(); it != idNames.end(); ++it)
+	map<int, string> idNames = getProcessesId();
+	for (map<int, string>::const_iterator it = idNames.begin(); it != idNames.end(); ++it)
 	{
 		if (strICmp(processName, it->second))
 		{
@@ -130,16 +130,16 @@ vector<DWORD> getProcessId(const string &processName)
 }
 string getProcessName(DWORD id)
 {
-	map<DWORD, string> idName = getProcessesId();
+	map<int, string> idName = getProcessesId();
 	return idName[id];
 }
 
-DWORD getCurrentProcessId()
-{ return ::GetCurrentProcessId(); }
+int getCurrentProcessId()
+{ return static_cast<int>(GetCurrentProcessId()); }
 string getCurrentProcessName()
 {
 	char moduleName[MAX_PATH] = {};
-	::GetModuleFileName(nullptr, moduleName, arrCnt(moduleName));
+	GetModuleFileName(nullptr, moduleName, arrCnt(moduleName));
 
 	return moduleName;
 }

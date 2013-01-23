@@ -27,6 +27,7 @@
 #include <condition_variable>
 #include <chrono>
 #include <regex>
+#include <random>
 
 #include <windows.h>
 
@@ -41,8 +42,11 @@
 #include "wTaskbarProgress.h"
 #include "wRpc.h"
 #include "wPipe.h"
+#include "wOtherUtil.h"
+#include "wConsole.h"
 
-#pragma warning(disable: 4800)						// 'BOOL' : forcing value to bool 'true' or 'false'.
+#pragma warning(disable: 4800) 						// 'BOOL' : forcing value to bool 'true' or 'false'.
+#pragma warning(disable: 4996)						// 'tmpnam': This function or variable may be unsafe.
 
 namespace w
 {

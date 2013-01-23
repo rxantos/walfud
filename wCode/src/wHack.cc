@@ -48,8 +48,8 @@ bool remoteCall(unsigned targetProcessId, unsigned long (__stdcall *func)(void *
 
 	// Remote call.
 	HANDLE remoteThread = CreateRemoteThread(hRemoteProcess, nullptr, 
-												0, func, remoteParam, 
-												0, nullptr);
+											 0, func, remoteParam, 
+											 0, nullptr);
 
 	CloseHandle(remoteThread);
 	CloseHandle(hRemoteProcess);
@@ -64,8 +64,9 @@ bool remoteInject(unsigned targetProcessId, const string &injectedDllFullpath)
 	copy(injectedDllFullpath.begin(), injectedDllFullpath.end(), buf);
 
 	return remoteCall(targetProcessId, 
-					reinterpret_cast<unsigned long (__stdcall *)(void *)>(LoadLibraryA), 
-					buf, sizeof(buf), true); 
+					  reinterpret_cast<unsigned long (__stdcall *)(void *)>(LoadLibraryA), 
+					  const_cast<char *>(injectedDllFullpath.c_str()), injectedDllFullpath.length() * sizeof(injectedDllFullpath[0]),
+					  true); 
 }
 bool remoteInject(const string &targetProcessName, const string &injectedDllFullpath)
 { return remoteInject(w::getProcessId(targetProcessName)[0], injectedDllFullpath); }
