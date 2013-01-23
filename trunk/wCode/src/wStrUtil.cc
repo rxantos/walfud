@@ -269,4 +269,19 @@ pair<size_t, size_t> strPairAround(const string &str,
 					 strPairSide(str, make_pair(openStr, closeStr), closeStr, pos, esc, false));
 }
 
+string strRandom(unsigned cnt)
+{
+	string meaningless(cnt, '\0');
+
+	static default_random_engine dre;
+	uniform_int_distribution<char> nd('a', 'z');
+
+	for (unsigned i = 0; i < 100; ++i)
+	{
+		meaningless.push_back(nd(dre));
+	}
+
+	return meaningless;
+}
+
 }
