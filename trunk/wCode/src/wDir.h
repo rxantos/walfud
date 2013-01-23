@@ -13,6 +13,25 @@ namespace w
 
 /*
  *
+ *		Get object true fullpath.
+ *
+ *	Param:
+ *		'uncOrPlain': 'true' -> in Unc; 'false' -> in plain.
+ *
+ *	Note:
+ *		To get real path, I have to detect file existence. If file do not exists, return empty string.
+ *
+ *		Unc path is like: "\\?\c:\windows".
+ *		Plain path is like: "c:\windows".
+ *
+ *		Unc path can access non-normal path, such as "\\?\c:\a.." or "\\?\c:\con".
+ *		In plain path, "c:\windows." == "c:\windows". If directory, "c:\windows\" == "c:\windows".
+ *
+ */
+std::string getTrueFullpath(std::string fullpath, bool uncOrPlain = false);
+
+/*
+ *
  *
  *	Note:
  *		Treat "windows" as a file.
