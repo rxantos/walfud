@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="wPulverizerTool.cc" />
+    <ClCompile Include="..\..\wCode\src\wCppExt.cc">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wDir.cc">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wDisk.cc">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wFilePermission.cc">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wHack.cc">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wPipe.cc">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wProcess.cc">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wRpc.cc">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wStrUtil.cc">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wSysUtil.cc">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wTaskbarProgress.cc">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wTimeMeasurer.cc">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cc" />
+    <ClCompile Include="wPulverizer.cc" />
+    <ClCompile Include="..\..\wCode\src\wOtherUtil.cc">
+      <Filter>wCode</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="wPulverizerTool.h" />
+    <ClInclude Include="..\..\wCode\src\wCppExt.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wDir.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wDisk.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wFilePermission.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wHack.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wPipe.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wProcess.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wRpc.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wStrUtil.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wSysUtil.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wTaskbarProgress.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wTimeMeasurer.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="wPulverizer.h" />
+    <ClInclude Include="..\..\wCode\src\wOtherUtil.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="wCode">
+      <UniqueIdentifier>{8123748e-ed3c-491e-9137-1880d6b7a1c4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
