@@ -22,7 +22,7 @@ HRESULT CFileIconImpl::IsDirty(){ return E_NOTIMPL; }
 HRESULT CFileIconImpl::Load(LPCOLESTR pszFileName, DWORD dwMode)
 {
 //	m_fileFullpath = pszFileName;
-	MessageBox(nullptr, L"", L"Load()", MB_OK);
+	MessageBox(nullptr, pszFileName, L"Load()", MB_OK);
 	return S_OK;
 }
 HRESULT CFileIconImpl::Save(LPCOLESTR pszFileName, BOOL fRemember){ return E_NOTIMPL; }
