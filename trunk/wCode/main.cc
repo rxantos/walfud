@@ -5,34 +5,40 @@
 
 #include "wCppExt.h"
 using namespace std;
+using namespace w;
+
+void foo(void *param)
+{
+	const char *p = reinterpret_cast<const char *>(param);
+	cout <<p <<endl;
+}
+
+void bar(int a, int b)
+{
+	cout <<a <<" : " <<b <<endl;
+}
+
+class T
+{
+public:
+	void baz()
+	{
+		cout <<"T::baz()." <<endl;
+	}
+};
 
 int main(/*int argc, char *argv[]*/)
 {
-	async(launch::async, 
-	[]() -> void
-	{
-		w::SyncPipe spServer("1234");
-		while (true)
-		{
-			unsigned char buf[1024] = {};
-			unsigned readSize = spServer.read(buf, sizeof(buf));
+	MyConsole c;
+	c.add("1", function<void (void *)>(foo), "12344321");
+	c.add("2", string("notepad.exe"));
+	c.add("3", bind(bar, 1, 2));
 
-			cout <<"read: " <<readSize <<" : " <<buf <<endl;
-			this_thread::sleep_for(chrono::seconds(2));
-		}
-	});
+	T t;
+	//c.add("4", &T::baz, &t);
 
-	this_thread::sleep_for(chrono::seconds(1));
+	c.run();
 
-	w::SyncPipe spClient("1234", true);	
-	while (true)
-	{
-		unsigned char buf[10] = {"234jkl"};
-		unsigned writeSize = spClient.write(buf, sizeof(buf));
-
-		cout <<"write: " <<writeSize <<" : " <<buf <<endl;
-		this_thread::sleep_for(chrono::seconds(1));
-	}
 	return 0;
 }
 

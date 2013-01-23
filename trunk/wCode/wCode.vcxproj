@@ -12,11 +12,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cc" />
+    <ClCompile Include="src\wConsole.cpp" />
     <ClCompile Include="src\wCppExt.cc" />
     <ClCompile Include="src\wDir.cc" />
     <ClCompile Include="src\wDisk.cc" />
     <ClCompile Include="src\wFilePermission.cc" />
     <ClCompile Include="src\wHack.cc" />
+    <ClCompile Include="src\wOtherUtil.cc" />
     <ClCompile Include="src\wPipe.cc" />
     <ClCompile Include="src\wProcess.cc" />
     <ClCompile Include="src\wRpc.cc" />
@@ -26,11 +28,13 @@
     <ClCompile Include="src\wTimeMeasurer.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\wConsole.h" />
     <ClInclude Include="src\wCppExt.h" />
     <ClInclude Include="src\wDir.h" />
     <ClInclude Include="src\wDisk.h" />
     <ClInclude Include="src\wFilePermission.h" />
     <ClInclude Include="src\wHack.h" />
+    <ClInclude Include="src\wOtherUtil.h" />
     <ClInclude Include="src\wPipe.h" />
     <ClInclude Include="src\wProcess.h" />
     <ClInclude Include="src\wRpc.h" />
