@@ -306,6 +306,13 @@ std::pair<size_t, size_t> strPairAround(const std::string &str,
 										const std::string &openStr, const std::string &closeStr, size_t pos, 
 										const char *esc = nullptr);
 
+/*
+ *
+ *		Get a random string of 'cnt' element.
+ *
+ */
+std::string strRandom(unsigned cnt);
+
 
 }
 
