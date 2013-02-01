@@ -50,6 +50,9 @@
     <ClCompile Include="src\wOtherUtil.cc">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\wMath.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\wCppExt.h">
@@ -92,6 +95,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\wOtherUtil.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wMath.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
