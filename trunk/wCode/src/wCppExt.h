@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <iterator>
 #include <array>
 #include <vector>
 #include <deque>
@@ -44,6 +45,7 @@
 #include "wPipe.h"
 #include "wOtherUtil.h"
 #include "wConsole.h"
+#include "wMath.h"
 
 #pragma warning(disable: 4800) 						// 'BOOL' : forcing value to bool 'true' or 'false'.
 #pragma warning(disable: 4996)						// 'tmpnam': This function or variable may be unsafe.
