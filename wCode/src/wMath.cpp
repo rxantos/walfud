@@ -113,7 +113,7 @@ static bool unsignedIntLess(const string &a, const string &b)
 
 	//v.push_back(make_pair("b.f", "d.3")),
 	//v.push_back(make_pair("bf", "5.1a3fc0a49b6dd625d62cab5432b5b342bca5d235c436bf54663c51d3"));
-bool unsignedNumLess(const string &a, const string &b)
+static bool unsignedNumLess(const string &a, const string &b)
 {
 	bool res = false;
 
@@ -157,6 +157,77 @@ static const string &getLargerNumRef(const string &a, const string &b)
 
 /*
  *
+ *		Remove sign symbol and return original sign.
+ *
+ *	Rtn:
+ *		'true' is positive; 'false' is negative.
+ *
+ */
+static bool toUnsignedNum(string &num)
+{
+	bool res = true;
+
+	if (!num.empty())
+	{
+		switch (num[0])
+		{
+		case '-':
+			res = false;
+			// Fallthrouh.
+		case '+':
+			num.erase(0, 1);
+			break;
+		default:
+			break;
+		}
+	}
+
+	return res;
+}
+
+string standardizeNum(string num, bool alwaysSign)
+{
+	bool positive = true;
+	if (num.empty())
+	{
+		num = '0';
+	}
+	else
+	{
+		// Erase sign symbol.
+		positive = toUnsignedNum(num);
+
+		string integerPart = getIntegerPartFromDecimal(num), fractionPart = getFractionPartFromDecimal(num);
+		integerPart.erase(0, integerPart.find_first_not_of('0'));
+		reverse(fractionPart.begin(), fractionPart.end());
+		fractionPart.erase(0, fractionPart.find_first_not_of('0'));
+		reverse(fractionPart.begin(), fractionPart.end());
+
+		integerPart = integerPart.empty() ? "0" : integerPart;
+		fractionPart = fractionPart.empty() ? "" : '.' + fractionPart;
+		num = integerPart + fractionPart;
+	}//if (num.empty()
+
+	// 'alwaysSign == true': "0" => "+0", "-0" => "-0", "1234" => "+1234".
+	// 'alwaysSign == false': "+0" => "0", "-0" => "0", "+1234" => "1234", "-1234" => "-1234".
+	if (alwaysSign)
+	{
+		num = (positive ? '+' : '-') + num;
+	}
+	else
+	{
+		// Only negative has leading "-".
+		if (!positive && num != "0")
+		{
+			num = "-" + num;
+		}
+	}
+
+	return num;
+}
+
+/*
+ *
  *		Unsigned integer arithmetic.
  *
  *	Note:
@@ -183,10 +254,11 @@ static const string &getLargerNumRef(const string &a, const string &b)
 	//{
 	//	cout <<unsignedInt_add_unsignedInt(i.second, i.first, 16) <<endl;
 	//}
-static string unsignedInt_add_unsignedInt(const string &a, const string &b, unsigned radix)
+static string unsignedInt_add_unsignedInt(string a, string b, unsigned radix)
 {
 	string res;
 	res.reserve(max(a.length(), b.length()));
+	a = standardizeNum(a), b = standardizeNum(b);
 	
 	int carry = 0;	
 	for (string::const_reverse_iterator it = a.rbegin(), jt = b.rbegin();	// Go from most trival bit to most significant bit.
@@ -211,11 +283,12 @@ static string unsignedInt_add_unsignedInt(const string &a, const string &b, unsi
 	}
 	
 	reverse(res.begin(), res.end());
-	return res;
+	return standardizeNum(res);
 }
-static string unsignedInt_mul_unsignedChar(const string &a, unsigned char b, unsigned radix)
+static string unsignedInt_mul_unsignedChar(string a, unsigned char b, unsigned radix)
 {
 	string res;
+	a = standardizeNum(a);
 
 	int carry = 0;
 	for (auto it = a.rbegin(); it != a.rend(); ++it)
@@ -237,7 +310,7 @@ static string unsignedInt_mul_unsignedChar(const string &a, unsigned char b, uns
 	}
 
 	reverse(res.begin(), res.end());
-	return res;
+	return standardizeNum(res);
 }
 	//vector<pair<string, string>> v;
 	//v.push_back(make_pair("4444", "4")),
@@ -258,9 +331,10 @@ static string unsignedInt_mul_unsignedChar(const string &a, unsigned char b, uns
 	//{
 	//	cout <<unsignedInt_mul_unsignedInt(i.second, i.first, 16) <<endl;
 	//}
-static string unsignedInt_mul_unsignedInt(const string &a, const string &b, unsigned radix)
+static string unsignedInt_mul_unsignedInt(string a, string b, unsigned radix)
 {
 	string res;
+	a = standardizeNum(a), b = standardizeNum(b);
 
 	for (auto i : b)
 	{
@@ -268,7 +342,7 @@ static string unsignedInt_mul_unsignedInt(const string &a, const string &b, unsi
 		res = unsignedInt_add_unsignedInt(res + "0", tmp, radix);
 	}
 
-	return res;
+	return standardizeNum(res);
 }
 	//vector<pair<string, string>> v;
 	//v.push_back(make_pair("4444", "4")),
@@ -289,9 +363,10 @@ static string unsignedInt_mul_unsignedInt(const string &a, const string &b, unsi
 	//{
 	//	cout <<unsignedInt_sub_unsignedInt(i.second, i.first, 16) <<endl;
 	//}
-static string unsignedInt_sub_unsignedInt(const string &a, const string &b, unsigned radix)
+static string unsignedInt_sub_unsignedInt(string a, string b, unsigned radix)
 {
 	string res;
+	a = standardizeNum(a), b = standardizeNum(b);
 
 	const string &smaller = getSmallerNumRef(a, b), 
 				 &larger = getLargerNumRef(a, b);
@@ -323,7 +398,7 @@ static string unsignedInt_sub_unsignedInt(const string &a, const string &b, unsi
 	}
 	
 	reverse(res.begin(), res.end());
-	return res;
+	return standardizeNum(res);
 }
 	//vector<pair<string, string>> v;
 	//v.push_back(make_pair("4444", "4"));
@@ -345,21 +420,21 @@ static string unsignedInt_sub_unsignedInt(const string &a, const string &b, unsi
 	//{
 	//	cout <<unsignedInt_div_unsignedInt(i.second, i.first, 16) <<endl;
 	//}
-static string unsignedInt_div_unsignedInt(const string &a, const string &b, unsigned radix)
+static string unsignedInt_div_unsignedInt(string a, string b, unsigned radix)
 {
 	string res;
+	a = standardizeNum(a), b = standardizeNum(b);
 
 	// Prepare. 
 	vector<string> floors;
 	floors.push_back("");				// '[0]' is invalid floor, should not be used.
-	for (unsigned i = 1; i < radix; ++i)
+	for (unsigned ii = 1; ii < radix; ++ii)
 	{
-		floors.push_back(unsignedInt_mul_unsignedChar(b, digitToChar(i), radix));
+		floors.push_back(unsignedInt_mul_unsignedChar(b, digitToChar(ii), radix));
 	}
 
 	string dividend = a.substr(0, b.length());
-	size_t i = b.length() - 1; 
-	while (i < a.length())
+	for (size_t i = b.length()-1; i < a.length(); )
 	{
 		// Try divisor from 'floors'.
 		bool foundDivisor = false;
@@ -387,7 +462,7 @@ static string unsignedInt_div_unsignedInt(const string &a, const string &b, unsi
 		}
 	}
 
-	return res.empty() ? "0" : res;
+	return standardizeNum(res);
 }
 
 /*
@@ -415,7 +490,7 @@ static string unsignedInt_div_unsignedInt(const string &a, const string &b, unsi
 	//{
 	//	cout <<unsigned_add_unsigned(i.second, i.first, 16) <<endl;
 	//}
-static string unsigned_add_unsigned(const string &a, const string &b, unsigned radix)
+static string unsigned_add_unsigned(string a, string b, unsigned radix)
 {
 	string res;
 
@@ -543,7 +618,7 @@ static string unsigned_sub_unsigned(string a, string b, unsigned radix)
 	//{
 	//	cout <<unsigned_div_unsigned(i.second, i.first, 4, 10) <<endl;
 	//}
-static string unsigned_div_unsigned(string a, string b, unsigned precision, unsigned radix)
+static string unsigned_div_unsigned(string a, string b, unsigned radix, unsigned precision)
 {
 	string res;
 
@@ -569,6 +644,111 @@ static string unsigned_div_unsigned(string a, string b, unsigned precision, unsi
 	{
 		res.insert(res.length() - precision, ".");
 	}
+
+	return res;
+}
+
+string add(string a, string b, unsigned radix)
+{
+	string res;
+
+	bool positiveA = toUnsignedNum(a), positiveB = toUnsignedNum(b);
+	if (positiveA && positiveB)
+	{
+		// "(+a) + (+b)".
+		res = unsigned_add_unsigned(a, b, radix);
+	}
+	else if (positiveA && !positiveB)
+	{
+		// "(+a) + (-b)".
+		res = unsigned_sub_unsigned(a, b, radix);
+	}
+	else if (!positiveA && positiveB)
+	{
+		// "(-a) + (+b)".
+		res = unsigned_sub_unsigned(b, a, radix);
+	}
+	else // !positiveA && !positiveB
+	{
+		// "(-a) + (-b)".
+		res = '-' + unsigned_add_unsigned(a, b, radix);
+	}
+
+	return res;
+}
+string sub(string a, string b, unsigned radix)
+{
+	string res;
+
+	bool positiveA = toUnsignedNum(a), positiveB = toUnsignedNum(b);
+	if (positiveA && positiveB)
+	{
+		// "(+a) - (+b)".
+		res = unsigned_sub_unsigned(a, b, radix);
+	}
+	else if (positiveA && !positiveB)
+	{
+		// "(+a) - (-b)".
+		res = unsigned_add_unsigned(a, b, radix);
+	}
+	else if (!positiveA && positiveB)
+	{
+		// "(-a) - (+b)".
+		res = '-' + unsigned_add_unsigned(a, b, radix);
+	}
+	else // !positiveA && !positiveB
+	{
+		// "(-a) - (-b)".
+		res = unsigned_sub_unsigned(b, a, radix);
+	}
+
+	return res;
+}
+string mul(string a, string b, unsigned radix)
+{
+	string res;
+
+	bool positiveA = toUnsignedNum(a), positiveB = toUnsignedNum(b);
+	if (positiveA && positiveB
+		|| !positiveA && !positiveB)
+	{
+		// "(+a) * (+b)" or
+		// "(-a) * (-b)".
+		res = unsigned_mul_unsigned(a, b, radix);
+	}
+	else if (positiveA && !positiveB
+			 || !positiveA && positiveB)
+	{
+		// "(+a) * (-b)" or
+		// "(-a) * (+b)".
+		res = '-' + unsigned_mul_unsigned(a, b, radix);
+	}
+	else
+	{}
+
+	return res;
+}
+string div(string a, string b, unsigned radix, unsigned precision)
+{
+	string res;
+
+	bool positiveA = toUnsignedNum(a), positiveB = toUnsignedNum(b);
+	if (positiveA && positiveB
+		|| !positiveA && !positiveB)
+	{
+		// "(+a) / (+b)" or
+		// "(-a) / (-b)".
+		res = unsigned_div_unsigned(a, b, radix, precision);
+	}
+	else if (positiveA && !positiveB
+			 || !positiveA && positiveB)
+	{
+		// "(+a) / (-b)" or
+		// "(-a) / (+b)".
+		res = '-' + unsigned_div_unsigned(a, b, radix, precision);
+	}
+	else
+	{}
 
 	return res;
 }
