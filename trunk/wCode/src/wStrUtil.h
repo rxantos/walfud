@@ -72,6 +72,7 @@ namespace w
 	//strTrimRight_tester.push_back("-#$%-");
 	//strTrimRight_tester.push_back("-#$%--#$%-");
 	//strTrimRight_tester.push_back("");
+	//strTrimRight_tester.push_back("-#$%");
 	//strTrimRight_tester.push_back("-#$%-1234-#$%-678-#$%--#$%-9-#$%-");
 	//strTrimRight_tester.push_back("01234");
 
@@ -180,7 +181,7 @@ std::string wStrToStr(const std::wstring &wstr);
  *		More details: http://en.cppreference.com/w/cpp/string/basic_string/to_string.
  *
  */
-std::string intToStr(int num, int base = 10);
+std::string intToStr(int num, unsigned radix = 10);
 int strToInt(const std::string &str);
 
 /*

@@ -38,7 +38,8 @@ string strTrimRight(const string &str, const string &delim)
 	string res(str);
 
 	size_t pos = 0;
-	while ((pos = res.rfind(delim)) == (res.size() - delim.size()))
+	while ((pos = res.rfind(delim)) != string::npos
+		   && pos == (res.size() - delim.size()))
 	{
 		res.erase(pos, delim.size());
 	}
@@ -88,17 +89,17 @@ string wStrToStr(const wstring &wstr)
 	return str;
 }
 
-string intToStr(int num, int base)
+string intToStr(int num, unsigned radix)
 {
 	//ostringstream oss;
-	//oss <<(base == 10 ? dec : base == 16 ? hex : base == 8 ? oct : ???) <<num;
+	//oss <<(radix == 10 ? dec : radix == 16 ? hex : radix == 8 ? oct : ???) <<num;
 
 	string str;
 	do
 	{
-		int reminder = num % base;
+		int reminder = num % radix;
 		str.push_back(static_cast<char>(reminder < 10 ? reminder + '0' : reminder - 10 + 'a'));
-	} while (num /= base);
+	} while (num /= radix);
 
 	reverse(str.begin(), str.end());
 	return str;
