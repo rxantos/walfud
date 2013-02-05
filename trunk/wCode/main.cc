@@ -7,40 +7,31 @@
 using namespace std;
 using namespace w;
 
-void foo(void *param)
-{
-	const char *p = reinterpret_cast<const char *>(param);
-	cout <<p <<endl;
-}
-
-void bar(int a, int b)
-{
-	cout <<a <<" : " <<b <<endl;
-}
-
-class T
-{
-public:
-	void baz()
-	{
-		cout <<"T::baz()." <<endl;
-	}
-};
-
 int main(/*int argc, char *argv[]*/)
 {
-	MyConsole c;
-	c.add("1", function<void (void *)>(foo), "12344321");
-	c.add("2", string("notepad.exe"));
-	c.add("3", bind(bar, 1, 2));
+	vector<pair<string, string>> v;
+	v.push_back(make_pair("4444", "4"));
+	v.push_back(make_pair("444.4", "5"));
+	v.push_back(make_pair("4444", "0.45"));
+	v.push_back(make_pair("444.4", "444.4")),
+	v.push_back(make_pair("0.1234", "0.1234")),
+	v.push_back(make_pair("0.1234", "0.12345"));
 
-	T t;
-	//c.add("4", &T::baz, &t);
+	v.push_back(make_pair("-4444", "4"));
+	v.push_back(make_pair("-4444", "-0.45"));
+	v.push_back(make_pair("-444.4", "+444.4")),
+	v.push_back(make_pair("+0.1234", "0.1234")),
+	v.push_back(make_pair("+0.1234", "+0.12345"));
 
-	c.run();
+	for (auto i : v)
+	{
+		cout <<i.first <<" : " <<i.second <<" <=> " <<mul(i.first, i.second) <<endl;
+	}
+	cout <<endl;
+	for (auto i : v)
+	{
+		cout <<i.first <<" : " <<i.second <<" <=> " <<div(i.first, i.second) <<endl;
+	}
 
 	return 0;
 }
-
-
-	

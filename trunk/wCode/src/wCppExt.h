@@ -29,6 +29,7 @@
 #include <chrono>
 #include <regex>
 #include <random>
+#include <cassert>
 
 #include <windows.h>
 
