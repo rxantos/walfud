@@ -58,6 +58,16 @@ unsigned charToDigit(char c);
 
 /*
  *
+ *		Remove sign symbol and return original sign.
+ *
+ *	Rtn:
+ *		'true' is positive; 'false' is negative.
+ *
+ */
+bool eraseSign(std::string &num);
+
+/*
+ *
  *		Standardize a number.
  *
  *	Param:
@@ -120,6 +130,38 @@ unsigned charToDigit(char c);
 	//	cout <<i <<" : " <<standardizeNum(i, true) <<endl;
 	//}
 std::string standardizeNum(std::string num, bool alwaysSign = false);
+
+/*
+ *
+ *		Compare two number strings.
+ *
+ */
+	//vector<pair<string, string>> v;
+	//v.push_back(make_pair("4444", "4"));
+	//v.push_back(make_pair("444.4", "5"));
+	//v.push_back(make_pair("4444", "0.45"));
+	//v.push_back(make_pair("444.4", "444.4")),
+	//v.push_back(make_pair("0.1234", "0.1234")),
+	//v.push_back(make_pair("0.1234", "0.12345"));
+	//v.push_back(make_pair("b.f", "d.3")),
+	//v.push_back(make_pair("bf", "5.1a3fc0a49b6dd625d62cab5432b5b342bca5d235c436bf54663c51d3"));
+
+	//v.push_back(make_pair("-4444", "4"));
+	//v.push_back(make_pair("-4444", "-0.45"));
+	//v.push_back(make_pair("-444.4", "+444.4")),
+	//v.push_back(make_pair("+0.1234", "0.1234")),
+	//v.push_back(make_pair("+0.1234", "+0.12345"));
+
+	//for (auto i : v)
+	//{
+	//	cout <<i.first <<" : " <<i.second <<" <=> " <<numLess(i.first, i.second) <<endl;
+	//}
+	//cout <<endl;
+	//for (auto i : v)
+	//{
+	//	cout <<i.second <<" : " <<i.first <<" <=> " <<numLess(i.second, i.first) <<endl;
+	//}
+bool numLess(std::string a, std::string b);
 
 /*
  *
@@ -204,6 +246,12 @@ std::string sub(std::string a, std::string b, unsigned radix = 10);
 	//	cout <<setw(10) <<i.first <<" * " <<setw(7) <<i.second <<" == " <<mul(i.first, i.second) <<" <=> " <<mul(i.second, i.first) <<endl;
 	//}
 std::string mul(std::string a, std::string b, unsigned radix = 10);
+/*
+ *
+ *	Note:
+ *		Divided zero will get assertion.
+ *
+ */
 	//unordered_multimap<string, string> m;
 	//m.insert(make_pair("12345678", "9"));
 	//m.insert(make_pair("12345678", "+9"));

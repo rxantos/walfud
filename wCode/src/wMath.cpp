@@ -46,124 +46,7 @@ unsigned charToDigit(char c)
 	return i;
 }
 
-	//vector<pair<string, string>> v;
-	//v.push_back(make_pair("4444", "4"));
-	//v.push_back(make_pair("444.4", "5"));
-	//v.push_back(make_pair("4444", "0.45"));
-	//v.push_back(make_pair("444.4", "444.4")),
-	//v.push_back(make_pair("4444.0", "4444444")),
-	//v.push_back(make_pair("4444", "0.0")),
-	//v.push_back(make_pair("0.1234", "0.1234")),
-	//v.push_back(make_pair("0.1234", "0.12345"));
-
-	//v.push_back(make_pair("b.f", "d.3")),
-	//v.push_back(make_pair("bf", "5.1a3fc0a49b6dd625d62cab5432b5b342bca5d235c436bf54663c51d3"));
-
-	//for (auto i : v)
-	//{
-	//	cout <<getIntegerPartFromDecimal(i.first) <<" : " <<getFractionPartFromDecimal(i.first) <<endl;
-	//	cout <<getIntegerPartFromDecimal(i.second) <<" : " <<getFractionPartFromDecimal(i.second) <<endl;
-	//}
-static string getIntegerPartFromDecimal(const string &decimal)
-{ return decimal.substr(0, decimal.find('.')); }
-static string getFractionPartFromDecimal(const string &decimal)
-{
-	const size_t decimalPointPos = decimal.find('.');
-
-	return decimalPointPos == string::npos ? "" : decimal.substr(decimalPointPos + 1, decimal.length());
-}
-
-/*
- *
- *		Compare two numbers.
- *
- *	Note:
- *		This function ignores leading '0'.
- *
- *	Example:
- *		   a              b        return value        reason
- *		-------------------------------------------------------
- *		"1234"         "12345"       'true'              <
- *		"1234"         "2234"        'true'              <
- *		"1234"         "1234"        'false'            ==
- *		"1234"         "99"          'false'             >
- *		"01234"        "1234"        'false'            ==
- *		"01234"        "01234"       'false'            ==
- *		"1234"         "01234"       'false'            ==
- *
- */
-static bool unsignedIntLess(const string &a, const string &b)
-{
-	string::const_iterator it = find_if(a.begin(), a.end(), [](char c) -> bool { return c != '0'; }),
-						   jt = find_if(b.begin(), b.end(), [](char c) -> bool { return c != '0'; });
-	const size_t numLenA = distance(it, a.end()), numLenB = distance(jt, b.end());
-
-	return numLenA < numLenB 
-		   || numLenA == numLenB && lexicographical_compare(it, a.end(), jt, b.end(), [](char x, char y){ return charToDigit(x) < charToDigit(y); });
-}
-	//vector<pair<string, string>> v;
-	//v.push_back(make_pair("4444", "4"));
-	//v.push_back(make_pair("444.4", "5"));
-	//v.push_back(make_pair("4444", "0.45"));
-	//v.push_back(make_pair("444.4", "444.4")),
-	//v.push_back(make_pair("4444.0", "4444444")),
-	//v.push_back(make_pair("4444", "0.0")),
-	//v.push_back(make_pair("0.1234", "0.1234")),
-	//v.push_back(make_pair("0.1234", "0.12345"));
-
-	//v.push_back(make_pair("b.f", "d.3")),
-	//v.push_back(make_pair("bf", "5.1a3fc0a49b6dd625d62cab5432b5b342bca5d235c436bf54663c51d3"));
-static bool unsignedNumLess(const string &a, const string &b)
-{
-	bool res = false;
-
-	string integerPart_a = getIntegerPartFromDecimal(a), integerPart_b = getIntegerPartFromDecimal(b);
-	if (unsignedIntLess(integerPart_a, integerPart_b))
-	{
-		res = true;
-	}
-	else if (unsignedIntLess(integerPart_b, integerPart_a))
-	{
-		res = false;
-	}
-	else // integerPart_a == integerPart_b
-	{
-		string fractionalPart_a = getFractionPartFromDecimal(a), fractionalPart_b = getFractionPartFromDecimal(b);
-
-		res = lexicographical_compare(fractionalPart_a.begin(), fractionalPart_a.end(), 
-									  fractionalPart_b.begin(), fractionalPart_b.end());
-	}
-
-	return res;
-}
-
-/*
- *
- *		Get reference of smaller/larger one between to unsigned number string.
- *
- *	Note:
- *		'getSmallerNumRef' PREFERS TO return 'a' if 'a' == 'b', while 'getLargerNumRef' PREFERS TO return 'b' if 'a' == 'b'.
- *		If you pass 'const' arguments, then return value is constant reference, otherwise, return normal reference.
- *
- */
-static string &getSmallerNumRef(string &a, string &b)
-{ return unsignedNumLess(b, a) ? b : a; }
-static const string &getSmallerNumRef(const string &a, const string &b)
-{ return getSmallerNumRef(const_cast<string &>(a), const_cast<string &>(b)); }
-static string &getLargerNumRef(string &a, string &b)
-{ return unsignedNumLess(b, a) ? a : b; }
-static const string &getLargerNumRef(const string &a, const string &b)
-{ return getLargerNumRef(const_cast<string &>(a), const_cast<string &>(b)); }
-
-/*
- *
- *		Remove sign symbol and return original sign.
- *
- *	Rtn:
- *		'true' is positive; 'false' is negative.
- *
- */
-static bool toUnsignedNum(string &num)
+bool eraseSign(string &num)
 {
 	bool res = true;
 
@@ -188,6 +71,7 @@ static bool toUnsignedNum(string &num)
 string standardizeNum(string num, bool alwaysSign)
 {
 	bool positive = true;
+
 	if (num.empty())
 	{
 		num = '0';
@@ -195,19 +79,23 @@ string standardizeNum(string num, bool alwaysSign)
 	else
 	{
 		// Erase sign symbol.
-		positive = toUnsignedNum(num);
+		positive = eraseSign(num);
 
-		string integerPart = getIntegerPartFromDecimal(num), fractionPart = getFractionPartFromDecimal(num);
-		integerPart.erase(0, integerPart.find_first_not_of('0'));
-		reverse(fractionPart.begin(), fractionPart.end());
-		fractionPart.erase(0, fractionPart.find_first_not_of('0'));
-		reverse(fractionPart.begin(), fractionPart.end());
-
+		// Divide integer part and decimal part from string.
+		const size_t decimalPointPos = num.find('.');
+		string integerPart = num.substr(0, decimalPointPos), 
+			   fractionPart = decimalPointPos == string::npos ? "0" : num.substr(decimalPointPos + 1, num.length());
+		// Erase trivial leading zero.
+		integerPart = strTrimLeft(integerPart, "0");
+		// Erase trivial tailing zero.
+		fractionPart = strTrimRight(fractionPart, "0");
+		// Combine back to string.
 		integerPart = integerPart.empty() ? "0" : integerPart;
 		fractionPart = fractionPart.empty() ? "" : '.' + fractionPart;
 		num = integerPart + fractionPart;
 	}//if (num.empty()
 
+	// Add sign.
 	// 'alwaysSign == true': "0" => "+0", "-0" => "-0", "1234" => "+1234".
 	// 'alwaysSign == false': "+0" => "0", "-0" => "0", "+1234" => "1234", "-1234" => "-1234".
 	if (alwaysSign)
@@ -224,6 +112,109 @@ string standardizeNum(string num, bool alwaysSign)
 	}
 
 	return num;
+}
+
+/*
+ *
+ *		Compare two unsigned integers.
+ *
+ *	Note:
+ *		You should standardize parameter before calling me.
+ *
+ *	Example:
+ *		   a              b        return value        reason
+ *		-------------------------------------------------------
+ *		"1234"         "12345"       'true'              <
+ *		"1234"         "2234"        'true'              <
+ *		"1234"         "1234"        'false'            ==
+ *		"1234"         "99"          'false'             >
+ *		"01234"        "1234"        'false'         undefined
+ *		"01234"        "01234"       'false'         undefined
+ *		"1234"         "01234"       'false'         undefined
+ *
+ */
+static bool unsignedIntLess(string a, string b)
+{
+	a = standardizeNum(a), b = standardizeNum(b);
+
+	return a.length() < b.length()
+		   || a.length() == b.length() && lexicographical_compare(a.begin(), a.end(), b.begin(), b.end(), [](char x, char y){ return charToDigit(x) < charToDigit(y); }); 
+}
+/*
+ *
+ *		Compare two unsigned decimals.
+ *
+ *	Note:
+ *		You should standardize parameter before calling me.
+ *
+ */
+	//vector<pair<string, string>> v;
+	//v.push_back(make_pair("4444", "4"));
+	//v.push_back(make_pair("444.4", "5"));
+	//v.push_back(make_pair("4444", "0.45"));
+	//v.push_back(make_pair("444.4", "444.4")),
+	//v.push_back(make_pair("0.1234", "0.1234")),
+	//v.push_back(make_pair("0.1234", "0.12345"));
+
+	//v.push_back(make_pair("b.f", "d.3")),
+	//v.push_back(make_pair("bf", "5.1a3fc0a49b6dd625d62cab5432b5b342bca5d235c436bf54663c51d3"));
+
+	//for (auto i : v)
+	//{
+	//	cout <<i.first <<" : " <<i.second <<" <=> " <<numLess(i.first, i.second) <<endl;
+	//}
+	//cout <<endl;
+	//for (auto i : v)
+	//{
+	//	cout <<i.second <<" : " <<i.first <<" <=> " <<numLess(i.second, i.first) <<endl;
+	//}
+static bool unsignedNumLess(string a, string b)
+{
+	bool res = false;
+
+	string integerPartA = a.substr(0, a.find('.')), integerPartB = b.substr(0, b.find('.'));
+	if (unsignedIntLess(integerPartA, integerPartB))
+	{
+		res = true;
+	}
+	else if (unsignedIntLess(integerPartB, integerPartA))
+	{
+		res = false;
+	}
+	else // integerPartA == integerPartB
+	{
+		const size_t decimalPointPosA = a.find('.'), decimalPointPosB = b.find('.');
+		string fractionPartA = decimalPointPosA == string::npos ? "0" : a.substr(decimalPointPosA + 1, a.length()), 
+			   fractionPartB = decimalPointPosB == string::npos ? "0" : b.substr(decimalPointPosB + 1, b.length());
+
+		res = unsignedIntLess(fractionPartA, fractionPartB);
+	}
+
+	return res;
+}
+bool numLess(string a, string b)
+{
+	bool res = false;
+
+	bool positiveA = eraseSign(a), positiveB = eraseSign(b);
+	if (positiveA && positiveB)
+	{
+		res = unsignedNumLess(a, b);
+	}
+	else if (positiveA && !positiveB)
+	{
+		res = false;
+	}
+	else if (!positiveA && positiveB)
+	{
+		res = true;
+	}
+	else // !positiveA && !positiveB
+	{
+		res = unsignedNumLess(b, a);
+	}
+
+	return res;
 }
 
 /*
@@ -247,14 +238,14 @@ string standardizeNum(string num, bool alwaysSign)
 
 	//for (auto i : v)
 	//{
-	//	cout <<unsignedInt_add_unsignedInt(i.first, i.second, 16) <<endl;
+	//	cout <<uiAddUI(i.first, i.second, 16) <<endl;
 	//}
 	//cout <<endl;
 	//for (auto i : v)
 	//{
-	//	cout <<unsignedInt_add_unsignedInt(i.second, i.first, 16) <<endl;
+	//	cout <<uiAddUI(i.second, i.first, 16) <<endl;
 	//}
-static string unsignedInt_add_unsignedInt(string a, string b, unsigned radix)
+static string uiAddUI(string a, string b, unsigned radix)
 {
 	string res;
 	res.reserve(max(a.length(), b.length()));
@@ -285,7 +276,7 @@ static string unsignedInt_add_unsignedInt(string a, string b, unsigned radix)
 	reverse(res.begin(), res.end());
 	return standardizeNum(res);
 }
-static string unsignedInt_mul_unsignedChar(string a, unsigned char b, unsigned radix)
+static string uiMulUC(string a, char b, unsigned radix)
 {
 	string res;
 	a = standardizeNum(a);
@@ -324,22 +315,22 @@ static string unsignedInt_mul_unsignedChar(string a, unsigned char b, unsigned r
 
 	//for (auto i : v)
 	//{
-	//	cout <<unsignedInt_mul_unsignedInt(i.first, i.second, 16) <<endl;
+	//	cout <<uiMulUI(i.first, i.second, 16) <<endl;
 	//}
 	//cout <<endl;
 	//for (auto i : v)
 	//{
-	//	cout <<unsignedInt_mul_unsignedInt(i.second, i.first, 16) <<endl;
+	//	cout <<uiMulUI(i.second, i.first, 16) <<endl;
 	//}
-static string unsignedInt_mul_unsignedInt(string a, string b, unsigned radix)
+static string uiMulUI(string a, string b, unsigned radix)
 {
 	string res;
 	a = standardizeNum(a), b = standardizeNum(b);
 
 	for (auto i : b)
 	{
-		string tmp = unsignedInt_mul_unsignedChar(a, i, radix);
-		res = unsignedInt_add_unsignedInt(res + "0", tmp, radix);
+		string tmp = uiMulUC(a, i, radix);
+		res = uiAddUI(res + "0", tmp, radix);
 	}
 
 	return standardizeNum(res);
@@ -356,20 +347,20 @@ static string unsignedInt_mul_unsignedInt(string a, string b, unsigned radix)
 
 	//for (auto i : v)
 	//{
-	//	cout <<unsignedInt_sub_unsignedInt(i.first, i.second, 16) <<endl;
+	//	cout <<uiSubUI(i.first, i.second, 16) <<endl;
 	//}
 	//cout <<endl;
 	//for (auto i : v)
 	//{
-	//	cout <<unsignedInt_sub_unsignedInt(i.second, i.first, 16) <<endl;
+	//	cout <<uiSubUI(i.second, i.first, 16) <<endl;
 	//}
-static string unsignedInt_sub_unsignedInt(string a, string b, unsigned radix)
+static string uiSubUI(string a, string b, unsigned radix)
 {
 	string res;
 	a = standardizeNum(a), b = standardizeNum(b);
 
-	const string &smaller = getSmallerNumRef(a, b), 
-				 &larger = getLargerNumRef(a, b);
+	const string &smaller = unsignedIntLess(b, a) ? b : a,
+				 &larger = unsignedIntLess(b, a) ? a : b;
 	int carry = 0;
 	for (string::const_reverse_iterator it = larger.rbegin(), jt = smaller.rbegin();	// Go from most trival bit to most significant bit.
 		 it != larger.rend() || jt != smaller.rend();									// If there is any more number in high bit, goes on.
@@ -413,24 +404,29 @@ static string unsignedInt_sub_unsignedInt(string a, string b, unsigned radix)
 
 	//for (auto i : v)
 	//{
-	//	cout <<unsignedInt_div_unsignedInt(i.first, i.second, 10) <<endl;
+	//	cout <<uiDivUI(i.first, i.second, 10) <<endl;
 	//}
 	//cout <<endl;
 	//for (auto i : v)
 	//{
-	//	cout <<unsignedInt_div_unsignedInt(i.second, i.first, 16) <<endl;
+	//	cout <<uiDivUI(i.second, i.first, 16) <<endl;
 	//}
-static string unsignedInt_div_unsignedInt(string a, string b, unsigned radix)
+static string uiDivUI(string a, string b, unsigned radix)
 {
 	string res;
 	a = standardizeNum(a), b = standardizeNum(b);
+
+	if (b == "0")
+	{
+		assert(false && "dividor should NOT be 0.");
+	}
 
 	// Prepare. 
 	vector<string> floors;
 	floors.push_back("");				// '[0]' is invalid floor, should not be used.
 	for (unsigned ii = 1; ii < radix; ++ii)
 	{
-		floors.push_back(unsignedInt_mul_unsignedChar(b, digitToChar(ii), radix));
+		floors.push_back(uiMulUC(b, digitToChar(ii), radix));
 	}
 
 	string dividend = a.substr(0, b.length());
@@ -444,7 +440,7 @@ static string unsignedInt_div_unsignedInt(string a, string b, unsigned radix)
 			if (!unsignedIntLess(dividend, floor))
 			{
 				// Find a valid divisor.
-				dividend = unsignedInt_sub_unsignedInt(dividend, floor, radix);
+				dividend = uiSubUI(dividend, floor, radix);
 				res.push_back(digitToChar(j));
 				foundDivisor = true;
 
@@ -483,50 +479,54 @@ static string unsignedInt_div_unsignedInt(string a, string b, unsigned radix)
 
 	//for (auto i : v)
 	//{
-	//	cout <<unsigned_add_unsigned(i.first, i.second, 16) <<endl;
+	//	cout <<uAddU(i.first, i.second, 16) <<endl;
 	//}
 	//cout <<endl;
 	//for (auto i : v)
 	//{
-	//	cout <<unsigned_add_unsigned(i.second, i.first, 16) <<endl;
+	//	cout <<uAddU(i.second, i.first, 16) <<endl;
 	//}
-static string unsigned_add_unsigned(string a, string b, unsigned radix)
+static string uAddU(string a, string b, unsigned radix)
 {
 	string res;
+	a = standardizeNum(a), b = standardizeNum(b);
 
-	string fractionalCarry;
-	// Fractional part.
+	string fractionCarry;
+	// Fraction part.
 	{
-		string fractionalPart_a = getFractionPartFromDecimal(a), fractionalPart_b = getFractionPartFromDecimal(b);
+		const size_t decimalPointPosA = a.find('.'), decimalPointPosB = b.find('.');
+		string fractionPartA = decimalPointPosA == string::npos ? "0" : a.substr(decimalPointPosA + 1, a.length()), 
+			   fractionPartB = decimalPointPosB == string::npos ? "0" : b.substr(decimalPointPosB + 1, b.length());
 
-		// Fractional part alignment.
-		fractionalPart_a.resize(max(fractionalPart_a.length(), fractionalPart_b.length()), '0'),
-		fractionalPart_b.resize(max(fractionalPart_a.length(), fractionalPart_b.length()), '0');
+		// Fraction part alignment.
+		fractionPartA.resize(max(fractionPartA.length(), fractionPartB.length()), '0'),
+		fractionPartB.resize(max(fractionPartA.length(), fractionPartB.length()), '0');
 
-		// Save fractional part result and carry information.
-		string fractionalPart_res = unsignedInt_add_unsignedInt(fractionalPart_a, fractionalPart_b, radix);
-		if (fractionalPart_a.length() < fractionalPart_res.length())
+		// Save fraction part result and carry information.
+		string fractionPart_res = uiAddUI(fractionPartA, fractionPartB, radix);
+		if (fractionPartA.length() < fractionPart_res.length())
 		{
-			fractionalCarry = "1";
-			res = fractionalPart_res.substr(1, fractionalPart_res.length());
+			fractionCarry = "1";
+			res = fractionPart_res.substr(1, fractionPart_res.length());
 		}
 		else
 		{
-			fractionalCarry = "0";
-			res = fractionalPart_res.substr(0, fractionalPart_res.length());
+			fractionCarry = "0";
+			res = fractionPart_res.substr(0, fractionPart_res.length());
 		}
 	}
 
 	// Integer part.
 	{
-		string integerPart_a = getIntegerPartFromDecimal(a), integerPart_b = getIntegerPartFromDecimal(b);
+		string integerPartA = a.substr(0, a.find('.')), 
+			   integerPartB = b.substr(0, b.find('.'));
 
-		// Combine with fractional part.
-		string integerPart_res = unsignedInt_add_unsignedInt(integerPart_a, integerPart_b, radix);
-		res = unsignedInt_add_unsignedInt(integerPart_res, fractionalCarry, radix) + "." + res;
+		// Combine with fraction part.
+		string integerPart_res = uiAddUI(integerPartA, integerPartB, radix);
+		res = uiAddUI(integerPart_res, fractionCarry, radix) + "." + res;
 	}
 
-	return res;
+	return standardizeNum(res);
 }
 	//vector<pair<string, string>> v;
 	//v.push_back(make_pair("4444", "4"));
@@ -541,32 +541,43 @@ static string unsigned_add_unsigned(string a, string b, unsigned radix)
 
 	//for (auto i : v)
 	//{
-	//	cout <<unsigned_mul_unsigned(i.first, i.second, 16) <<endl;
+	//	cout <<uMulU(i.first, i.second, 16) <<endl;
 	//}
 	//cout <<endl;
 	//for (auto i : v)
 	//{
-	//	cout <<unsigned_mul_unsigned(i.second, i.first, 16) <<endl;
+	//	cout <<uMulU(i.second, i.first, 16) <<endl;
 	//}
-static string unsigned_mul_unsigned(string a, string b, unsigned radix)
+static string uMulU(string a, string b, unsigned radix)
 {
 	string res;
+	a = standardizeNum(a), b = standardizeNum(b);
 
 	// Find decmal point.
-	string::iterator decimalPointPos_a = find(a.begin(), a.end(), '.'), decimalPointPos_b = find(b.begin(), b.end(), '.');
-	const size_t decimalLen_a = distance(decimalPointPos_a + (decimalPointPos_a == a.end() ? 0 : 1), a.end()), 
-				 decimalLen_b = distance(decimalPointPos_b + (decimalPointPos_b == b.end() ? 0 : 1), b.end());
+	string::iterator decimalPointPosA = find(a.begin(), a.end(), '.'), decimalPointPosB = find(b.begin(), b.end(), '.');
+	const size_t fractionLenA = distance(decimalPointPosA + (decimalPointPosA == a.end() ? 0 : 1), a.end()), 
+				 fractionLenB = distance(decimalPointPosB + (decimalPointPosB == b.end() ? 0 : 1), b.end());
 
 	// Erase decimal point.
-	a.erase(decimalPointPos_a), b.erase(decimalPointPos_b);
+	a.erase(decimalPointPosA), b.erase(decimalPointPosB);
+	a = standardizeNum(a), b = standardizeNum(b);
 
 	// Multiple as integer.
-	res = unsignedInt_mul_unsignedInt(a, b, radix);
+	res = uiMulUI(a, b, radix);
 
 	// Insert decimal point.
-	res.insert(res.length() - (decimalLen_a + decimalLen_b), ".");
+	const size_t fractionLen = fractionLenA + fractionLenB;
+	if (fractionLen < res.length())
+	{
+		res.insert(res.length() - fractionLen, ".");
+	}
+	else
+	{
+		string filling(fractionLen - res.length(), '0');
+		res = "0." + filling + res;
+	}
 
-	return res;
+	return standardizeNum(res);
 }
 	//vector<pair<string, string>> v;
 	//v.push_back(make_pair("4444", "4"));
@@ -580,24 +591,27 @@ static string unsigned_mul_unsigned(string a, string b, unsigned radix)
 
 	//v.push_back(make_pair("b.f", "d.3")),
 	//v.push_back(make_pair("bf", "5.1a3fc0a49b6dd625d62cab5432b5b342bca5d235c436bf54663c51d3"));
-static string unsigned_sub_unsigned(string a, string b, unsigned radix)
+static string uSubU(string a, string b, unsigned radix)
 {
 	string res;
+	a = standardizeNum(a), b = standardizeNum(b);
 
 	// Fractional part align.
-	string fractionPart_a = getFractionPartFromDecimal(a), fractionPart_b = getFractionPartFromDecimal(b);
-	fractionPart_a.resize(max(fractionPart_a.length(), fractionPart_b.length()), '0'), 
-	fractionPart_b.resize(max(fractionPart_a.length(), fractionPart_b.length()), '0');
+	const size_t decimalPointPosA = a.find('.'), decimalPointPosB = b.find('.');
+	string fractionPartA = decimalPointPosA == string::npos ? "0" : a.substr(decimalPointPosA + 1, a.length()), 
+		   fractionPartB = decimalPointPosB == string::npos ? "0" : b.substr(decimalPointPosB + 1, b.length());
+	fractionPartA.resize(max(fractionPartA.length(), fractionPartB.length()), '0'), 
+	fractionPartB.resize(max(fractionPartA.length(), fractionPartB.length()), '0');
 
 	// Combine new dicimal.
-	a = getIntegerPartFromDecimal(a) + fractionPart_a;
-	b = getIntegerPartFromDecimal(b) + fractionPart_b;
+	a = a.substr(0, a.find('.')) + fractionPartA;
+	b = b.substr(0, b.find('.')) + fractionPartB;
 
 	// Decimal point.
-	res = unsignedInt_sub_unsignedInt(a, b, radix);
-	res.insert(res.length() - max(fractionPart_a.length(), fractionPart_b.length()), ".");
+	res = uiSubUI(a, b, radix);
+	res.insert(res.length() - max(fractionPartA.length(), fractionPartB.length()), ".");
 
-	return res;
+	return standardizeNum(res);
 }
 	//vector<pair<string, string>> v;
 	//v.push_back(make_pair("4444", "4"));
@@ -611,27 +625,30 @@ static string unsigned_sub_unsigned(string a, string b, unsigned radix)
 
 	//for (auto i : v)
 	//{
-	//	cout <<unsigned_div_unsigned(i.first, i.second, 4, 10) <<endl;
+	//	cout <<uDivU(i.first, i.second, 4, 10) <<endl;
 	//}
 	//cout <<endl;
 	//for (auto i : v)
 	//{
-	//	cout <<unsigned_div_unsigned(i.second, i.first, 4, 10) <<endl;
+	//	cout <<uDivU(i.second, i.first, 4, 10) <<endl;
 	//}
-static string unsigned_div_unsigned(string a, string b, unsigned radix, unsigned precision)
+static string uDivU(string a, string b, unsigned radix, unsigned precision)
 {
 	string res;
+	a = standardizeNum(a), b = standardizeNum(b);
 
-	// Fractional part align.
-	string fractionPart_a = getFractionPartFromDecimal(a), fractionPart_b = getFractionPartFromDecimal(b);
-	fractionPart_a.resize(fractionPart_b.length() + precision, '0');
+	// fraction part align.
+	const size_t decimalPointPosA = a.find('.'), decimalPointPosB = b.find('.');
+	string fractionPartA = decimalPointPosA == string::npos ? "0" : a.substr(decimalPointPosA + 1, a.length()), 
+		   fractionPartB = decimalPointPosB == string::npos ? "0" : b.substr(decimalPointPosB + 1, b.length());
+	fractionPartA.resize(fractionPartB.length() + precision, '0');
 
 	// Combine new dicimal.
-	a = getIntegerPartFromDecimal(a) + fractionPart_a;
-	b = getIntegerPartFromDecimal(b) + fractionPart_b;
+	a = a.substr(0, a.find('.')) + fractionPartA;
+	b = b.substr(0, b.find('.')) + fractionPartB;
 
 	// Decimal point.
-	res = unsignedInt_div_unsignedInt(a, b, radix);
+	res = uiDivUI(a, b, radix);
 	if (res.length() < precision)
 	{
 		// "0.xxxxx".
@@ -645,112 +662,116 @@ static string unsigned_div_unsigned(string a, string b, unsigned radix, unsigned
 		res.insert(res.length() - precision, ".");
 	}
 
-	return res;
+	return standardizeNum(res);
 }
 
 string add(string a, string b, unsigned radix)
 {
 	string res;
+	a = standardizeNum(a), b = standardizeNum(b);
 
-	bool positiveA = toUnsignedNum(a), positiveB = toUnsignedNum(b);
+	bool positiveA = eraseSign(a), positiveB = eraseSign(b);
 	if (positiveA && positiveB)
 	{
 		// "(+a) + (+b)".
-		res = unsigned_add_unsigned(a, b, radix);
+		res = uAddU(a, b, radix);
 	}
 	else if (positiveA && !positiveB)
 	{
 		// "(+a) + (-b)".
-		res = unsigned_sub_unsigned(a, b, radix);
+		res = uSubU(a, b, radix);
 	}
 	else if (!positiveA && positiveB)
 	{
 		// "(-a) + (+b)".
-		res = unsigned_sub_unsigned(b, a, radix);
+		res = uSubU(b, a, radix);
 	}
 	else // !positiveA && !positiveB
 	{
 		// "(-a) + (-b)".
-		res = '-' + unsigned_add_unsigned(a, b, radix);
+		res = '-' + uAddU(a, b, radix);
 	}
 
-	return res;
+	return standardizeNum(res);
 }
 string sub(string a, string b, unsigned radix)
 {
 	string res;
+	a = standardizeNum(a), b = standardizeNum(b);
 
-	bool positiveA = toUnsignedNum(a), positiveB = toUnsignedNum(b);
+	bool positiveA = eraseSign(a), positiveB = eraseSign(b);
 	if (positiveA && positiveB)
 	{
 		// "(+a) - (+b)".
-		res = unsigned_sub_unsigned(a, b, radix);
+		res = uSubU(a, b, radix);
 	}
 	else if (positiveA && !positiveB)
 	{
 		// "(+a) - (-b)".
-		res = unsigned_add_unsigned(a, b, radix);
+		res = uAddU(a, b, radix);
 	}
 	else if (!positiveA && positiveB)
 	{
 		// "(-a) - (+b)".
-		res = '-' + unsigned_add_unsigned(a, b, radix);
+		res = '-' + uAddU(a, b, radix);
 	}
 	else // !positiveA && !positiveB
 	{
 		// "(-a) - (-b)".
-		res = unsigned_sub_unsigned(b, a, radix);
+		res = uSubU(b, a, radix);
 	}
 
-	return res;
+	return standardizeNum(res);
 }
 string mul(string a, string b, unsigned radix)
 {
 	string res;
+	a = standardizeNum(a), b = standardizeNum(b);
 
-	bool positiveA = toUnsignedNum(a), positiveB = toUnsignedNum(b);
+	bool positiveA = eraseSign(a), positiveB = eraseSign(b);
 	if (positiveA && positiveB
 		|| !positiveA && !positiveB)
 	{
 		// "(+a) * (+b)" or
 		// "(-a) * (-b)".
-		res = unsigned_mul_unsigned(a, b, radix);
+		res = uMulU(a, b, radix);
 	}
 	else if (positiveA && !positiveB
 			 || !positiveA && positiveB)
 	{
 		// "(+a) * (-b)" or
 		// "(-a) * (+b)".
-		res = '-' + unsigned_mul_unsigned(a, b, radix);
+		res = '-' + uMulU(a, b, radix);
 	}
 	else
 	{}
 
-	return res;
+	return standardizeNum(res);
 }
 string div(string a, string b, unsigned radix, unsigned precision)
 {
 	string res;
+	a = standardizeNum(a), b = standardizeNum(b);
 
-	bool positiveA = toUnsignedNum(a), positiveB = toUnsignedNum(b);
+	bool positiveA = eraseSign(a), positiveB = eraseSign(b);
 	if (positiveA && positiveB
 		|| !positiveA && !positiveB)
 	{
 		// "(+a) / (+b)" or
 		// "(-a) / (-b)".
-		res = unsigned_div_unsigned(a, b, radix, precision);
+		res = uDivU(a, b, radix, precision);
 	}
 	else if (positiveA && !positiveB
 			 || !positiveA && positiveB)
 	{
 		// "(+a) / (-b)" or
 		// "(-a) / (+b)".
-		res = '-' + unsigned_div_unsigned(a, b, radix, precision);
+		res = '-' + uDivU(a, b, radix, precision);
 	}
 	else
 	{}
 
-	return res;
+	return standardizeNum(res);
 }
 
 }
