@@ -226,6 +226,62 @@ bool numLess(string a, string b)
  *		2. All characters in lowercase.
  *
  */
+/*
+ *
+ *		Add arithmetic of two unsigned integer of fraction part.
+ *
+ *	Rtn:
+ *		'.first' is carry in.
+ *		'.second' is result of two fraction strings.
+ *
+ */
+	//unordered_multimap<string, string> m;
+	//m.insert(make_pair("1234", "1234"));
+	//m.insert(make_pair("0007", "1"));
+	//m.insert(make_pair("0007", "0009"));
+	//m.insert(make_pair("0007", "0"));
+
+	//m.insert(make_pair("9999", "003"));
+
+	//for (auto i : m)
+	//{
+	//	auto res = uiAddUI_fraction(i.first, i.second, 10);
+	//	cout <<"0." <<i.first <<" + " <<"0." <<i.second <<" <=> " <<res.first <<"." <<res.second <<endl;
+	//}
+	//cout <<endl;
+	//for (auto i : m)
+	//{
+	//	auto res = uiAddUI_fraction(i.second, i.first, 10);
+	//	cout <<"0." <<i.second <<" + " <<"0." <<i.first <<" <=> " <<res.first <<"." <<res.second <<endl;
+	//}
+static pair<string, string> uiAddUI_fraction(const string &a, const string &b, unsigned radix)
+{
+	pair<string, string> res;
+
+	int carry = 0;
+	for (size_t i = 0, len = min(a.length(), b.length()); i < len; ++i)
+	{
+		int iA = charToDigit(a[len - i - 1]),
+			iB = charToDigit(b[len - i - 1]);
+		
+		int iC = iA + iB + carry;
+		carry = iC / radix;
+		iC %= radix;
+
+		res.second.push_back(digitToChar(iC));
+	}
+
+	// Carry in.
+	res.first.push_back(digitToChar(carry));
+	carry = 0;
+
+	reverse(res.second.begin(), res.second.end());
+
+	// Append unpaired part of a string which is longer.
+	res.second += (a.length() < b.length() ? b : a).substr(res.second.length(), 
+														   (numeric_limits<size_t>::max)());
+	return res;
+}
 	//vector<pair<string, string>> v;
 	//v.push_back(make_pair("4444", "4")),
 	//v.push_back(make_pair("4444", "4444")),
@@ -498,22 +554,10 @@ static string uAddU(string a, string b, unsigned radix)
 		string fractionPartA = decimalPointPosA == string::npos ? "0" : a.substr(decimalPointPosA + 1, a.length()), 
 			   fractionPartB = decimalPointPosB == string::npos ? "0" : b.substr(decimalPointPosB + 1, b.length());
 
-		// Fraction part alignment.
-		fractionPartA.resize(max(fractionPartA.length(), fractionPartB.length()), '0'),
-		fractionPartB.resize(max(fractionPartA.length(), fractionPartB.length()), '0');
-
 		// Save fraction part result and carry information.
-		string fractionPart_res = uiAddUI(fractionPartA, fractionPartB, radix);
-		if (fractionPartA.length() < fractionPart_res.length())
-		{
-			fractionCarry = "1";
-			res = fractionPart_res.substr(1, fractionPart_res.length());
-		}
-		else
-		{
-			fractionCarry = "0";
-			res = fractionPart_res.substr(0, fractionPart_res.length());
-		}
+		pair<string, string> fractionPart_res = uiAddUI_fraction(fractionPartA, fractionPartB, radix);
+		fractionCarry = fractionPart_res.first;
+		res = fractionPart_res.second;
 	}
 
 	// Integer part.
