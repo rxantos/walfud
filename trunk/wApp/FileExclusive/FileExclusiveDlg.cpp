@@ -6,6 +6,7 @@
 #include "FileExclusive.h"
 #include "FileExclusiveDlg.h"
 #include "afxdialogex.h"
+#include "wStrUtil.h"
 using namespace std;
 
 #ifdef _DEBUG
@@ -16,8 +17,13 @@ using namespace std;
 // CFileExclusiveDlg dialog
 
 static const int sc_colFullpath = 0, sc_colStatus = 1;
+static const int sc_colFullpathWidth = 300, sc_colStatusWidth = 100;
+
 static const wchar_t *sc_statusLocked = L"locked",
 					 *sc_statusUnlocked = L"unlocked";
+
+static const UINT_PTR sc_timerCheckHandle = 10000;
+static const UINT sc_intervalCheckHandle = 500;		// ms.
 
 CFileExclusiveDlg::CFileExclusiveDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CFileExclusiveDlg::IDD, pParent)
@@ -35,6 +41,8 @@ BEGIN_MESSAGE_MAP(CFileExclusiveDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_WM_DROPFILES()
+	ON_WM_TIMER()
+	ON_BN_CLICKED(IDC_BUTTON_REFRESH, &CFileExclusiveDlg::OnBnClickedButtonRefresh)
 END_MESSAGE_MAP()
 
 
@@ -50,11 +58,14 @@ BOOL CFileExclusiveDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// Initialize controls.
-	m_listFile.InsertColumn(sc_colFullpath, L"file fullpath", LVCFMT_CENTER, 300);
-	m_listFile.InsertColumn(sc_colStatus, L"status", LVCFMT_CENTER, 50);
+	m_listFile.InsertColumn(sc_colFullpath, L"file fullpath", LVCFMT_CENTER, sc_colFullpathWidth);
+	m_listFile.InsertColumn(sc_colStatus, L"status", LVCFMT_CENTER, sc_colStatusWidth);
 
 	// Get file target from command line.
-	GetArgsFromCmdLine();
+	getArgsFromCmdLine();
+
+	// Setup timer.
+	SetTimer(sc_timerCheckHandle, sc_intervalCheckHandle, nullptr);
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -109,8 +120,19 @@ void CFileExclusiveDlg::OnDropFiles(HDROP hDropInfo)
 	return;
 }
 
+void CFileExclusiveDlg::OnTimer(UINT_PTR nIDEvent)
+{
+	switch (nIDEvent)
+	{
+	case sc_timerCheckHandle:
+		break;
+	default:
+		break;
+	}
+}
 
-void CFileExclusiveDlg::GetArgsFromCmdLine()
+// Interface.
+void CFileExclusiveDlg::getArgsFromCmdLine()
 {
 	int argc = 0;
 	wchar_t **argv = CommandLineToArgvW(GetCommandLineW(), &argc);
@@ -124,33 +146,68 @@ void CFileExclusiveDlg::GetArgsFromCmdLine()
 	argv = NULL;
 }
 
+void CFileExclusiveDlg::checkHandle()
+{
+	for (unordered_map<wstring, HANDLE>::const_iterator it = m_filenameHandle.cbegin(); it != m_filenameHandle.cend(); ++it)
+	{
+		if (GetFileType(it->second) == FILE_TYPE_UNKNOWN
+			&& GetLastError() == ERROR_INVALID_HANDLE)
+		{
+			// If handle has been invalid, then update the list.
+			int pos = distance(m_filenameHandle.cbegin(), it);
+			m_listFile.SetItemText(pos, sc_colStatus, sc_statusUnlocked);
+		}
+	}
+}
+
+void CFileExclusiveDlg::refresh()
+{
+	auto tmp = m_filenameHandle;
+
+	for (auto i : tmp)
+	{
+		freeFile(i.first);
+	}
+
+	for (auto i : tmp)
+	{
+		exclusiveFile(i.first);
+	}
+}
+
 // logic.
 void CFileExclusiveDlg::exclusiveFile(const wstring &fullpath)
 {
-	if (m_filenameHandle.find(fullpath) == m_filenameHandle.end())
-	{
-		// Exclusive a file.
-		HANDLE h = CreateFile(fullpath.c_str(), GENERIC_ALL, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
-		if (h == INVALID_HANDLE_VALUE)
-		{
-			wstring info = wstring(L"Can NOT lock file: ") + L"'" + fullpath + L"'.";
-			OutputDebugString(info.c_str());
-		}
-		else
-		{
-			m_filenameHandle[fullpath] = h;
+	// Exclusive a file.
+	HANDLE h = CreateFile(fullpath.c_str(), GENERIC_ALL, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
+	DWORD lastErr = GetLastError();
 
-			// Insert to list.
-			int index = m_listFile.InsertItem(m_listFile.GetItemCount(), fullpath.c_str());
-			m_listFile.SetItemText(index, sc_colStatus, sc_statusLocked);
-
-			wstring info = wstring(L"Lock file: ") + L"'" + fullpath + L"'.";
-			OutputDebugString(info.c_str());
-		}
-	}
-	else
+	if (h != INVALID_HANDLE_VALUE																						// Locked by me.
+		|| (lastErr == ERROR_SHARING_VIOLATION && m_filenameHandle.find(fullpath) == m_filenameHandle.end()))			// Locked by me or other process.
 	{
-		wstring info = wstring(L"File: ") + L"'" + fullpath + L"' has locked before. Do NOTHING.";
-		OutputDebugString(info.c_str());
+		// Insert to container.
+		m_filenameHandle[fullpath] = h;
+		// Insert to list.
+		int index = m_listFile.InsertItem(m_listFile.GetItemCount(), fullpath.c_str());
+		m_listFile.SetItemText(index, sc_colStatus, sc_statusLocked);
 	}
+}
+void CFileExclusiveDlg::freeFile(const wstring &fullpath)
+{
+	auto toFree = m_filenameHandle.find(fullpath);
+	if (toFree != m_filenameHandle.end())
+	{
+		CloseHandle(toFree->second);
+		
+		// Remove from list.
+		int pos = distance(m_filenameHandle.begin(), toFree);
+		m_listFile.DeleteItem(pos);
+		// Remove from container.
+		m_filenameHandle.erase(toFree);
+	}
+}
+
+void CFileExclusiveDlg::OnBnClickedButtonRefresh()
+{
+	refresh();
 }

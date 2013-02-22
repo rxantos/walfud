@@ -3,22 +3,25 @@
 //
 
 #pragma once
-#include <map>
+#include <unordered_map>
 #include <string>
 
 // CFileExclusiveDlg dialog
 class CFileExclusiveDlg : public CDialogEx
 {
 	// data.
-	std::map<std::wstring, HANDLE> m_filenameHandle;
+	std::unordered_map<std::wstring, HANDLE> m_filenameHandle;
 
 public:
 	// Interface.
-	void GetArgsFromCmdLine();
+	void getArgsFromCmdLine();
+	void checkHandle();
+	void refresh();
 
 private:
 	// logic.
 	void exclusiveFile(const std::wstring &fullpath);
+	void freeFile(const std::wstring &fullpath);
 
 // Construction
 public:
@@ -41,5 +44,8 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	afx_msg void OnDropFiles(HDROP hDropInfo);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedButtonRefresh();
 };
