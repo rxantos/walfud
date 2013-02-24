@@ -22,9 +22,6 @@ static const int sc_colFullpathWidth = 300, sc_colStatusWidth = 100;
 static const wchar_t *sc_statusLocked = L"locked",
 					 *sc_statusUnlocked = L"unlocked";
 
-static const UINT_PTR sc_timerCheckHandle = 10000;
-static const UINT sc_intervalCheckHandle = 500;		// ms.
-
 CFileExclusiveDlg::CFileExclusiveDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CFileExclusiveDlg::IDD, pParent)
 {
@@ -64,8 +61,6 @@ BOOL CFileExclusiveDlg::OnInitDialog()
 	// Get file target from command line.
 	getArgsFromCmdLine();
 
-	// Setup timer.
-	SetTimer(sc_timerCheckHandle, sc_intervalCheckHandle, nullptr);
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -122,13 +117,11 @@ void CFileExclusiveDlg::OnDropFiles(HDROP hDropInfo)
 
 void CFileExclusiveDlg::OnTimer(UINT_PTR nIDEvent)
 {
-	switch (nIDEvent)
-	{
-	case sc_timerCheckHandle:
-		break;
-	default:
-		break;
-	}
+	//switch (nIDEvent)
+	//{
+	//default:
+	//	break;
+	//}
 }
 
 // Interface.
@@ -146,68 +139,61 @@ void CFileExclusiveDlg::getArgsFromCmdLine()
 	argv = NULL;
 }
 
-void CFileExclusiveDlg::checkHandle()
+void CFileExclusiveDlg::refreshFile(const wstring &fullpath)
 {
-	for (unordered_map<wstring, HANDLE>::const_iterator it = m_filenameHandle.cbegin(); it != m_filenameHandle.cend(); ++it)
-	{
-		if (GetFileType(it->second) == FILE_TYPE_UNKNOWN
-			&& GetLastError() == ERROR_INVALID_HANDLE)
-		{
-			// If handle has been invalid, then update the list.
-			int pos = distance(m_filenameHandle.cbegin(), it);
-			m_listFile.SetItemText(pos, sc_colStatus, sc_statusUnlocked);
-		}
-	}
-}
-
-void CFileExclusiveDlg::refresh()
-{
-	auto tmp = m_filenameHandle;
-
-	for (auto i : tmp)
-	{
-		freeFile(i.first);
-	}
-
-	for (auto i : tmp)
-	{
-		exclusiveFile(i.first);
-	}
+	freeFile(fullpath);
+	exclusiveFile(fullpath);
 }
 
 // logic.
 void CFileExclusiveDlg::exclusiveFile(const wstring &fullpath)
 {
-	// Exclusive a file.
-	HANDLE h = CreateFile(fullpath.c_str(), GENERIC_ALL, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
-	DWORD lastErr = GetLastError();
-
-	if (h != INVALID_HANDLE_VALUE																						// Locked by me.
-		|| (lastErr == ERROR_SHARING_VIOLATION && m_filenameHandle.find(fullpath) == m_filenameHandle.end()))			// Locked by me or other process.
+	auto toLock = find(m_targetsInfo.begin(), m_targetsInfo.end(), TargetInfo(fullpath));
+	
+	if (toLock == m_targetsInfo.end())
 	{
-		// Insert to container.
-		m_filenameHandle[fullpath] = h;
-		// Insert to list.
+		// Insert new item.
+		HANDLE h = CreateFile(fullpath.c_str(), GENERIC_ALL, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
+		m_targetsInfo.push_back(TargetInfo(fullpath, h));
 		int index = m_listFile.InsertItem(m_listFile.GetItemCount(), fullpath.c_str());
-		m_listFile.SetItemText(index, sc_colStatus, sc_statusLocked);
+		m_listFile.SetItemText(index, sc_colStatus, h != INVALID_HANDLE_VALUE ? sc_statusLocked : sc_statusUnlocked);
+	}
+	else
+	{
+		// Update existing status.
+		int pos = distance(m_targetsInfo.begin(), toLock);
+		m_listFile.SetItemText(pos, sc_colStatus, lockedByMe(toLock->filename) ? sc_statusLocked : sc_statusUnlocked);
 	}
 }
 void CFileExclusiveDlg::freeFile(const wstring &fullpath)
 {
-	auto toFree = m_filenameHandle.find(fullpath);
-	if (toFree != m_filenameHandle.end())
+	auto toFree = find(m_targetsInfo.begin(), m_targetsInfo.end(), TargetInfo(fullpath));
+	if (toFree != m_targetsInfo.end())
 	{
-		CloseHandle(toFree->second);
+		CloseHandle(toFree->handle);
 		
 		// Remove from list.
-		int pos = distance(m_filenameHandle.begin(), toFree);
+		int pos = distance(m_targetsInfo.begin(), toFree);
 		m_listFile.DeleteItem(pos);
 		// Remove from container.
-		m_filenameHandle.erase(toFree);
+		m_targetsInfo.erase(toFree);
 	}
 }
 
 void CFileExclusiveDlg::OnBnClickedButtonRefresh()
 {
-	refresh();
+	vector<wstring> filenames;
+	transform(m_targetsInfo.begin(), m_targetsInfo.end(), back_inserter(filenames), [](const TargetInfo &ti) { return ti.filename; });
+
+	for (auto i : filenames)
+	{
+		refreshFile(i);
+	}
+}
+
+bool CFileExclusiveDlg::lockedByMe(const wstring &fullpath)
+{
+	auto test = find(m_targetsInfo.begin(), m_targetsInfo.end(), TargetInfo(fullpath));
+	CloseHandle(test->handle);
+	return (test->handle = CreateFile(fullpath.c_str(), GENERIC_ALL, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL)) != INVALID_HANDLE_VALUE;
 }
