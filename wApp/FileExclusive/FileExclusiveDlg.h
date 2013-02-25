@@ -11,14 +11,14 @@
 
 struct TargetInfo
 {
-	std::wstring filename;
+	std::string filename;
 	HANDLE handle;
 
 	TargetInfo() : filename(), handle(INVALID_HANDLE_VALUE) {}
-	TargetInfo(const std::wstring &fn) : filename(fn), handle(INVALID_HANDLE_VALUE) {}
-	TargetInfo(const std::wstring &fn, HANDLE h) : filename(fn), handle(h) {}
+	TargetInfo(const std::string &fn) : filename(fn), handle(INVALID_HANDLE_VALUE) {}
+	TargetInfo(const std::string &fn, HANDLE h) : filename(fn), handle(h) {}
 };
-inline bool operator==(const TargetInfo &a, const TargetInfo &b) { return _wcsicmp(a.filename.c_str(), b.filename.c_str()) == 0; }
+bool operator==(const TargetInfo &a, const TargetInfo &b);
 
 // CFileExclusiveDlg dialog
 class CFileExclusiveDlg : public CDialogEx
@@ -33,11 +33,11 @@ public:
 
 private:
 	// logic.
-	void exclusiveFile(const std::wstring &fullpath);
-	void freeFile(const std::wstring &fullpath);
-	void refreshFile(const std::wstring &fullpath);
+	void exclusiveFile(const std::string &fullpath);
+	void freeFile(const std::string &fullpath);
+	void refreshFile(const std::string &fullpath);
 
-	bool lockedByMe(const std::wstring &fullpath);
+	bool lockedByMe(const std::string &fullpath);
 
 // Construction
 public:
