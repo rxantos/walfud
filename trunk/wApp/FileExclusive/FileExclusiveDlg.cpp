@@ -14,13 +14,15 @@ using namespace std;
 #endif
 
 
+bool operator==(const TargetInfo &a, const TargetInfo &b) { return w::strICmp(a.filename, b.filename); }
+
 // CFileExclusiveDlg dialog
 
 static const int sc_colFullpath = 0, sc_colStatus = 1;
 static const int sc_colFullpathWidth = 300, sc_colStatusWidth = 100;
 
-static const wchar_t *sc_statusLocked = L"locked",
-					 *sc_statusUnlocked = L"unlocked";
+static const char *sc_statusLocked = "locked",
+				  *sc_statusUnlocked = "unlocked";
 
 CFileExclusiveDlg::CFileExclusiveDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CFileExclusiveDlg::IDD, pParent)
@@ -55,8 +57,8 @@ BOOL CFileExclusiveDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// Initialize controls.
-	m_listFile.InsertColumn(sc_colFullpath, L"file fullpath", LVCFMT_CENTER, sc_colFullpathWidth);
-	m_listFile.InsertColumn(sc_colStatus, L"status", LVCFMT_CENTER, sc_colStatusWidth);
+	m_listFile.InsertColumn(sc_colFullpath, "file fullpath", LVCFMT_CENTER, sc_colFullpathWidth);
+	m_listFile.InsertColumn(sc_colStatus, "status", LVCFMT_CENTER, sc_colStatusWidth);
 
 	// Get file target from command line.
 	getArgsFromCmdLine();
@@ -106,7 +108,7 @@ void CFileExclusiveDlg::OnDropFiles(HDROP hDropInfo)
 	for(UINT i = 0; i < cnt; ++i)
 	{
 		// Get filename.
-		wchar_t filename[MAX_PATH] = {};
+		char filename[MAX_PATH] = {};
 		DragQueryFile(hDropInfo, i, filename, sizeof(filename)/sizeof(filename[0]));
 
 		exclusiveFile(filename);
@@ -132,21 +134,21 @@ void CFileExclusiveDlg::getArgsFromCmdLine()
 
 	for (int i = 1; i < argc; ++i)
 	{
-		exclusiveFile(argv[i]);
+		exclusiveFile(w::wStrToStr(argv[i]));
 	}
 
 	LocalFree(argv);
 	argv = NULL;
 }
 
-void CFileExclusiveDlg::refreshFile(const wstring &fullpath)
+void CFileExclusiveDlg::refreshFile(const string &fullpath)
 {
 	freeFile(fullpath);
 	exclusiveFile(fullpath);
 }
 
 // logic.
-void CFileExclusiveDlg::exclusiveFile(const wstring &fullpath)
+void CFileExclusiveDlg::exclusiveFile(const string &fullpath)
 {
 	auto toLock = find(m_targetsInfo.begin(), m_targetsInfo.end(), TargetInfo(fullpath));
 	
@@ -165,7 +167,7 @@ void CFileExclusiveDlg::exclusiveFile(const wstring &fullpath)
 		m_listFile.SetItemText(pos, sc_colStatus, lockedByMe(toLock->filename) ? sc_statusLocked : sc_statusUnlocked);
 	}
 }
-void CFileExclusiveDlg::freeFile(const wstring &fullpath)
+void CFileExclusiveDlg::freeFile(const string &fullpath)
 {
 	auto toFree = find(m_targetsInfo.begin(), m_targetsInfo.end(), TargetInfo(fullpath));
 	if (toFree != m_targetsInfo.end())
@@ -182,7 +184,7 @@ void CFileExclusiveDlg::freeFile(const wstring &fullpath)
 
 void CFileExclusiveDlg::OnBnClickedButtonRefresh()
 {
-	vector<wstring> filenames;
+	vector<string> filenames;
 	transform(m_targetsInfo.begin(), m_targetsInfo.end(), back_inserter(filenames), [](const TargetInfo &ti) { return ti.filename; });
 
 	for (auto i : filenames)
@@ -191,7 +193,7 @@ void CFileExclusiveDlg::OnBnClickedButtonRefresh()
 	}
 }
 
-bool CFileExclusiveDlg::lockedByMe(const wstring &fullpath)
+bool CFileExclusiveDlg::lockedByMe(const string &fullpath)
 {
 	auto test = find(m_targetsInfo.begin(), m_targetsInfo.end(), TargetInfo(fullpath));
 	CloseHandle(test->handle);
