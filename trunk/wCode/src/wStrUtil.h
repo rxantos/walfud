@@ -196,6 +196,27 @@ int strToInt(const std::string &str);
  *		Each item divided by 'delim'.
  *
  */
+	//vector<string> strSplit_tester;
+	//strSplit_tester.push_back("key=val");
+	//strSplit_tester.push_back("key=");
+	//strSplit_tester.push_back("=val");
+	//strSplit_tester.push_back("=");
+	//strSplit_tester.push_back("");
+	//strSplit_tester.push_back("key==val");
+	//strSplit_tester.push_back("===");
+	//strSplit_tester.push_back("keyval");
+
+	//for (auto i : strSplit_tester)
+	//{
+	//	//auto res = strSplit(i, '=');
+	//	auto res = strSplit(i, "=");
+	//	cout <<"|";
+	//	for (auto j : res)
+	//	{
+	//		cout <<j <<"|";
+	//	}
+	//	cout <<endl;
+	//}
 std::vector<std::string> strSplit(const std::string &str, const char delim);
 std::vector<std::string> strSplit(const char *strBeg, const char *strEnd, const char delim);
 std::vector<std::string> strSplit(const std::string &str, const std::string &delim);
