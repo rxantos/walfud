@@ -13,13 +13,35 @@ namespace w
 
 /*
  *
- *		Get all valid logic dirves name.
+ *		Get all valid logic dirves' dos name.
  *
  *	Rtn:
  *		Like {"C:", "D:" ...}.
  *
  */
 std::vector<std::string> getDrivesName();
+
+struct DriveInfo
+{
+	std::string dosName, ntName, volName;
+	std::string fs;
+
+	unsigned serialNum;
+};
+
+/*
+ *
+ *		More information than 'getDrivesName'. 
+ *
+ *	Param:
+ *		'driveName': is dos name of drive. Such as ""\\MyServer\MyShare\", or the C drive as "C:\".
+ *
+ */
+DriveInfo getDriveInfo(const std::string &driveName);
+std::vector<DriveInfo> getDrivesInfo();
+
+std::string ntNameToDosName(const std::string &ntName);
+std::string dosNameToNtName(const std::string &dosName);
 
 /*
  *

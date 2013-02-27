@@ -80,7 +80,8 @@ bool runAndWait(const std::string &filepath, const std::string &param, DWORD tim
  *		Limit a single process in running.
  *
  *	Param:
- *		'unionName': The system global name for the process, which is used to identify a unique process.
+ *		'unionName': The name can have a "Global\" or "Local\" prefix to explicitly create the object in the global or session name space. 
+ *	The remainder of the name can contain any character EXCEPT the backslash character (\). 
  *
  *	Rtn:
  *		'true': If no same process is running, otherwise is 'false'.
