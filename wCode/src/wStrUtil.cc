@@ -118,19 +118,18 @@ vector<string> strSplit(const string &str, const char delim)
 {
 	vector<string> res;
 	
-	size_t p = 0, q = 0;
-	for (; q != str.length(); ++q)
+	for (size_t partBeg = 0, partEnd = 0; partBeg < str.length(); partBeg = partEnd + 1)
 	{
-		if (str[q] == delim)
-		{
-			res.push_back(str.substr(p, q - p));
+		partEnd = str.find(delim, partBeg);
+		partEnd = partEnd == string::npos ? str.length() : partEnd;
 
-			p = q+1;
+		res.push_back(str.substr(partBeg, partEnd - partBeg));
+
+		if (partEnd == str.length() - 1)
+		{
+			// Tailing delimiter.
+			res.push_back(string());
 		}
-	}
-	if (p < str.length())
-	{
-		res.push_back(str.substr(p, q - p));
 	}
 
 	return res;
@@ -141,16 +140,18 @@ vector<string> strSplit(const string &str, const string &delim)
 {
 	vector<string> res;
 	
-	size_t p = 0, q = 0;
-	while ((q = str.find(delim, p)) != string::npos)
+	for (size_t partBeg = 0, partEnd = 0; partBeg < str.length(); partBeg = partEnd + 1)
 	{
-		res.push_back(str.substr(p, q - p));
+		partEnd = str.find(delim, partBeg);
+		partEnd = partEnd == string::npos ? str.length() : partEnd;
 
-		p = q+1;
-	}
-	if (p < str.length())
-	{
-		res.push_back(str.substr(p, q - p));
+		res.push_back(str.substr(partBeg, partEnd - partBeg));
+
+		if (partEnd == str.length() - 1)
+		{
+			// Tailing delimiter.
+			res.push_back(string());
+		}
 	}
 
 	return res;
