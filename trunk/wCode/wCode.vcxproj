@@ -18,6 +18,7 @@
     <ClCompile Include="src\wDisk.cc" />
     <ClCompile Include="src\wFilePermission.cc" />
     <ClCompile Include="src\wHack.cc" />
+    <ClCompile Include="src\wIniHelper.cpp" />
     <ClCompile Include="src\wMath.cpp" />
     <ClCompile Include="src\wOtherUtil.cc" />
     <ClCompile Include="src\wPipe.cc" />
@@ -36,6 +37,7 @@
     <ClInclude Include="src\wDisk.h" />
     <ClInclude Include="src\wFilePermission.h" />
     <ClInclude Include="src\wHack.h" />
+    <ClInclude Include="src\wIniHelper.h" />
     <ClInclude Include="src\wMath.h" />
     <ClInclude Include="src\wOtherUtil.h" />
     <ClInclude Include="src\wPipe.h" />
