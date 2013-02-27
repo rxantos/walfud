@@ -4,7 +4,6 @@
 //
 
 #include "wHack.h"
-#include <Dbghelp.h>
 using namespace std;
 
 #pragma comment(lib, "Dbghelp.lib")
@@ -80,7 +79,8 @@ bool remoteAntiinject(unsigned targetProcessId, const string &antiinjectedDllMod
 
 	return remoteCall(targetProcessId, 
 					  reinterpret_cast<unsigned long (__stdcall *)(void *)>(funcFreeLibrary), 
-					  baseAddr, sizeof(baseAddr), false);
+					  baseAddr, sizeof(baseAddr), 
+					  false);
 }
 bool remoteAntiinject(const string &targetProcessName, const string &antiinjectedDllFullpath)
 { return remoteAntiinject(w::getProcessId(targetProcessName)[0], antiinjectedDllFullpath); }
@@ -129,5 +129,129 @@ bool interceptFunc(HMODULE callerModule, void *originalFunc, void *myFunc)
 }
 bool interceptFunc(const string &callerModuleName, void *originalFunc, void *myFunc)
 { return interceptFunc(GetModuleHandle(callerModuleName.c_str()), originalFunc, myFunc); }
+
+//========================= Query handle from other processes.
+
+static const unsigned sc_searchTimeout = 50;		// ms.
+static const unsigned sc_maxPathLen = 1024;	
+static const unsigned sc_maxHandleCnt = 128 * 1024;	// Maximum allowable number of handle in current OS.
+
+unordered_multimap<int, void *> getIdHandleMap()
+{
+	unordered_multimap<int, void *> res;			// '.first' is process id; '.second' is handle.
+
+	const unsigned long needed = sizeof(SYSTEM_HANDLE_INFORMATION_EX) + sc_maxHandleCnt*sizeof(SYSTEM_HANDLE_INFORMATION);
+	unsigned char *buf = new unsigned char[needed];
+	memset(buf, 0, needed);
+
+	unsigned long writenSize = 0;
+	if (ZwQuerySystemInformation(SystemHandleInformation, static_cast<void *>(buf), needed, &writenSize) == 0)
+	{
+		// Save handles information.
+		SYSTEM_HANDLE_INFORMATION_EX *shie = reinterpret_cast<SYSTEM_HANDLE_INFORMATION_EX *>(buf);
+		SYSTEM_HANDLE_INFORMATION *shi = shie->Information;
+		for (unsigned long i = 0; i < shie->NumberOfHandles; ++i)
+		{
+			res.insert(make_pair(shi[i].ProcessId, reinterpret_cast<void *>(shi[i].Handle)));
+		}
+	}
+
+	delete []buf;
+	buf = nullptr;
+
+	return res;
+}
+
+string getNameFromHandle(HANDLE h, int processId)
+{
+	string res;
+
+	if (HANDLE processHandle = OpenProcess(PROCESS_DUP_HANDLE, false, processId))
+	{
+		HANDLE duplicatedHandle;
+		if (DuplicateHandle(processHandle, h, GetCurrentProcess(), &duplicatedHandle, 0, false, 0))
+		{
+			//IO_STATUS_BLOCK ioStatus = {};
+			const unsigned needed = sizeof(KOBJECT_NAME_INFORMATION) + sc_maxPathLen*sizeof(wchar_t);
+			unsigned char buf[needed] = {};
+			memset(buf, 0, needed);
+
+			// 'ZwQueryInformationFile' may cause stuck.
+			//if (ZwQueryInformationFile(duplicatedHandle, &ioStatus, static_cast<void *>(buf), needed, FileNameInformation) == 0)
+			if (ZwQueryObject(duplicatedHandle, 1, static_cast<void *>(buf), needed, nullptr) >= 0)
+			{
+				PKOBJECT_NAME_INFORMATION oni = reinterpret_cast<PKOBJECT_NAME_INFORMATION>(buf);
+				res = wStrToStr(oni->FileName);
+			}
+
+			CloseHandle(duplicatedHandle);
+		}//if (DuplicateHandle
+
+		CloseHandle(processHandle);
+	}//if (HANDLE
+
+	return res;
+}
+void getNameFromHandleWrapper(void *param)
+{
+	tuple<string &, int, void *> *handlenameIdHandlevalue = reinterpret_cast<tuple<string &, int, void *> *>(param);
+	string &handleName = get<0>(*handlenameIdHandlevalue);
+	int processId = get<1>(*handlenameIdHandlevalue);
+	HANDLE handle = get<2>(*handlenameIdHandlevalue);
+
+	handleName = getNameFromHandle(handle, processId);
+}
+
+vector<tuple<int, void *, string>> getIdHandlevalueHandlename(const unordered_multimap<int, void *> &idHandleMap)
+{
+	vector<tuple<int, void *, string>> res;		// '<0>' is process id; '<1>' is handle value in that process, '<2>' is handle name.
+
+	this_thread::sleep_for(chrono::seconds(1));
+	for (auto i : idHandleMap)
+	{
+		string handleName;
+		tuple<string &, int, void *> param(handleName, i.first, i.second);
+		HANDLE h = reinterpret_cast<HANDLE>(_beginthread(getNameFromHandleWrapper, 0, &param));
+		switch (WaitForSingleObject(h, sc_searchTimeout))
+		{
+		case WAIT_OBJECT_0:
+			if (!handleName.empty())
+			{
+				res.push_back(make_tuple(i.first, i.second, handleName));
+			}
+			break;
+		default:
+			TerminateThread(h, 1);
+			break;
+		}
+
+		// The C++11 implementation has drawback caused by 'async'.
+		// For details: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3451.pdf
+		//auto idNamePair = async(getNameFromHandle, i.second, i.first);
+		//switch (idNamePair.wait_for(chrono::milliseconds(sc_searchTimeout)))
+		//{
+		//case future_status::ready:
+		//	{
+		//		string handleName = idNamePair.get();
+		//		if (!handleName.empty())
+		//		{
+		//			res.insert(make_pair(i.first, handleName));
+		//		}
+		//		break;
+		//	}
+		//case future_status::timeout:
+		//	// We'd better find a way to kill the halting thread,
+		//	// otherwise there will be more and more halting threads, 
+		//	// which is a danger.
+		//	break;
+		//case future_status::deferred:
+		//	break;
+		//default:
+		//	break;
+		//}
+	}
+
+	return res;
+}
 
 }

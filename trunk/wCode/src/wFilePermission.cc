@@ -20,13 +20,13 @@ bool setPermission(const string &target, const string &usr,
 	bool res = false;
 
 	// Open file.
-	HANDLE file = ::CreateFile(target.c_str(),
-							   STANDARD_RIGHTS_WRITE | WRITE_DAC,
-							   FILE_SHARE_READ | FILE_SHARE_WRITE,
-							   nullptr,
-							   OPEN_EXISTING,
-							   FILE_FLAG_BACKUP_SEMANTICS,				// This flag must be set.
-							   nullptr);
+	HANDLE file = CreateFile(target.c_str(),
+							 STANDARD_RIGHTS_WRITE | WRITE_DAC,
+							 FILE_SHARE_READ | FILE_SHARE_WRITE,
+							 nullptr,
+							 OPEN_EXISTING,
+							 FILE_FLAG_BACKUP_SEMANTICS,				// This flag must be set.
+							 nullptr);
 	if (file != INVALID_HANDLE_VALUE)
 	{
 		// Get old acl.

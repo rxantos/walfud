@@ -62,14 +62,71 @@ vector<string> getDrivesName()
 	// Get valid drives in the system.
 	GetLogicalDriveStrings(size, buf);
 
-	// Remove redundant '\0' on the end of 'buf'.
-	char *bufEnd = unique(buf, buf + size);
-
 	// Split into vector.
-	drives = w::strSplit(buf, bufEnd, '\0');
+	drives = w::strSplit(buf, buf + size, '\0');
 
+	// Release memory.
 	delete []buf;
+	buf = nullptr;
+
+	// Remove empty item.
+	drives.erase(remove(drives.begin(), drives.end(), string()), drives.end());
+
+	// Remove tailing "\".
+	transform(drives.begin(), drives.end(), drives.begin(), [](const string &driveName) -> string { return strTrimRight(driveName, "\\"); });
+
 	return drives;
+}
+
+vector<DriveInfo> getDrivesInfo()
+{
+	vector<DriveInfo> drivesInfo;
+
+	for (auto i : getDrivesName())
+	{
+		auto di = getDriveInfo(i);
+		drivesInfo.push_back(di);
+	}
+
+	return drivesInfo;
+}
+DriveInfo getDriveInfo(const string &driveName)
+{
+	DriveInfo di = {};
+
+	char ntName[MAX_PATH] = {};
+	QueryDosDevice(driveName.c_str(), ntName, arrCnt(ntName));
+
+	char volName[MAX_PATH] = {}, fsType[MAX_PATH] = {};
+	DWORD serialNum = 0;
+	GetVolumeInformation(driveName.c_str(), volName, arrCnt(volName), &serialNum, nullptr, nullptr, fsType, MAX_PATH);
+
+	di.dosName = driveName;
+	di.ntName = ntName;
+	di.volName = volName;
+	di.fs = fsType;
+	di.serialNum = serialNum;
+
+	return di;
+}
+
+string ntNameToDosName(const string &ntName)
+{
+	string dosName;
+
+	return dosName;
+}
+string dosNameToNtName(const string &dosName)
+{
+	string ntName = dosName;
+
+	string drive, dir, namePart, extPart;
+	pathSplit(dosName, drive, dir, namePart, extPart);
+
+	auto driveInfo = getDriveInfo(drive);
+
+	ntName = driveInfo.ntName + strTrimLeft(ntName, drive);
+	return ntName;
 }
 
 vector<string> getFixedDrivesName()

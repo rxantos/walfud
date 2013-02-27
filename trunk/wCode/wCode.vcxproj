@@ -27,6 +27,7 @@
     <ClCompile Include="src\wSysUtil.cc" />
     <ClCompile Include="src\wTaskbarProgress.cc" />
     <ClCompile Include="src\wTimeMeasurer.cc" />
+    <ClCompile Include="src\wWindowsExt.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\wConsole.h" />
@@ -44,6 +45,7 @@
     <ClInclude Include="src\wSysUtil.h" />
     <ClInclude Include="src\wTaskbarProgress.h" />
     <ClInclude Include="src\wTimeMeasurer.h" />
+    <ClInclude Include="src\wWindowsExt.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2FFDD478-6094-426B-ADFB-861F31213DE3}</ProjectGuid>
