@@ -3,15 +3,31 @@
 //
 
 #pragma once
-#include <vector>
-#include <string>
 #include "afxcmn.h"
+#include <vector>
+#include <map>
+#include <unordered_map>
+#include <string>
+#include <tuple>
+#include "afxwin.h"
 
 // CHandleUnlockDlg dialog
 class CHandleUnlockDlg : public CDialogEx
 {
+	struct HandleRefInfo
+	{
+		static const int sc_invalidId = 0;
+
+		int processId;
+		void *val;
+
+		HandleRefInfo() : processId(sc_invalidId), val(static_cast<void *>(INVALID_HANDLE_VALUE)) {}
+		HandleRefInfo(int pi, void *v) : processId(pi), val(v) {}
+	};
+
 	// data.
-	std::vector<std::string> m_filesFullpath;
+	std::vector<std::tuple<int, void *, std::string>> m_handleState;
+	std::unordered_multimap<std::string, HandleRefInfo> m_handleRefInfo;
 
 // Construction
 public:
@@ -37,6 +53,12 @@ protected:
 
 private:
 	// logic.
+	void query();
+	void updateList();
+
 public:
 	CListCtrl m_list;
+	afx_msg void OnBnClickedButtonCloseHandle();
+	CButton m_checkRefreshPerQuery;
+	afx_msg void OnBnClickedButtonQuery();
 };
