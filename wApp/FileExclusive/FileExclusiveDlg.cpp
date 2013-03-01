@@ -13,16 +13,53 @@ using namespace std;
 #define new DEBUG_NEW
 #endif
 
-
+//
 bool operator==(const TargetInfo &a, const TargetInfo &b) { return w::strICmp(a.filename, b.filename); }
+
+// Status.
+map<Status::Key, string> Status::ms_idDescription;
+
+Status::Status() : m_curStatusKey(Key::UNKNOWN)
+{ init(); }
+Status::Status(unsigned id) : m_curStatusKey(static_cast<Status::Key>(id))
+{ init(); }
+Status &Status::operator==(unsigned id)
+{
+	m_curStatusKey = ms_idDescription.find(static_cast<Status::Key>(id)) == ms_idDescription.end() ? Key::UNKNOWN : static_cast<Status::Key>(id);
+	return *this;
+}
+Status::Status(Status::Key key) : m_curStatusKey(key)
+{ init(); }
+Status &Status::operator==(Status::Key key)
+{
+	m_curStatusKey = key;
+	return *this;
+}
+
+// Interface.
+string Status::toString() const
+{ return ms_idDescription[m_curStatusKey]; }
+
+// private.
+void Status::init()
+{
+	static bool once = false;
+	if (!once)
+	{
+		ms_idDescription[Key::SUCCESS] = "locked";
+		ms_idDescription[Key::FILE_NOT_FOUND] = "file not found";
+		ms_idDescription[Key::ACCESS_DENIED] = "access denied";
+		ms_idDescription[Key::SHARING_VIOLATION] = "sharing violation";
+		ms_idDescription[Key::UNKNOWN] = "unknown fail";
+
+		once = true;
+	}
+}
 
 // CFileExclusiveDlg dialog
 
 static const int sc_colFullpath = 0, sc_colStatus = 1;
 static const int sc_colFullpathWidth = 300, sc_colStatusWidth = 100;
-
-static const char *sc_statusLocked = "locked",
-				  *sc_statusUnlocked = "unlocked";
 
 CFileExclusiveDlg::CFileExclusiveDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CFileExclusiveDlg::IDD, pParent)
@@ -118,13 +155,7 @@ void CFileExclusiveDlg::OnDropFiles(HDROP hDropInfo)
 }
 
 void CFileExclusiveDlg::OnTimer(UINT_PTR nIDEvent)
-{
-	//switch (nIDEvent)
-	//{
-	//default:
-	//	break;
-	//}
-}
+{}
 
 // Interface.
 void CFileExclusiveDlg::getArgsFromCmdLine()
@@ -141,31 +172,24 @@ void CFileExclusiveDlg::getArgsFromCmdLine()
 	argv = NULL;
 }
 
-void CFileExclusiveDlg::refreshFile(const string &fullpath)
-{
-	freeFile(fullpath);
-	exclusiveFile(fullpath);
-}
-
 // logic.
 void CFileExclusiveDlg::exclusiveFile(const string &fullpath)
 {
+	int index = 0;
 	auto toLock = find(m_targetsInfo.begin(), m_targetsInfo.end(), TargetInfo(fullpath));
-	
 	if (toLock == m_targetsInfo.end())
 	{
-		// Insert new item.
-		HANDLE h = CreateFile(fullpath.c_str(), GENERIC_ALL, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
-		m_targetsInfo.push_back(TargetInfo(fullpath, h));
-		int index = m_listFile.InsertItem(m_listFile.GetItemCount(), fullpath.c_str());
-		m_listFile.SetItemText(index, sc_colStatus, h != INVALID_HANDLE_VALUE ? sc_statusLocked : sc_statusUnlocked);
+		m_targetsInfo.push_back(TargetInfo(fullpath, INVALID_HANDLE_VALUE));
+		index = m_listFile.InsertItem(m_listFile.GetItemCount(), fullpath.c_str());
 	}
 	else
 	{
-		// Update existing status.
-		int pos = distance(m_targetsInfo.begin(), toLock);
-		m_listFile.SetItemText(pos, sc_colStatus, lockedByMe(toLock->filename) ? sc_statusLocked : sc_statusUnlocked);
+		index = distance(m_targetsInfo.begin(), toLock);
 	}
+	
+	// Update status.
+	Status s = tryExclusive(index);
+	m_listFile.SetItemText(index, sc_colStatus, s.toString().c_str());
 }
 void CFileExclusiveDlg::freeFile(const string &fullpath)
 {
@@ -189,13 +213,17 @@ void CFileExclusiveDlg::OnBnClickedButtonRefresh()
 
 	for (auto i : filenames)
 	{
-		refreshFile(i);
+		exclusiveFile(i);
 	}
 }
 
-bool CFileExclusiveDlg::lockedByMe(const string &fullpath)
+Status CFileExclusiveDlg::tryExclusive(unsigned index)
 {
-	auto test = find(m_targetsInfo.begin(), m_targetsInfo.end(), TargetInfo(fullpath));
-	CloseHandle(test->handle);
-	return (test->handle = CreateFile(fullpath.c_str(), GENERIC_ALL, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL)) != INVALID_HANDLE_VALUE;
+	Status res;
+
+	CloseHandle(m_targetsInfo[index].handle);
+	m_targetsInfo[index].handle = CreateFile(m_targetsInfo[index].filename.c_str(), GENERIC_ALL, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
+	res = GetLastError();
+
+	return res;
 }

@@ -5,6 +5,7 @@
 #pragma once
 
 #include <vector>
+#include <map>
 #include <string>
 
 #pragma warning(disable: 4996)
@@ -19,6 +20,38 @@ struct TargetInfo
 	TargetInfo(const std::string &fn, HANDLE h) : filename(fn), handle(h) {}
 };
 bool operator==(const TargetInfo &a, const TargetInfo &b);
+
+class Status
+{
+public:
+	// .
+	enum class Key : unsigned
+	{
+		SUCCESS = ERROR_SUCCESS,
+		FILE_NOT_FOUND = ERROR_FILE_NOT_FOUND,
+		ACCESS_DENIED = ERROR_ACCESS_DENIED,
+		SHARING_VIOLATION = ERROR_SHARING_VIOLATION,
+		UNKNOWN = static_cast<unsigned>(-1),
+	};
+
+private:
+	// data.
+	Key m_curStatusKey;
+	static std::map<Key, std::string> ms_idDescription;
+
+public:
+	Status();
+	Status(unsigned id);
+	Status &operator==(unsigned id);
+	Status(Key key);
+	Status &operator==(Key key);
+public:
+	// Interface.
+	std::string toString() const;
+
+private:
+	void init();
+};
 
 // CFileExclusiveDlg dialog
 class CFileExclusiveDlg : public CDialogEx
@@ -35,9 +68,8 @@ private:
 	// logic.
 	void exclusiveFile(const std::string &fullpath);
 	void freeFile(const std::string &fullpath);
-	void refreshFile(const std::string &fullpath);
 
-	bool lockedByMe(const std::string &fullpath);
+	Status tryExclusive(unsigned index);
 
 // Construction
 public:
