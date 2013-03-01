@@ -114,6 +114,20 @@ string ntNameToDosName(const string &ntName)
 {
 	string dosName;
 
+	for (auto const &i : getDrivesInfo())
+	{
+		const string &ntDrive = i.ntName;
+		if (ntName.find(ntDrive) == 0)
+		{
+			if (ntName.size() <= i.ntName.size()
+				|| ntName[ntDrive.size()] == '\\')
+			{
+				dosName = strTrimRight(i.dosName, "\\") + "\\" + strTrimLeft(ntName.substr(ntDrive.length(), ntName.length()), "\\");
+				break;
+			}
+		}
+	}
+
 	return dosName;
 }
 string dosNameToNtName(const string &dosName)
