@@ -56,8 +56,13 @@
 #include "wWindowsExt.h"
 #include "wIniHelper.h"
 
-#pragma warning(disable: 4800) 						// 'BOOL' : forcing value to bool 'true' or 'false'.
-#pragma warning(disable: 4996)						// 'tmpnam': This function or variable may be unsafe.
+#undef max							// Use C++ inline function instead of C macro. 
+									// Avoiding the most vexing problem: 
+									// http://www.cnblogs.com/walfud/articles/2391768.html
+#undef min							// Same on.
+
+#pragma warning(disable: 4800) 		// 'BOOL' : forcing value to bool 'true' or 'false'.
+#pragma warning(disable: 4996)		// 'tmpnam': This function or variable may be unsafe.
 
 namespace w
 {
