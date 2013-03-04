@@ -7,53 +7,32 @@
 #include "FileExclusiveDlg.h"
 #include "afxdialogex.h"
 #include "wStrUtil.h"
+#include <limits>
 using namespace std;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
-//
-bool operator==(const TargetInfo &a, const TargetInfo &b) { return w::strICmp(a.filename, b.filename); }
+#define ERROR_UNKNOWN (numeric_limits<unsigned>::max())
 
-// Status.
-map<Status::Key, string> Status::ms_idDescription;
-
-Status::Status() : m_curStatusKey(Key::UNKNOWN)
-{ init(); }
-Status::Status(unsigned id) : m_curStatusKey(static_cast<Status::Key>(id))
-{ init(); }
-Status &Status::operator==(unsigned id)
-{
-	m_curStatusKey = ms_idDescription.find(static_cast<Status::Key>(id)) == ms_idDescription.end() ? Key::UNKNOWN : static_cast<Status::Key>(id);
-	return *this;
-}
-Status::Status(Status::Key key) : m_curStatusKey(key)
-{ init(); }
-Status &Status::operator==(Status::Key key)
-{
-	m_curStatusKey = key;
-	return *this;
-}
-
-// Interface.
-string Status::toString() const
-{ return ms_idDescription[m_curStatusKey]; }
-
-// private.
-void Status::init()
+string lastErrToStr(unsigned lastErr)
 {
 	static bool once = false;
+	static map<unsigned, string> s_idDescription;
 	if (!once)
 	{
-		ms_idDescription[Key::SUCCESS] = "locked";
-		ms_idDescription[Key::FILE_NOT_FOUND] = "file not found";
-		ms_idDescription[Key::ACCESS_DENIED] = "access denied";
-		ms_idDescription[Key::SHARING_VIOLATION] = "sharing violation";
-		ms_idDescription[Key::UNKNOWN] = "unknown fail";
+		s_idDescription[ERROR_SUCCESS] = "locked";
+		s_idDescription[ERROR_FILE_NOT_FOUND] = "file not found";
+		s_idDescription[ERROR_ACCESS_DENIED] = "access denied";
+		s_idDescription[ERROR_SHARING_VIOLATION] = "sharing violation";
+		s_idDescription[ERROR_UNKNOWN] = "unknown fail";
 
 		once = true;
 	}
+
+	return s_idDescription.find(lastErr) != s_idDescription.end() ? 
+			s_idDescription[lastErr] : s_idDescription[ERROR_UNKNOWN];
 }
 
 // CFileExclusiveDlg dialog
@@ -176,54 +155,35 @@ void CFileExclusiveDlg::getArgsFromCmdLine()
 void CFileExclusiveDlg::exclusiveFile(const string &fullpath)
 {
 	int index = 0;
-	auto toLock = find(m_targetsInfo.begin(), m_targetsInfo.end(), TargetInfo(fullpath));
-	if (toLock == m_targetsInfo.end())
+	auto toLock = m_targetsInfo.find(fullpath);
+	if (m_targetsInfo.find(fullpath) == m_targetsInfo.end())
 	{
-		m_targetsInfo.push_back(TargetInfo(fullpath, INVALID_HANDLE_VALUE));
+		// New item.
+		m_targetsInfo[fullpath] = INVALID_HANDLE_VALUE;
 		index = m_listFile.InsertItem(m_listFile.GetItemCount(), fullpath.c_str());
 	}
 	else
 	{
+		// Existing.
 		index = distance(m_targetsInfo.begin(), toLock);
+		CloseHandle(toLock->second);
+		m_targetsInfo[fullpath] = INVALID_HANDLE_VALUE;
 	}
 	
-	// Update status.
-	Status s = tryExclusive(index);
-	m_listFile.SetItemText(index, sc_colStatus, s.toString().c_str());
-}
-void CFileExclusiveDlg::freeFile(const string &fullpath)
-{
-	auto toFree = find(m_targetsInfo.begin(), m_targetsInfo.end(), TargetInfo(fullpath));
-	if (toFree != m_targetsInfo.end())
-	{
-		CloseHandle(toFree->handle);
-		
-		// Remove from list.
-		int pos = distance(m_targetsInfo.begin(), toFree);
-		m_listFile.DeleteItem(pos);
-		// Remove from container.
-		m_targetsInfo.erase(toFree);
-	}
+	// Try to lock file.
+	m_targetsInfo[fullpath] = reinterpret_cast<void *>(CreateFile(fullpath.c_str(), GENERIC_ALL, 0, NULL, 
+													   OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL));
+	unsigned lastErr = static_cast<unsigned>(GetLastError());
+	m_listFile.SetItemText(index, sc_colStatus, lastErrToStr(lastErr).c_str());
 }
 
 void CFileExclusiveDlg::OnBnClickedButtonRefresh()
 {
 	vector<string> filenames;
-	transform(m_targetsInfo.begin(), m_targetsInfo.end(), back_inserter(filenames), [](const TargetInfo &ti) { return ti.filename; });
+	transform(m_targetsInfo.begin(), m_targetsInfo.end(), back_inserter(filenames), [](const pair<string, void *> &p) { return p.first; });
 
 	for (auto i : filenames)
 	{
 		exclusiveFile(i);
 	}
-}
-
-Status CFileExclusiveDlg::tryExclusive(unsigned index)
-{
-	Status res;
-
-	CloseHandle(m_targetsInfo[index].handle);
-	m_targetsInfo[index].handle = CreateFile(m_targetsInfo[index].filename.c_str(), GENERIC_ALL, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
-	res = GetLastError();
-
-	return res;
 }
