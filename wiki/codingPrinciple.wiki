@@ -11,6 +11,8 @@
  
  Function parameter's type should be close to needed.
 
+ Always put prefer branch in front in 'if - else' statement.
+
  You can see my article at http://www.cnblogs.com/walfud.
  If any question, comments here or email me: walfud.s@gmail.com.
 
