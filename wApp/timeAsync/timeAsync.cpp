@@ -120,7 +120,7 @@ cout <<". ok." <<endl;
 cout <<". fail." <<endl;
 			}
 		}
-		else if (WAIT_TIMEOUT)
+		else if (w == WAIT_TIMEOUT)
 		{
 cout <<". timeout." <<endl;
 			TerminateThread(h, -1);
