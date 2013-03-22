@@ -1,4 +1,4 @@
-// timeAsync.cpp : Defines the entry point for the console application.
+// timeSync.cpp : Defines the entry point for the console application.
 //
 
 #include <Winsock2.h>
@@ -16,7 +16,7 @@ using namespace std;
 
 #pragma comment(lib, "Ws2_32.lib")
 
-static const unsigned sc_timeOut = 5 * 1000;		// 5s.
+static const unsigned sc_timeOut = 2 * 1000;		// 5s.
 
 bool isValidSystemTime(const SYSTEMTIME &st)
 { return 1601 <= st.wYear && st.wYear <= 30827
@@ -41,7 +41,7 @@ string hostnameToIp(const string &hostname)
 	return oss.str();
 }
 
-SYSTEMTIME asyncTimeFromIp(const string &timeServerIp)
+SYSTEMTIME syncTimeFromIp(const string &timeServerIp)
 {
 	SYSTEMTIME st = {};
 
@@ -120,7 +120,7 @@ SYSTEMTIME getTimeFromInternet(vector<string> serversHost)
 cout <<"trying: " <<host;
 							ip = hostnameToIp(host);
 cout <<". ip is " <<ip;
-							st = asyncTimeFromIp(ip);
+							st = syncTimeFromIp(ip);
 cout <<". st.year: " <<st.wYear <<"," <<" hour: " <<st.wHour + 8;	// To east 8th area.
 						}
 					}, 0, &p));
@@ -271,7 +271,7 @@ int main()
 //							if (param != nullptr)
 //							{
 //								Param p = *reinterpret_cast<Param *>(param);
-//								p.second = asyncTimeFromIp(p.first);
+//								p.second = syncTimeFromIp(p.first);
 //							}
 //						}, 0, &param));
 //			switch (WaitForSingleObject(h, sc_timeOut))

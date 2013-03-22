@@ -97,7 +97,7 @@
     <ClCompile Include="..\..\wCode\src\wTaskbarProgress.cc" />
     <ClCompile Include="..\..\wCode\src\wTimeMeasurer.cc" />
     <ClCompile Include="..\..\wCode\src\wWindowsExt.cpp" />
-    <ClCompile Include="timeAsync.cpp" />
+    <ClCompile Include="timeSync.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\wCode\src\wConsole.h" />
