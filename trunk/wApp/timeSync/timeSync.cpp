@@ -95,7 +95,8 @@ SYSTEMTIME getTimeFromInternet(vector<string> serversHost)
 {
 	SYSTEMTIME res = {};
 
-	while (!serversHost.empty())
+	bool found = false;
+	while (!serversHost.empty() && !found)
 	{
 		// Select a time server host and each server only connect once.
 		unsigned r = abs(rand()) % serversHost.size();
@@ -107,45 +108,73 @@ SYSTEMTIME getTimeFromInternet(vector<string> serversHost)
 		// Get system time from internet.
 		string ip;
 		SYSTEMTIME st = {};
-		typedef tuple<string, string &, SYSTEMTIME &> Param;
-		Param p(host, ip, st);
+		
+		//Param p(host, ip, st);
+
+		typedef tuple<string *,				// In. Host.
+					  string *,				// Out. Ip.
+					  atomic_bool *,		// In. 'true' if caller to release memory; 'false' if callee to release memory.
+					  SYSTEMTIME *			// Out. System time.
+									> Param;
+		Param *p = new Param;
+		string *host = get<0>(*p) = new string(host);
+		string *ip = get<1>(*p) = new string;
+		atomic_bool *owner = get<2>(*p) = new atomic_bool;
+		SYSTEMTIME *st = get<3>(*p) = new SYSTEMTIME;
+
+		*owner = true;					// Caller is resposible for release.
+
 		HANDLE h = reinterpret_cast<HANDLE>(_beginthread([](void *param)
 					{
-						if (param != nullptr)
+						if (Param *p = reinterpret_cast<Param *>(param))
 						{
-							Param p = *reinterpret_cast<Param *>(param);
-							string host = get<0>(p);			// In.
-							string &ip = get<1>(p);				// Out.
-							SYSTEMTIME &st = get<2>(p);			// Out.
-cout <<"trying: " <<host;
-							ip = hostnameToIp(host);
-cout <<". ip is " <<ip;
-							st = syncTimeFromIp(ip);
-cout <<". st.year: " <<st.wYear <<"," <<" hour: " <<st.wHour + 8;	// To east 8th area.
-						}
-					}, 0, &p));
+							string *host = get<0>(*p);
+							string *ip = get<1>(*p);
+							atomic_bool *owner = get<2>(*p);
+							SYSTEMTIME *st = get<3>(*p);
+cout <<"trying: " <<*host;
+							*ip = hostnameToIp(*host);
+cout <<". ip is " <<*ip;
+							*st = syncTimeFromIp(*ip);
+//cout <<". st.year: " <<*st.wYear <<"," <<" hour: " <<st.wHour + 8;	// To east 8th area.
 
-		DWORD w = WaitForSingleObject(h, sc_timeOut);
-		if (w == WAIT_OBJECT_0)
+							if (!*owner)
+							{
+								// Thread is resposible for release memory.
+								delete host;
+								delete ip;
+								delete owner;
+								delete st;
+								delete p;
+							}
+						}//if (Param
+					}, 0, p));
+
+		switch (WaitForSingleObject(h, sc_timeOut))
 		{
+		case WAIT_OBJECT_0:
 			if (isValidSystemTime(st))
 			{
 cout <<". ok." <<endl;
 				res = st;
-				break;
 			}
 			else
 			{
 cout <<". fail." <<endl;
 			}
-		}
-		else if (w == WAIT_TIMEOUT)
-		{
+		case WAIT_TIMEOUT:
+			// Thread is pending, we don't know when it returns, 
+			// so we ship the ownership to thread, and let it runs.
+			*owner = false;
 cout <<". timeout." <<endl;
-			TerminateThread(h, -1);
-		}
-		else
-		{}
+			break;
+		default:
+			break;
+		}//switch
+			
+
+
+
 	}//while (!serversHost
 
 	return res;
