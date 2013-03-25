@@ -14,6 +14,10 @@ using namespace std;
 #define new DEBUG_NEW
 #endif
 
+#ifndef	WM_COPYGLOBALDATA
+#define WM_COPYGLOBALDATA 0x0049
+#endif
+
 #define ERROR_UNKNOWN (numeric_limits<unsigned>::max())
 
 string lastErrToStr(unsigned lastErr)
@@ -78,6 +82,10 @@ BOOL CFileExclusiveDlg::OnInitDialog()
 
 	// Get file target from command line.
 	getArgsFromCmdLine();
+
+	// Allow message for lower privilege.
+	ChangeWindowMessageFilter(WM_DROPFILES, MSGFLT_ADD);
+	ChangeWindowMessageFilter(WM_COPYGLOBALDATA, MSGFLT_ADD);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
