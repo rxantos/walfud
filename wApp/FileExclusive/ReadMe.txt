@@ -6,3 +6,6 @@ Usage:
 Contact:
 	walfud.s@gmail.com
 	
+Contributors:
+	LiBo@360.cn		// Allow drag opertion from lower privilege.
+	WeiHongkai@360.cn	// Testing above.
