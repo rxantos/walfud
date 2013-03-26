@@ -53,6 +53,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../../wCode/src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -78,6 +79,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>../../wCode/src;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -95,11 +97,31 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
+    <PostBuildEvent>
+      <Command>copy $(TargetPath) $(ProjectDir)..\bin\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\wCode\src\wConsole.h" />
+    <ClInclude Include="..\..\wCode\src\wCppExt.h" />
+    <ClInclude Include="..\..\wCode\src\wDir.h" />
+    <ClInclude Include="..\..\wCode\src\wDisk.h" />
+    <ClInclude Include="..\..\wCode\src\wFilePermission.h" />
+    <ClInclude Include="..\..\wCode\src\wHack.h" />
+    <ClInclude Include="..\..\wCode\src\wIniHelper.h" />
+    <ClInclude Include="..\..\wCode\src\wMath.h" />
+    <ClInclude Include="..\..\wCode\src\wOtherUtil.h" />
+    <ClInclude Include="..\..\wCode\src\wPipe.h" />
+    <ClInclude Include="..\..\wCode\src\wProcess.h" />
+    <ClInclude Include="..\..\wCode\src\wRpc.h" />
+    <ClInclude Include="..\..\wCode\src\wStrUtil.h" />
+    <ClInclude Include="..\..\wCode\src\wSysUtil.h" />
+    <ClInclude Include="..\..\wCode\src\wTaskbarProgress.h" />
+    <ClInclude Include="..\..\wCode\src\wTimeMeasurer.h" />
+    <ClInclude Include="..\..\wCode\src\wWindowsExt.h" />
     <ClInclude Include="gdtHelper.h" />
     <ClInclude Include="gdtHelperDlg.h" />
     <ClInclude Include="Resource.h" />
@@ -107,6 +129,23 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\wCode\src\wConsole.cpp" />
+    <ClCompile Include="..\..\wCode\src\wCppExt.cc" />
+    <ClCompile Include="..\..\wCode\src\wDir.cc" />
+    <ClCompile Include="..\..\wCode\src\wDisk.cc" />
+    <ClCompile Include="..\..\wCode\src\wFilePermission.cc" />
+    <ClCompile Include="..\..\wCode\src\wHack.cc" />
+    <ClCompile Include="..\..\wCode\src\wIniHelper.cpp" />
+    <ClCompile Include="..\..\wCode\src\wMath.cpp" />
+    <ClCompile Include="..\..\wCode\src\wOtherUtil.cc" />
+    <ClCompile Include="..\..\wCode\src\wPipe.cc" />
+    <ClCompile Include="..\..\wCode\src\wProcess.cc" />
+    <ClCompile Include="..\..\wCode\src\wRpc.cc" />
+    <ClCompile Include="..\..\wCode\src\wStrUtil.cc" />
+    <ClCompile Include="..\..\wCode\src\wSysUtil.cc" />
+    <ClCompile Include="..\..\wCode\src\wTaskbarProgress.cc" />
+    <ClCompile Include="..\..\wCode\src\wTimeMeasurer.cc" />
+    <ClCompile Include="..\..\wCode\src\wWindowsExt.cpp" />
     <ClCompile Include="gdtHelper.cpp" />
     <ClCompile Include="gdtHelperDlg.cpp" />
     <ClCompile Include="stdafx.cpp">

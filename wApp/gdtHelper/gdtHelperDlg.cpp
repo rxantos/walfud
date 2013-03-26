@@ -6,6 +6,8 @@
 #include "gdtHelper.h"
 #include "gdtHelperDlg.h"
 #include "afxdialogex.h"
+#include "wCppExt.h"
+using namespace std;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -15,9 +17,16 @@ static const unsigned sc_bitG = 55,
 					  sc_bitDB = 54,
 					  sc_bitL = 53,
 					  sc_bitAVL = 52,
-
 					  sc_bitP = 47,
-					  sc_bitS = 44;
+					  sc_bitS = 44,
+
+					  sc_bitDPL_1 = 46,
+					  sc_bitDPL_0 = 45,
+
+					  sc_bitType_3 = 43,
+					  sc_bitType_2 = 42,
+					  sc_bitType_1 = 41,
+					  sc_bitType_0 = 40;
 
 // CgdtHelperDlg dialog
 
@@ -134,6 +143,20 @@ BEGIN_MESSAGE_MAP(CgdtHelperDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CHECK_AVL, &CgdtHelperDlg::OnBnClickedCheckAvl)
 	ON_BN_CLICKED(IDC_CHECK_P, &CgdtHelperDlg::OnBnClickedCheckP)
 	ON_BN_CLICKED(IDC_CHECK_S, &CgdtHelperDlg::OnBnClickedCheckS)
+
+	ON_BN_CLICKED(IDC_RADIO_DPL_00, &CgdtHelperDlg::OnBnClickedRadioDpl00)
+	ON_BN_CLICKED(IDC_RADIO_DPL_01, &CgdtHelperDlg::OnBnClickedRadioDpl01)
+	ON_BN_CLICKED(IDC_RADIO_DPL_10, &CgdtHelperDlg::OnBnClickedRadioDpl10)
+	ON_BN_CLICKED(IDC_RADIO_DPL_11, &CgdtHelperDlg::OnBnClickedRadioDpl11)
+
+	ON_BN_CLICKED(IDC_RADIO_TYPE_0000, &CgdtHelperDlg::OnBnClickedRadioType0000)
+	ON_BN_CLICKED(IDC_RADIO_TYPE_0010, &CgdtHelperDlg::OnBnClickedRadioType0010)
+	ON_BN_CLICKED(IDC_RADIO_TYPE_0100, &CgdtHelperDlg::OnBnClickedRadioType0100)
+	ON_BN_CLICKED(IDC_RADIO_TYPE_0110, &CgdtHelperDlg::OnBnClickedRadioType0110)
+	ON_BN_CLICKED(IDC_RADIO_TYPE_1000, &CgdtHelperDlg::OnBnClickedRadioType1000)
+	ON_BN_CLICKED(IDC_RADIO_TYPE_1010, &CgdtHelperDlg::OnBnClickedRadioType1010)
+	ON_BN_CLICKED(IDC_RADIO_TYPE_1100, &CgdtHelperDlg::OnBnClickedRadioType1100)
+	ON_BN_CLICKED(IDC_RADIO_TYPE_1110, &CgdtHelperDlg::OnBnClickedRadioType1110)
 END_MESSAGE_MAP()
 
 
@@ -204,15 +227,26 @@ HCURSOR CgdtHelperDlg::OnQueryDragIcon()
 
 void CgdtHelperDlg::OnEnChangeEditSegmentBase()
 {
-	// TODO:  If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialogEx::OnInitDialog()
-	// function and call CRichEditCtrl().SetEventMask()
-	// with the ENM_CHANGE flag ORed into the mask.
+	char num[1024] = {};
+	m_editSegmentBase.GetWindowText(num, arrCnt(num));
 
-	// TODO:  Add your control notification handler code here
-
+	unsigned val = static_cast<unsigned>(stoul(num, nullptr, 16));
+	// SegmentBase[15-0] => Gdt[31-16].
+	for (unsigned i = 0; i < 16; ++i)
+	{
+		m_editBits[16 + i].SetWindowText((val & 1<<i) == 0 ? "0" : "1");
+	}
+	// SegmentBase[23-16] => Gdt[39-32].
+	for (unsigned i = 16; i < 24; ++i)
+	{
+		m_editBits[16 + i].SetWindowText((val & 1<<i) == 0 ? "0" : "1");
+	}
+	// SegmentBase[31-24] => Gdt[63-56].
+	for (unsigned i = 24; i < 32; ++i)
+	{
+		m_editBits[32 + i].SetWindowText((val & 1<<i) == 0 ? "0" : "1");
+	}
 }
-
 
 void CgdtHelperDlg::OnEnChangeEditSegmentBound()
 {
@@ -224,22 +258,47 @@ void CgdtHelperDlg::OnEnChangeEditSegmentBound()
 	// TODO:  Add your control notification handler code here
 }
 
-/*
- *
- *		This macro used to shorten the same line in 'void CgdtHelperDlg::OnBnClickedCheckXXX()'.
- *
- */
-#define Foo(bitName) m_editBits[sc_bit##bitName].SetWindowText(m_check##bitName.GetCheck() == 0 ? "0" : "1")
-
 void CgdtHelperDlg::OnBnClickedCheckG()
-{ Foo(G); }
+{ m_editBits[sc_bitG].SetWindowText(m_checkG.GetCheck() == 0 ? "0" : "1"); }
 void CgdtHelperDlg::OnBnClickedCheckDb()
-{ Foo(DB); }
+{ m_editBits[sc_bitDB].SetWindowText(m_checkDB.GetCheck() == 0 ? "0" : "1"); }
 void CgdtHelperDlg::OnBnClickedCheckL()
-{ Foo(L); }
+{ m_editBits[sc_bitL].SetWindowText(m_checkL.GetCheck() == 0 ? "0" : "1"); }
 void CgdtHelperDlg::OnBnClickedCheckAvl()
-{ Foo(AVL); }
+{ m_editBits[sc_bitAVL].SetWindowText(m_checkAVL.GetCheck() == 0 ? "0" : "1"); }
 void CgdtHelperDlg::OnBnClickedCheckP()
-{ Foo(P); }
+{ m_editBits[sc_bitP].SetWindowText(m_checkP.GetCheck() == 0 ? "0" : "1"); }
 void CgdtHelperDlg::OnBnClickedCheckS()
-{ Foo(S); }
+{ m_editBits[sc_bitS].SetWindowText(m_checkS.GetCheck() == 0 ? "0" : "1"); }
+
+void CgdtHelperDlg::OnBnClickedRadioDpl00()
+{ m_editBits[sc_bitDPL_1].SetWindowText("0"), m_editBits[sc_bitDPL_0].SetWindowText("0"); }
+void CgdtHelperDlg::OnBnClickedRadioDpl01()
+{ m_editBits[sc_bitDPL_1].SetWindowText("0"), m_editBits[sc_bitDPL_0].SetWindowText("1"); }
+void CgdtHelperDlg::OnBnClickedRadioDpl10()
+{ m_editBits[sc_bitDPL_1].SetWindowText("1"), m_editBits[sc_bitDPL_0].SetWindowText("0"); }
+void CgdtHelperDlg::OnBnClickedRadioDpl11()
+{ m_editBits[sc_bitDPL_1].SetWindowText("1"), m_editBits[sc_bitDPL_0].SetWindowText("1"); }
+
+#define Bar(d, c, b, a) \
+	m_editBits[sc_bitType_3].SetWindowText(#d), \
+	m_editBits[sc_bitType_2].SetWindowText(#c), \
+	m_editBits[sc_bitType_1].SetWindowText(#b), \
+	m_editBits[sc_bitType_0].SetWindowText(#a)
+
+void CgdtHelperDlg::OnBnClickedRadioType0000()
+{ Bar(0, 0, 0, 0); }
+void CgdtHelperDlg::OnBnClickedRadioType0010()
+{ Bar(0, 0, 1, 0); }
+void CgdtHelperDlg::OnBnClickedRadioType0100()
+{ Bar(0, 1, 0, 0); }
+void CgdtHelperDlg::OnBnClickedRadioType0110()
+{ Bar(0, 1, 1, 0); }
+void CgdtHelperDlg::OnBnClickedRadioType1000()
+{ Bar(1, 0, 0, 0); }
+void CgdtHelperDlg::OnBnClickedRadioType1010()
+{ Bar(1, 0, 1, 0); }
+void CgdtHelperDlg::OnBnClickedRadioType1100()
+{ Bar(1, 1, 0, 0); }
+void CgdtHelperDlg::OnBnClickedRadioType1110()
+{ Bar(1, 1, 1, 0); }
