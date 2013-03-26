@@ -48,4 +48,18 @@ public:
 	afx_msg void OnBnClickedCheckAvl();
 	afx_msg void OnBnClickedCheckP();
 	afx_msg void OnBnClickedCheckS();
+
+	afx_msg void OnBnClickedRadioDpl00();
+	afx_msg void OnBnClickedRadioDpl01();
+	afx_msg void OnBnClickedRadioDpl10();
+	afx_msg void OnBnClickedRadioDpl11();
+
+	afx_msg void OnBnClickedRadioType0000();
+	afx_msg void OnBnClickedRadioType0010();
+	afx_msg void OnBnClickedRadioType0100();
+	afx_msg void OnBnClickedRadioType0110();
+	afx_msg void OnBnClickedRadioType1000();
+	afx_msg void OnBnClickedRadioType1010();
+	afx_msg void OnBnClickedRadioType1100();
+	afx_msg void OnBnClickedRadioType1110();
 };
