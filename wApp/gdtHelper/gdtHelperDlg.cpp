@@ -248,7 +248,7 @@ BOOL CgdtHelperDlg::OnInitDialog()
 
 	// Initialize widget.
 	m_editSegmentBase.SetLimitText(8);
-	m_editSegmentBound.SetLimitText(6);
+	m_editSegmentBound.SetLimitText(5);
 	for (unsigned i = 0; i < arrCnt(m_editBits); ++i)
 	{
 		m_editBits[i].SetLimitText(1);
@@ -256,7 +256,7 @@ BOOL CgdtHelperDlg::OnInitDialog()
 
 	// Initialize data.
 	m_editSegmentBase.SetWindowText("00000000");
-	m_editSegmentBound.SetWindowText("000000");
+	m_editSegmentBound.SetWindowText("00000");
 
 	m_radioDPL_00.SetCheck(1);
 	m_radioType_0000.SetCheck(1); 
@@ -355,7 +355,7 @@ void CgdtHelperDlg::OnEnChangeEditSegmentBound()
 			m_editBits[i].SetWindowText((val & 1<<i) == 0 ? "0" : "1");
 		}
 		// SegmentBound[19-16] => GlobalDescriptor[51-48].
-		for (unsigned i = 16; i < 24; ++i)
+		for (unsigned i = 16; i < 20; ++i)
 		{
 			m_editBits[32 + i].SetWindowText((val & 1<<i) == 0 ? "0" : "1");
 		}
