@@ -16,7 +16,7 @@ using namespace std;
 
 #pragma comment(lib, "Ws2_32.lib")
 
-static const unsigned sc_timeOut = 2 * 1000;		// 5s.
+static const unsigned sc_timeOut = 3 * 1000;		// 3s.
 
 bool isValidSystemTime(const SYSTEMTIME &st)
 { return 1601 <= st.wYear && st.wYear <= 30827
@@ -60,7 +60,7 @@ SYSTEMTIME syncTimeFromIp(const string &timeServerIp)
 			// Receive internet time.
 			// The value returned by internet is the second elapsed since 1900/1/1 0:0:0.
 			unsigned long elapsedSecond = 0;
-			recv(sock, reinterpret_cast<char *>(&elapsedSecond), sizeof(elapsedSecond), MSG_WAITALL);
+			recv(sock, reinterpret_cast<char *>(&elapsedSecond), sizeof(elapsedSecond), 0);
 			elapsedSecond = ntohl(elapsedSecond);
 
 			if (elapsedSecond != 0)
@@ -106,23 +106,18 @@ SYSTEMTIME getTimeFromInternet(vector<string> serversHost)
 		serversHost.erase(it);
 
 		// Get system time from internet.
-		string ip;
-		SYSTEMTIME st = {};
-		
-		//Param p(host, ip, st);
-
 		typedef tuple<string *,				// In. Host.
 					  string *,				// Out. Ip.
 					  atomic_bool *,		// In. 'true' if caller to release memory; 'false' if callee to release memory.
 					  SYSTEMTIME *			// Out. System time.
 									> Param;
 		Param *p = new Param;
-		string *host = get<0>(*p) = new string(host);
-		string *ip = get<1>(*p) = new string;
-		atomic_bool *owner = get<2>(*p) = new atomic_bool;
-		SYSTEMTIME *st = get<3>(*p) = new SYSTEMTIME;
+		string *pHost = get<0>(*p) = new string(host);
+		string *pIp = get<1>(*p) = new string;
+		atomic_bool *pOwner = get<2>(*p) = new atomic_bool;
+		SYSTEMTIME *pSt = get<3>(*p) = new SYSTEMTIME;
 
-		*owner = true;					// Caller is resposible for release.
+		*pOwner = true;					// Caller is resposible for release.
 
 		HANDLE h = reinterpret_cast<HANDLE>(_beginthread([](void *param)
 					{
@@ -136,7 +131,6 @@ cout <<"trying: " <<*host;
 							*ip = hostnameToIp(*host);
 cout <<". ip is " <<*ip;
 							*st = syncTimeFromIp(*ip);
-//cout <<". st.year: " <<*st.wYear <<"," <<" hour: " <<st.wHour + 8;	// To east 8th area.
 
 							if (!*owner)
 							{
@@ -153,28 +147,26 @@ cout <<". ip is " <<*ip;
 		switch (WaitForSingleObject(h, sc_timeOut))
 		{
 		case WAIT_OBJECT_0:
-			if (isValidSystemTime(st))
+			if (isValidSystemTime(*pSt))
 			{
 cout <<". ok." <<endl;
-				res = st;
+				res = *pSt;
+				found = true;
 			}
 			else
 			{
 cout <<". fail." <<endl;
 			}
+			break;
 		case WAIT_TIMEOUT:
 			// Thread is pending, we don't know when it returns, 
 			// so we ship the ownership to thread, and let it runs.
-			*owner = false;
+			*pOwner = false;
 cout <<". timeout." <<endl;
 			break;
 		default:
 			break;
 		}//switch
-			
-
-
-
 	}//while (!serversHost
 
 	return res;
@@ -221,14 +213,10 @@ int main()
 	timeServersHost.push_back("nist1.aol-ca.truetime.com");	// TrueTime, AOL facility, Sunnyvale, California .
 	//timeServersHost.push_back("nist1.aol-va.truetime.com");	// TrueTime, AOL facility, Virginia.
 
-	for (int i = 0; i < 100; ++i)
+	SYSTEMTIME st = getTimeFromInternet(timeServersHost);
+	if (isValidSystemTime(st))
 	{
-		SYSTEMTIME st = getTimeFromInternet(timeServersHost);
-		if (isValidSystemTime(st))
-		{
-			SetSystemTime(&st);
-			break;
-		}
+		SetSystemTime(&st);
 	}
 
 	WSACleanup();
