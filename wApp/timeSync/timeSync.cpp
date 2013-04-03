@@ -53,36 +53,34 @@ SYSTEMTIME syncTimeFromIp(const string &timeServerIp)
 
 	// Send request to time server.
 	SOCKET sock = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	//SOCKET sock = ::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);		// UDP is unreliable.
 	if (sock != INVALID_SOCKET)
 	{
 		if (connect(sock, reinterpret_cast<SOCKADDR *>(&sa), sizeof(sa)) == 0)
 		{
 			// Receive internet time.
 			// The value returned by internet is the second elapsed since 1900/1/1 0:0:0.
-			unsigned long elapsedSecond = 0;
+			time_t elapsedSecond = 0;
+			//sendto(sock, NULL, 0, 0, reinterpret_cast<sockaddr *>(&sa), sizeof(sa));
+			//int addrSize = sizeof(sa);
+			//recvfrom(sock, reinterpret_cast<char *>(&elapsedSecond), sizeof(elapsedSecond), 0, reinterpret_cast<sockaddr *>(&sa), &addrSize);
 			recv(sock, reinterpret_cast<char *>(&elapsedSecond), sizeof(elapsedSecond), 0);
-			elapsedSecond = ntohl(elapsedSecond);
+			elapsedSecond = (static_cast<time_t>(ntohl(static_cast<unsigned long>(elapsedSecond >> 32))) << 32 
+							| ntohl(static_cast<unsigned long>(elapsedSecond)) - 2208988800);	// '2208988800' is the second "1900/01/01 00:00:00" - "1970/01/01 00:00:00".
+																								// Time protocol return a second elapsed from 1970/01/01 00:00:00,
+																								// but 'localtime' use a second goes from 1900/01/01 00:00:00. 
 
-			if (elapsedSecond != 0)
+			if (tm *p = localtime(&elapsedSecond))
 			{
-				// Convert to system time.
-				// 'SYSTEMTIME' goes from 1900/1/1 0:0:0, but 'FILETIME' goes from 1601/1/1 0:0:0.
-				// 'SYSTEMTIME' in second, 'FILETIME' in 100 nanosecond.
-				SYSTEMTIME tmp = {};
-				tmp.wYear = 1900;
-				tmp.wMonth = 1;
-				tmp.wDay = 1;
-
-				FILETIME ft = {};
-				SystemTimeToFileTime(&tmp, &ft);
-				LARGE_INTEGER &li = reinterpret_cast<LARGE_INTEGER &>(ft);
-				li.QuadPart += elapsedSecond * static_cast<long long>(1000 * 1000 * 10);
-				FileTimeToSystemTime(&ft, &tmp);
-
-				if (isValidSystemTime(tmp))
-				{
-					st = tmp;
-				}
+				st.wYear = p->tm_year + 1900,
+				st.wMonth = p->tm_mon + 1,
+				st.wDay = p->tm_mday,
+				st.wDayOfWeek = p->tm_wday,
+					
+				st.wHour = p->tm_hour,
+				st.wMinute = p->tm_min,
+				st.wSecond = p->tm_sec,
+				st.wMilliseconds = 0;
 			}//if (elapsedSecond
 		}//if (connect
 		closesocket(sock);
@@ -127,9 +125,9 @@ SYSTEMTIME getTimeFromInternet(vector<string> serversHost)
 							string *ip = get<1>(*p);
 							atomic_bool *owner = get<2>(*p);
 							SYSTEMTIME *st = get<3>(*p);
-cout <<"trying: " <<*host;
+cout <<*host;
 							*ip = hostnameToIp(*host);
-cout <<". ip is " <<*ip;
+cout <<"\t" <<*ip;
 							*st = syncTimeFromIp(*ip);
 
 							if (!*owner)
@@ -149,20 +147,20 @@ cout <<". ip is " <<*ip;
 		case WAIT_OBJECT_0:
 			if (isValidSystemTime(*pSt))
 			{
-cout <<". ok." <<endl;
 				res = *pSt;
 				found = true;
+cout <<"\t" <<res.wYear <<"-" <<res.wMonth <<"-" <<res.wDay <<" " <<res.wHour <<":" <<res.wMinute <<":" <<res.wSecond <<endl;
 			}
 			else
 			{
-cout <<". fail." <<endl;
+cout <<"\tfail." <<endl;
 			}
 			break;
 		case WAIT_TIMEOUT:
 			// Thread is pending, we don't know when it returns, 
 			// so we ship the ownership to thread, and let it runs.
 			*pOwner = false;
-cout <<". timeout." <<endl;
+cout <<"\ttimeout." <<endl;
 			break;
 		default:
 			break;
@@ -172,6 +170,7 @@ cout <<". timeout." <<endl;
 	return res;
 }
 
+#ifndef TEST
 int main()
 {
 	WSADATA WSAData = {};
@@ -197,14 +196,14 @@ int main()
 	//timeServersHost.push_back("s2k.time.edu.cn");	// CERNET桂林主节点.
 	//timeServersHost.push_back("s2m.time.edu.cn");	// 北京大学.
 
-	timeServersHost.push_back("www.time.ac.cn");	// 国家授时中心.
+	//timeServersHost.push_back("www.time.ac.cn");	// 国家授时中心.
 	timeServersHost.push_back("time-a.nist.gov");	// NIST, Gaithersburg, Maryland .
 	timeServersHost.push_back("time-b.nist.gov");	// NIST, Gaithersburg, Maryland .
 	timeServersHost.push_back("time-a.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
 	timeServersHost.push_back("time-b.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
 	timeServersHost.push_back("time-c.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
 	//timeServersHost.push_back("utcnist.colorado.edu");	// University of Colorado, Boulder .
-	timeServersHost.push_back("time.nist.gov");	// NCAR, Boulder, Colorado .
+	//timeServersHost.push_back("time.nist.gov");	// NCAR, Boulder, Colorado .
 	//timeServersHost.push_back("time-nw.nist.gov");	// Microsoft, Redmond, Washington .
 	timeServersHost.push_back("nist1.symmetricom.com");	// Symmetricom, San Jose, California .
 	//timeServersHost.push_back("nist1-dc.glassey.com");	// Abovenet, Virginia .
@@ -222,98 +221,99 @@ int main()
 	WSACleanup();
 	return 0;
  }
+#else
+// Server testing.
+int main()
+{
+	WSADATA WSAData = {};
+	WSAStartup(MAKEWORD(2,0), &WSAData);
 
-//// Server testing.
-//int main()
-//{
-//	WSADATA WSAData = {};
-//	WSAStartup(MAKEWORD(2,0), &WSAData);
-//
-//	// Available time server.
-//	vector<string> timeServersHost;
-//	timeServersHost.push_back("ntp.sjtu.edu.cn");	// 上海交通大学.
-//	timeServersHost.push_back("s1a.time.edu.cn");	// 北京邮电大学.
-//	timeServersHost.push_back("s1b.time.edu.cn");	// 清华大学.
-//	timeServersHost.push_back("s1c.time.edu.cn");	// 北京大学.
-//	timeServersHost.push_back("s1d.time.edu.cn");	// 东南大学.
-//	timeServersHost.push_back("s1e.time.edu.cn");	// 清华大学.
-//	timeServersHost.push_back("s2a.time.edu.cn");	// 清华大学.
-//	timeServersHost.push_back("s2b.time.edu.cn");	// 清华大学.
-//	timeServersHost.push_back("s2c.time.edu.cn");	// 北京邮电大学.
-//	timeServersHost.push_back("s2d.time.edu.cn");	// 西南地区网络中心.
-//	timeServersHost.push_back("s2e.time.edu.cn");	// 西北地区网络中心.
-//	timeServersHost.push_back("s2f.time.edu.cn");	// 东北地区网络中心.
-//	timeServersHost.push_back("s2g.time.edu.cn");	// 华东南地区网络中心.
-//	timeServersHost.push_back("s2h.time.edu.cn");	// 四川大学网络管理中心.
-//	timeServersHost.push_back("s2j.time.edu.cn");	// 大连理工大学网络中心.
-//	timeServersHost.push_back("s2k.time.edu.cn");	// CERNET桂林主节点.
-//	timeServersHost.push_back("s2m.time.edu.cn");	// 北京大学.
-//
-//	timeServersHost.push_back("www.time.ac.cn");	// 国家授时中心.
-//	timeServersHost.push_back("time-a.nist.gov");	// NIST, Gaithersburg, Maryland .
-//	timeServersHost.push_back("time-b.nist.gov");	// NIST, Gaithersburg, Maryland .
-//	timeServersHost.push_back("time-a.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
-//	timeServersHost.push_back("time-b.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
-//	timeServersHost.push_back("time-c.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
-//	timeServersHost.push_back("utcnist.colorado.edu");	// University of Colorado, Boulder .
-//	timeServersHost.push_back("time.nist.gov");	// NCAR, Boulder, Colorado .
-//	timeServersHost.push_back("time-nw.nist.gov");	// Microsoft, Redmond, Washington .
-//	timeServersHost.push_back("nist1.symmetricom.com");	// Symmetricom, San Jose, California .
-//	timeServersHost.push_back("nist1-dc.glassey.com");	// Abovenet, Virginia .
-//	timeServersHost.push_back("nist1-ny.glassey.com");	// Abovenet, New York City .
-//	timeServersHost.push_back("nist1-sj.glassey.com");	// Abovenet, San Jose, California .
-//	timeServersHost.push_back("nist1.aol-ca.truetime.com");	// TrueTime, AOL facility, Sunnyvale, California .
-//	timeServersHost.push_back("nist1.aol-va.truetime.com");	// TrueTime, AOL facility, Virginia.
-//
-//	// Time service testing.
-//	unordered_map<string, unsigned> hostCnt;
-//	unordered_map<string, string> hostIp;
-//	
-//	//for (int i = 0; i < 33; ++i)
-//	int i = 0;
-//	{
-//		cout <<"---------------------------------   " <<i + 1 <<"-th   --------------------------------" <<endl;
-//
-//		for (auto const &j : timeServersHost)
-//		{
-//			hostIp[j] = hostnameToIp(j);
-//			hostCnt[j] += !hostIp[j].empty() ? 1 : 0;
-//
-//			cout <<setw(30) <<j <<" : " <<setw(16) <<hostIp[j] <<" : " <<setw(3) <<hostCnt[j];
-//			SYSTEMTIME st = {};
-//			typedef pair<string, SYSTEMTIME &> Param;
-//			Param param(hostIp[j], st);
-//			HANDLE h = reinterpret_cast<HANDLE>(_beginthread([](void *param)
-//						{
-//							if (param != nullptr)
-//							{
-//								Param p = *reinterpret_cast<Param *>(param);
-//								p.second = syncTimeFromIp(p.first);
-//							}
-//						}, 0, &param));
-//			switch (WaitForSingleObject(h, sc_timeOut))
-//			{
-//			case WAIT_OBJECT_0:
-//				if (isValidSystemTime(st))
-//				{
-//					cout <<" succ : hour is " <<setw(2) <<st.wHour+8 <<".";	// To east the 8th area.
-//				}
-//				else
-//				{
-//					cout <<" fail.";
-//				}
-//				cout <<endl;
-//				break;
-//			case WAIT_TIMEOUT:
-//				cout <<" time out." <<endl;
-//				break;
-//			default:
-//				cout <<" thread fail." <<endl;
-//				break;
-//			}
-//		}
-//	}
-//
-//	WSACleanup();
-//	return 0;
-//}
+	// Available time server.
+	vector<string> timeServersHost;
+	timeServersHost.push_back("ntp.sjtu.edu.cn");	// 上海交通大学.
+	timeServersHost.push_back("s1a.time.edu.cn");	// 北京邮电大学.
+	timeServersHost.push_back("s1b.time.edu.cn");	// 清华大学.
+	timeServersHost.push_back("s1c.time.edu.cn");	// 北京大学.
+	timeServersHost.push_back("s1d.time.edu.cn");	// 东南大学.
+	timeServersHost.push_back("s1e.time.edu.cn");	// 清华大学.
+	timeServersHost.push_back("s2a.time.edu.cn");	// 清华大学.
+	timeServersHost.push_back("s2b.time.edu.cn");	// 清华大学.
+	timeServersHost.push_back("s2c.time.edu.cn");	// 北京邮电大学.
+	timeServersHost.push_back("s2d.time.edu.cn");	// 西南地区网络中心.
+	timeServersHost.push_back("s2e.time.edu.cn");	// 西北地区网络中心.
+	timeServersHost.push_back("s2f.time.edu.cn");	// 东北地区网络中心.
+	timeServersHost.push_back("s2g.time.edu.cn");	// 华东南地区网络中心.
+	timeServersHost.push_back("s2h.time.edu.cn");	// 四川大学网络管理中心.
+	timeServersHost.push_back("s2j.time.edu.cn");	// 大连理工大学网络中心.
+	timeServersHost.push_back("s2k.time.edu.cn");	// CERNET桂林主节点.
+	timeServersHost.push_back("s2m.time.edu.cn");	// 北京大学.
+
+	timeServersHost.push_back("www.time.ac.cn");	// 国家授时中心.
+	timeServersHost.push_back("time-a.nist.gov");	// NIST, Gaithersburg, Maryland .
+	timeServersHost.push_back("time-b.nist.gov");	// NIST, Gaithersburg, Maryland .
+	timeServersHost.push_back("time-a.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
+	timeServersHost.push_back("time-b.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
+	timeServersHost.push_back("time-c.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
+	timeServersHost.push_back("utcnist.colorado.edu");	// University of Colorado, Boulder .
+	timeServersHost.push_back("time.nist.gov");	// NCAR, Boulder, Colorado .
+	timeServersHost.push_back("time-nw.nist.gov");	// Microsoft, Redmond, Washington .
+	timeServersHost.push_back("nist1.symmetricom.com");	// Symmetricom, San Jose, California .
+	timeServersHost.push_back("nist1-dc.glassey.com");	// Abovenet, Virginia .
+	timeServersHost.push_back("nist1-ny.glassey.com");	// Abovenet, New York City .
+	timeServersHost.push_back("nist1-sj.glassey.com");	// Abovenet, San Jose, California .
+	timeServersHost.push_back("nist1.aol-ca.truetime.com");	// TrueTime, AOL facility, Sunnyvale, California .
+	timeServersHost.push_back("nist1.aol-va.truetime.com");	// TrueTime, AOL facility, Virginia.
+
+	// Time service testing.
+	unordered_map<string, unsigned> hostCnt;
+	unordered_map<string, string> hostIp;
+	
+	//for (int i = 0; i < 33; ++i)
+	int i = 0;
+	{
+		cout <<"---------------------------------   " <<i + 1 <<"-th   --------------------------------" <<endl;
+
+		for (auto const &j : timeServersHost)
+		{
+			hostIp[j] = hostnameToIp(j);
+			hostCnt[j] += !hostIp[j].empty() ? 1 : 0;
+
+			cout <<setw(30) <<j <<" : " <<setw(16) <<hostIp[j] <<" : " <<setw(3) <<hostCnt[j];
+			SYSTEMTIME st = {};
+			typedef pair<string, SYSTEMTIME &> Param;
+			Param param(hostIp[j], st);
+			HANDLE h = reinterpret_cast<HANDLE>(_beginthread([](void *param)
+						{
+							if (param != nullptr)
+							{
+								Param p = *reinterpret_cast<Param *>(param);
+								p.second = syncTimeFromIp(p.first);
+							}
+						}, 0, &param));
+			switch (WaitForSingleObject(h, sc_timeOut))
+			{
+			case WAIT_OBJECT_0:
+				if (isValidSystemTime(st))
+				{
+					cout <<" succ : hour is " <<setw(2) <<st.wHour+8 <<".";	// To east the 8th area.
+				}
+				else
+				{
+					cout <<" fail.";
+				}
+				cout <<endl;
+				break;
+			case WAIT_TIMEOUT:
+				cout <<" time out." <<endl;
+				break;
+			default:
+				cout <<" thread fail." <<endl;
+				break;
+			}
+		}
+	}
+
+	WSACleanup();
+	return 0;
+}
+#endif // TEST
