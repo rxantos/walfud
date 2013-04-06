@@ -18,6 +18,21 @@ using namespace std;
 
 static const unsigned sc_timeOut = 3 * 1000;		// 3s.
 
+struct NTP_Pack 
+{
+	char flag;
+	char peerClockStratum;
+	char peerPollingInterval;
+	char peerClockPrecision; 
+	char rootDelay[4];
+	char clockDispersion[4];
+	char referenceClock[4];
+	char referenceClockUpdateTime[8];
+	char originateTimeStamp[8];
+	char receiveTimeStamp[8];
+	char transmitTimeStamp[8];
+};
+
 bool isValidSystemTime(const SYSTEMTIME &st)
 { return 1601 <= st.wYear && st.wYear <= 30827
 		 && 1 <= st.wMonth && st.wMonth <= 12
@@ -45,6 +60,47 @@ SYSTEMTIME syncTimeFromIp(const string &timeServerIp)
 {
 	SYSTEMTIME st = {};
 
+#ifdef NTP
+	// Construct socket address.
+	sockaddr_in sa = {};
+	sa.sin_family = AF_INET;
+	sa.sin_port = htons(IPPORT_NTP);
+	sa.sin_addr.S_un.S_addr = inet_addr(timeServerIp.c_str());
+
+	SOCKET sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (sock != INVALID_SOCKET)
+	{
+		NTP_Pack ntpPack = {};
+		ntpPack.flag =0x1b;
+
+		if (sendto(sock, reinterpret_cast<char *>(&ntpPack), sizeof(ntpPack), 
+				   0, reinterpret_cast<SOCKADDR *>(&sa), sizeof(sa)) == sizeof(ntpPack)
+			&& recvfrom(sock, reinterpret_cast<char *>(&ntpPack), sizeof(ntpPack), 
+						0, nullptr, nullptr) == sizeof(ntpPack))
+		{
+			time_t elapsedSecond = 0;
+			memcpy(&elapsedSecond, ntpPack.receiveTimeStamp, sizeof(elapsedSecond));
+			elapsedSecond = ntohl(static_cast<unsigned long>(elapsedSecond)) - 2208988800;	// '2208988800' is the second "1900/01/01 00:00:00" - "1970/01/01 00:00:00".
+																							// Time protocol return a second elapsed from 1970/01/01 00:00:00,
+																							// but 'gmtime' use a second goes from 1900/01/01 00:00:00. 
+
+			if (tm *p = gmtime(&elapsedSecond))
+			{
+				st.wYear = p->tm_year + 1900,
+				st.wMonth = p->tm_mon + 1,
+				st.wDay = p->tm_mday,
+				st.wDayOfWeek = p->tm_wday,
+					
+				st.wHour = p->tm_hour,
+				st.wMinute = p->tm_min,
+				st.wSecond = p->tm_sec,
+				st.wMilliseconds = 0;
+			}//if (elapsedSecond
+		}//if (sendto
+		closesocket(sock);
+	}//if (sock
+
+#else
 	// Construct socket address.
 	sockaddr_in sa = {};
 	sa.sin_family = AF_INET;
@@ -65,12 +121,9 @@ SYSTEMTIME syncTimeFromIp(const string &timeServerIp)
 			//int addrSize = sizeof(sa);
 			//recvfrom(sock, reinterpret_cast<char *>(&elapsedSecond), sizeof(elapsedSecond), 0, reinterpret_cast<sockaddr *>(&sa), &addrSize);
 			recv(sock, reinterpret_cast<char *>(&elapsedSecond), sizeof(elapsedSecond), 0);
-			elapsedSecond = (static_cast<time_t>(ntohl(static_cast<unsigned long>(elapsedSecond >> 32))) << 32 
-							| ntohl(static_cast<unsigned long>(elapsedSecond)) - 2208988800);	// '2208988800' is the second "1900/01/01 00:00:00" - "1970/01/01 00:00:00".
-																								// Time protocol return a second elapsed from 1970/01/01 00:00:00,
-																								// but 'localtime' use a second goes from 1900/01/01 00:00:00. 
+			elapsedSecond = ntohl(static_cast<unsigned long>(elapsedSecond)) - 2208988800);	
 
-			if (tm *p = localtime(&elapsedSecond))
+			if (tm *p = gmtime(&elapsedSecond))
 			{
 				st.wYear = p->tm_year + 1900,
 				st.wMonth = p->tm_mon + 1,
@@ -84,7 +137,8 @@ SYSTEMTIME syncTimeFromIp(const string &timeServerIp)
 			}//if (elapsedSecond
 		}//if (connect
 		closesocket(sock);
-	}
+	}//if (sock
+#endif // NTP.
 
 	return st;
 }
@@ -215,7 +269,9 @@ int main()
 	SYSTEMTIME st = getTimeFromInternet(timeServersHost);
 	if (isValidSystemTime(st))
 	{
+#ifndef DEBUG
 		SetSystemTime(&st);
+#endif // DEBUG.
 	}
 
 	WSACleanup();
@@ -268,8 +324,7 @@ int main()
 	unordered_map<string, unsigned> hostCnt;
 	unordered_map<string, string> hostIp;
 	
-	//for (int i = 0; i < 33; ++i)
-	int i = 0;
+	for (int i = 0; i < 10; ++i)
 	{
 		cout <<"---------------------------------   " <<i + 1 <<"-th   --------------------------------" <<endl;
 
@@ -295,7 +350,7 @@ int main()
 			case WAIT_OBJECT_0:
 				if (isValidSystemTime(st))
 				{
-					cout <<" succ : hour is " <<setw(2) <<st.wHour+8 <<".";	// To east the 8th area.
+					cout <<" succ : hour is " <<setw(2) <<st.wHour <<".";
 				}
 				else
 				{
@@ -309,9 +364,9 @@ int main()
 			default:
 				cout <<" thread fail." <<endl;
 				break;
-			}
-		}
-	}
+			}//switch (WaitForSingleObject
+		}//for (auto
+	}//for (int
 
 	WSACleanup();
 	return 0;
