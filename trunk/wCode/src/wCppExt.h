@@ -29,6 +29,7 @@
 #include <thread>
 #include <future>
 #include <mutex>
+#include <atomic>
 #include <condition_variable>
 #include <chrono>
 #include <regex>
