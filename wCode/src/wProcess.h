@@ -50,7 +50,7 @@ std::map<int, ProcessInfo> getProcessesInfo();
  *		One id maps to one process, while one name maps to one or more processes.
  *
  */
-std::vector<int> getProcessId(const std::string &processName);
+std::unordered_set<int> getProcessId(const std::string &processName);
 std::string getProcessName(DWORD id);
 
 int getCurrentProcessId();

@@ -26,6 +26,7 @@
 #include <numeric>
 #include <limits>
 #include <functional>
+#include <atomic>
 #include <thread>
 #include <future>
 #include <mutex>

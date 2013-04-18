@@ -55,7 +55,22 @@ bool remoteCall(unsigned targetProcessId, unsigned long (__stdcall *func)(void *
 	return remoteThread != nullptr;
 }
 bool remoteCall(const string &targetProcessName, unsigned long (__stdcall *func)(void *), void *param, unsigned paramSize, bool paramIsPtr)
-{ return remoteCall(w::getProcessId(targetProcessName)[0], func, param, paramSize, paramIsPtr); }
+{
+	double res = 1;
+
+	// If not all done well, then return false.
+	for (const auto &i : w::getProcessId(targetProcessName))
+	{
+		if (!remoteCall(i, func, param, paramSize, paramIsPtr))
+		{
+			res = res > 0 ? -res : res;
+		}
+
+		res *= 1.1;
+	}
+
+	return res > 1;
+}
 
 bool remoteInject(unsigned targetProcessId, const string &injectedDllFullpath)
 { 
@@ -68,7 +83,22 @@ bool remoteInject(unsigned targetProcessId, const string &injectedDllFullpath)
 					  true); 
 }
 bool remoteInject(const string &targetProcessName, const string &injectedDllFullpath)
-{ return remoteInject(w::getProcessId(targetProcessName)[0], injectedDllFullpath); }
+{
+	double res = 1;
+
+	// If not all done well, then return false.
+	for (const auto &i : w::getProcessId(targetProcessName))
+	{
+		if (!remoteInject(i, injectedDllFullpath))
+		{
+			res = res > 0 ? -res : res;
+		}
+
+		res *= 1.1;
+	}
+
+	return res > 1;
+}
 
 bool remoteAntiinject(unsigned targetProcessId, const string &antiinjectedDllModuleName)
 {
@@ -83,7 +113,22 @@ bool remoteAntiinject(unsigned targetProcessId, const string &antiinjectedDllMod
 					  false);
 }
 bool remoteAntiinject(const string &targetProcessName, const string &antiinjectedDllFullpath)
-{ return remoteAntiinject(w::getProcessId(targetProcessName)[0], antiinjectedDllFullpath); }
+{
+	double res = 1;
+
+	// If not all done well, then return false.
+	for (const auto &i : w::getProcessId(targetProcessName))
+	{
+		if (!remoteAntiinject(i, antiinjectedDllFullpath))
+		{
+			res = res > 0 ? -res : res;
+		}
+
+		res *= 1.1;
+	}
+
+	return res > 1;
+}
 
 bool interceptFunc(HMODULE callerModule, void *originalFunc, void *myFunc)
 {
