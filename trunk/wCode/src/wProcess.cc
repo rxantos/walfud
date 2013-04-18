@@ -113,16 +113,16 @@ static map<int, string> getProcessesId()
 	CloseHandle(snapshot);
 	return idName;
 }
-vector<int> getProcessId(const string &processName)
+unordered_set<int> getProcessId(const string &processName)
 {
-	vector<int> ids;
+	unordered_set<int> ids;
 
 	map<int, string> idNames = getProcessesId();
 	for (map<int, string>::const_iterator it = idNames.begin(); it != idNames.end(); ++it)
 	{
 		if (strICmp(processName, it->second))
 		{
-			ids.push_back(it->first);
+			ids.insert(it->first);
 		}
 	}
 	
