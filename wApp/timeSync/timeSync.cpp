@@ -389,7 +389,7 @@ Arg getArg(const int argc, const char * const argv[])
  *			"ntp"	=>	network time protocol by udp. (default)
  *		-h: time server host name. seperated by backspace.
  *		-i: time server ip. seperated by backspace. (unimplement)
- *		-t: time out per try, in millisecond.
+ *		-t: time out per try, in millisecond. (default is 3000 ms.)
  *
  */
 int main(int argc, char *argv[])
