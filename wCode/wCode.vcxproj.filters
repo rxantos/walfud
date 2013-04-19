@@ -59,6 +59,9 @@
     <ClCompile Include="src\wIniHelper.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\wService.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\wCppExt.h">
@@ -110,6 +113,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\wIniHelper.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\wService.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

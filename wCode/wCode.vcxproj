@@ -24,6 +24,7 @@
     <ClCompile Include="src\wPipe.cc" />
     <ClCompile Include="src\wProcess.cc" />
     <ClCompile Include="src\wRpc.cc" />
+    <ClCompile Include="src\wService.cpp" />
     <ClCompile Include="src\wStrUtil.cc" />
     <ClCompile Include="src\wSysUtil.cc" />
     <ClCompile Include="src\wTaskbarProgress.cc" />
@@ -43,6 +44,7 @@
     <ClInclude Include="src\wPipe.h" />
     <ClInclude Include="src\wProcess.h" />
     <ClInclude Include="src\wRpc.h" />
+    <ClInclude Include="src\wService.h" />
     <ClInclude Include="src\wStrUtil.h" />
     <ClInclude Include="src\wSysUtil.h" />
     <ClInclude Include="src\wTaskbarProgress.h" />

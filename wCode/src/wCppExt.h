@@ -57,6 +57,7 @@
 #include "wMath.h"
 #include "wWindowsExt.h"
 #include "wIniHelper.h"
+#include "wService.h"
 
 #undef max							// Use C++ inline function instead of C macro. 
 									// Avoiding the most vexing problem: 
