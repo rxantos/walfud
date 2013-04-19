@@ -18,6 +18,19 @@ using namespace std;
 
 static const unsigned sc_timeOut = 3 * 1000;		// 3s.
 
+enum class SyncProtocol : unsigned
+{
+	DEFAULT,
+	TimeProtocol,
+	NetworkTimeProtocol,
+};
+enum class NetworkProtocol : unsigned
+{
+	DEFAULT,
+	TCP,
+	UDP,
+};
+
 struct NTP_Pack 
 {
 	char flag;
@@ -56,16 +69,72 @@ string hostnameToIp(const string &hostname)
 	return oss.str();
 }
 
-SYSTEMTIME syncTimeFromIp(const string &timeServerIp)
+/*
+ *
+ *		Synchronous time from specified server. Time Protocol. Both TCP and UDP is ok.
+ *
+ */
+time_t syncTimeFromIp_tp_tcp(const sockaddr_in &sa)
 {
-	SYSTEMTIME st = {};
+	time_t elapsedSecond = 0;
 
-#ifdef NTP
-	// Construct socket address.
-	sockaddr_in sa = {};
-	sa.sin_family = AF_INET;
-	sa.sin_port = htons(IPPORT_NTP);
-	sa.sin_addr.S_un.S_addr = inet_addr(timeServerIp.c_str());
+	// Send request to time server.
+	SOCKET sock = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (sock != INVALID_SOCKET)
+	{
+		if (connect(sock, reinterpret_cast<const sockaddr *>(&sa), sizeof(sa)) == 0)
+		{
+			// Receive internet time.
+			// The value returned by internet is the second elapsed since 1900/1/1 0:0:0.			
+			recv(sock, reinterpret_cast<char *>(&elapsedSecond), sizeof(elapsedSecond), 0);
+			elapsedSecond = ntohl(static_cast<unsigned long>(elapsedSecond) - 2208988800);	
+		}//if (connect
+
+		closesocket(sock);
+	}//if (sock
+
+	return elapsedSecond;
+}
+time_t syncTimeFromIp_tp_udp(const sockaddr_in &sa)
+{
+	time_t elapsedSecond = 0;
+
+	// Send request to time server.
+	SOCKET sock = ::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);		// UDP is unreliable.
+	if (sock != INVALID_SOCKET)
+	{
+		// Receive internet time.
+		// The value returned by internet is the second elapsed since 1900/1/1 0:0:0.
+		sendto(sock, NULL, 0, 0, reinterpret_cast<const sockaddr *>(&sa), sizeof(sa));
+		recvfrom(sock, reinterpret_cast<char *>(&elapsedSecond), sizeof(elapsedSecond), 0, nullptr, 0);
+		elapsedSecond = ntohl(static_cast<unsigned long>(elapsedSecond) - 2208988800);
+
+		closesocket(sock);
+	}//if (sock
+
+	return elapsedSecond;
+}
+time_t syncTimeFromIp_tp(const sockaddr_in &sa, NetworkProtocol np = NetworkProtocol::TCP)
+{
+	// Time protocol.
+	return np == NetworkProtocol::UDP ? syncTimeFromIp_tp_udp(sa)		// Using UDP.
+									  : syncTimeFromIp_tp_tcp(sa);		// Using TCP.
+}
+
+/*
+ *
+ *		Synchronous time from specified server. Network Time Protocol. Only UDP.
+ *
+ */
+time_t syncTimeFromIp_ntp_tcp(const sockaddr_in &sa)
+{
+	assert(false && "NetworkTimeProtocol only support UDP. Please call 'syncTimeFromIp_ntp_udp' instead.");
+
+	return 0;
+}
+time_t syncTimeFromIp_ntp_udp(const sockaddr_in &sa)
+{
+	time_t elapsedSecond = 0;
 
 	SOCKET sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	if (sock != INVALID_SOCKET)
@@ -74,81 +143,81 @@ SYSTEMTIME syncTimeFromIp(const string &timeServerIp)
 		ntpPack.flag =0x1b;
 
 		if (sendto(sock, reinterpret_cast<char *>(&ntpPack), sizeof(ntpPack), 
-				   0, reinterpret_cast<SOCKADDR *>(&sa), sizeof(sa)) == sizeof(ntpPack)
+				   0, reinterpret_cast<const sockaddr *>(&sa), sizeof(sa)) == sizeof(ntpPack)
 			&& recvfrom(sock, reinterpret_cast<char *>(&ntpPack), sizeof(ntpPack), 
 						0, nullptr, nullptr) == sizeof(ntpPack))
 		{
-			time_t elapsedSecond = 0;
 			memcpy(&elapsedSecond, ntpPack.receiveTimeStamp, sizeof(elapsedSecond));
 			elapsedSecond = ntohl(static_cast<unsigned long>(elapsedSecond)) - 2208988800;	// '2208988800' is the second "1900/01/01 00:00:00" - "1970/01/01 00:00:00".
 																							// Time protocol return a second elapsed from 1970/01/01 00:00:00,
 																							// but 'gmtime' use a second goes from 1900/01/01 00:00:00. 
-
-			if (tm *p = gmtime(&elapsedSecond))
-			{
-				st.wYear = p->tm_year + 1900,
-				st.wMonth = p->tm_mon + 1,
-				st.wDay = p->tm_mday,
-				st.wDayOfWeek = p->tm_wday,
-					
-				st.wHour = p->tm_hour,
-				st.wMinute = p->tm_min,
-				st.wSecond = p->tm_sec,
-				st.wMilliseconds = 0;
-			}//if (elapsedSecond
 		}//if (sendto
 		closesocket(sock);
 	}//if (sock
 
-#else
+	return elapsedSecond;
+}
+time_t syncTimeFromIp_ntp(const sockaddr_in &sa, NetworkProtocol np = NetworkProtocol::UDP)
+{
+	// Network time protocol.
+	return np == NetworkProtocol::TCP ? syncTimeFromIp_ntp_tcp(sa)		// Using TCP.
+									  : syncTimeFromIp_ntp_udp(sa);		// Using UDP.
+}
+
+SYSTEMTIME syncTimeFromIp(const string &timeServerIp, unsigned timeoutPerTry, 
+						  SyncProtocol sp = SyncProtocol::NetworkTimeProtocol, NetworkProtocol np = NetworkProtocol::TCP)
+{
+	SYSTEMTIME st = {};
+
+	// Network time protocol.
 	// Construct socket address.
 	sockaddr_in sa = {};
 	sa.sin_family = AF_INET;
-	sa.sin_port = htons(IPPORT_TIMESERVER);
+	switch (sp)
+	{
+	case SyncProtocol::DEFAULT:
+		// Fall through.
+	case SyncProtocol::NetworkTimeProtocol:
+		sa.sin_port = htons(IPPORT_NTP);
+		break;
+	case SyncProtocol::TimeProtocol:
+		sa.sin_port = htons(IPPORT_TIMESERVER);
+		break;
+	default:
+		break;
+	}
 	sa.sin_addr.S_un.S_addr = inet_addr(timeServerIp.c_str());
 
-	// Send request to time server.
-	SOCKET sock = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-	//SOCKET sock = ::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);		// UDP is unreliable.
-	if (sock != INVALID_SOCKET)
+	if (time_t elapsedSecond = syncTimeFromIp_ntp(sa, np))
 	{
-		if (connect(sock, reinterpret_cast<SOCKADDR *>(&sa), sizeof(sa)) == 0)
+		if (tm *p = gmtime(&elapsedSecond))
 		{
-			// Receive internet time.
-			// The value returned by internet is the second elapsed since 1900/1/1 0:0:0.
-			time_t elapsedSecond = 0;
-			//sendto(sock, NULL, 0, 0, reinterpret_cast<sockaddr *>(&sa), sizeof(sa));
-			//int addrSize = sizeof(sa);
-			//recvfrom(sock, reinterpret_cast<char *>(&elapsedSecond), sizeof(elapsedSecond), 0, reinterpret_cast<sockaddr *>(&sa), &addrSize);
-			recv(sock, reinterpret_cast<char *>(&elapsedSecond), sizeof(elapsedSecond), 0);
-			elapsedSecond = ntohl(static_cast<unsigned long>(elapsedSecond)) - 2208988800);	
-
-			if (tm *p = gmtime(&elapsedSecond))
-			{
-				st.wYear = p->tm_year + 1900,
-				st.wMonth = p->tm_mon + 1,
-				st.wDay = p->tm_mday,
-				st.wDayOfWeek = p->tm_wday,
+			st.wYear = p->tm_year + 1900,
+			st.wMonth = p->tm_mon + 1,
+			st.wDay = p->tm_mday,
+			st.wDayOfWeek = p->tm_wday,
 					
-				st.wHour = p->tm_hour,
-				st.wMinute = p->tm_min,
-				st.wSecond = p->tm_sec,
-				st.wMilliseconds = 0;
-			}//if (elapsedSecond
-		}//if (connect
-		closesocket(sock);
-	}//if (sock
-#endif // NTP.
+			st.wHour = p->tm_hour,
+			st.wMinute = p->tm_min,
+			st.wSecond = p->tm_sec,
+			st.wMilliseconds = 0;
+		}
+	}
 
 	return st;
 }
 
-SYSTEMTIME getTimeFromInternet(vector<string> serversHost)
+SYSTEMTIME getTimeFromInternet(vector<string> serversHost, unsigned timeoutPerTry, 
+							   SyncProtocol sp = SyncProtocol::NetworkTimeProtocol, NetworkProtocol np = NetworkProtocol::UDP)
 {
 	SYSTEMTIME res = {};
 
 	bool found = false;
+#ifdef DEBUG
+	while (!serversHost.empty())
+#else
 	while (!serversHost.empty() && !found)
+#endif // DEBUG.
 	{
 		// Select a time server host and each server only connect once.
 		unsigned r = abs(rand()) % serversHost.size();
@@ -160,14 +229,20 @@ SYSTEMTIME getTimeFromInternet(vector<string> serversHost)
 		// Get system time from internet.
 		typedef tuple<string *,				// In. Host.
 					  string *,				// Out. Ip.
+					  unsigned *,			// In. Timeout per try.
 					  atomic_bool *,		// In. 'true' if caller to release memory; 'false' if callee to release memory.
-					  SYSTEMTIME *			// Out. System time.
+					  SYSTEMTIME *,			// Out. System time.
+					  SyncProtocol *,		// In. Synchronous protocol.
+					  NetworkProtocol *		// In. Network protocol.
 									> Param;
 		Param *p = new Param;
 		string *pHost = get<0>(*p) = new string(host);
 		string *pIp = get<1>(*p) = new string;
-		atomic_bool *pOwner = get<2>(*p) = new atomic_bool;
-		SYSTEMTIME *pSt = get<3>(*p) = new SYSTEMTIME;
+		unsigned *pTo = get<2>(*p) = new unsigned(timeoutPerTry);
+		atomic_bool *pOwner = get<3>(*p) = new atomic_bool;
+		SYSTEMTIME *pSt = get<4>(*p) = new SYSTEMTIME;
+		SyncProtocol *pSp = get<5>(*p) = new SyncProtocol(sp);
+		NetworkProtocol *pNp = get<6>(*p) = new NetworkProtocol(np);
 
 		*pOwner = true;					// Caller is resposible for release.
 
@@ -177,26 +252,32 @@ SYSTEMTIME getTimeFromInternet(vector<string> serversHost)
 						{
 							string *host = get<0>(*p);
 							string *ip = get<1>(*p);
-							atomic_bool *owner = get<2>(*p);
-							SYSTEMTIME *st = get<3>(*p);
+							unsigned *to = get<2>(*p);
+							atomic_bool *owner = get<3>(*p);
+							SYSTEMTIME *st = get<4>(*p);
+							SyncProtocol *sp = get<5>(*p);
+							NetworkProtocol *np = get<6>(*p);
 cout <<*host;
 							*ip = hostnameToIp(*host);
 cout <<"\t" <<*ip;
-							*st = syncTimeFromIp(*ip);
+							*st = syncTimeFromIp(*ip, *to, *sp, *np);
 
 							if (!*owner)
 							{
 								// Thread is resposible for release memory.
 								delete host;
 								delete ip;
+								delete to;
 								delete owner;
 								delete st;
+								delete sp;
+								delete np;
 								delete p;
 							}
 						}//if (Param
 					}, 0, p));
 
-		switch (WaitForSingleObject(h, sc_timeOut))
+		switch (WaitForSingleObject(h, timeoutPerTry))
 		{
 		case WAIT_OBJECT_0:
 			if (isValidSystemTime(*pSt))
@@ -224,49 +305,124 @@ cout <<"\ttimeout." <<endl;
 	return res;
 }
 
+struct Arg
+{
+	vector<string> hosts, ips;
+
+	SyncProtocol sp;
+	unsigned timeout;
+
+	unsigned flag;
+	static const unsigned sc_hosts	= 1 << 0,
+						  sc_ips	= 1 << 1,
+						  sc_sp		= 1 << 2,
+						  sc_timeout= 1 << 3;
+};
+
+Arg getArg(const int argc, const char * const argv[])
+{
+	Arg arg = {};
+
+	unsigned flag = 0;
+	for (int i = 1; i < argc; ++i)
+	{
+		string str = argv[i];
+		if (str[0] == '-')
+		{
+			// Options key.
+			switch (str[1])
+			{
+			case 'p':
+				// Synchronus protocol.
+				flag = Arg::sc_sp;
+				break;
+			case 'h':
+				// Time servers host.
+				flag = Arg::sc_hosts;
+				break;
+			case 'i':
+				// Time servers ip.
+				flag = Arg::sc_ips;
+				break;
+			case 't':
+				// Time out.
+				flag = Arg::sc_timeout;
+				break;
+			default:
+				break;
+			}//switch
+
+			arg.flag |= flag;
+		}
+		else
+		{
+			// Options value.
+			switch (flag)
+			{
+			case Arg::sc_sp:
+				arg.sp = str == "tp" ? SyncProtocol::TimeProtocol
+									 : SyncProtocol::NetworkTimeProtocol;
+				break;
+			case Arg::sc_hosts:
+				arg.hosts.push_back(str);
+				break;
+			case Arg::sc_ips:
+				// Not implement.
+				break;
+			case Arg::sc_timeout:
+				arg.timeout = w::strToUnsigned(str);
+				break;
+			default:
+				break;
+			}//switch
+		}//if
+	}//for
+
+	return arg;
+}
+
 #ifndef TEST
-int main()
+/*
+ *
+ *	Param: 
+ *		-p: "tp"	=>	time protocol by tcp;
+ *			"ntp"	=>	network time protocol by udp. (default)
+ *		-h: time server host name. seperated by backspace.
+ *		-i: time server ip. seperated by backspace. (unimplement)
+ *		-t: time out per try, in millisecond.
+ *
+ */
+int main(int argc, char *argv[])
 {
 	WSADATA WSAData = {};
 	WSAStartup(MAKEWORD(2,0), &WSAData);
 
+	// Get parameter.
+	Arg arg = getArg(argc, argv);
+
 	// Available time server.
 	vector<string> timeServersHost;
-	//timeServersHost.push_back("ntp.sjtu.edu.cn");	// 上海交通大学.
-	//timeServersHost.push_back("s1a.time.edu.cn");	// 北京邮电大学.
-	//timeServersHost.push_back("s1b.time.edu.cn");	// 清华大学.
-	//timeServersHost.push_back("s1c.time.edu.cn");	// 北京大学.
-	//timeServersHost.push_back("s1d.time.edu.cn");	// 东南大学.
-	//timeServersHost.push_back("s1e.time.edu.cn");	// 清华大学.
-	//timeServersHost.push_back("s2a.time.edu.cn");	// 清华大学.
-	//timeServersHost.push_back("s2b.time.edu.cn");	// 清华大学.
-	//timeServersHost.push_back("s2c.time.edu.cn");	// 北京邮电大学.
-	//timeServersHost.push_back("s2d.time.edu.cn");	// 西南地区网络中心.
-	//timeServersHost.push_back("s2e.time.edu.cn");	// 西北地区网络中心.
-	//timeServersHost.push_back("s2f.time.edu.cn");	// 东北地区网络中心.
-	//timeServersHost.push_back("s2g.time.edu.cn");	// 华东南地区网络中心.
-	//timeServersHost.push_back("s2h.time.edu.cn");	// 四川大学网络管理中心.
-	//timeServersHost.push_back("s2j.time.edu.cn");	// 大连理工大学网络中心.
-	//timeServersHost.push_back("s2k.time.edu.cn");	// CERNET桂林主节点.
-	//timeServersHost.push_back("s2m.time.edu.cn");	// 北京大学.
+	if (Arg::sc_hosts & arg.flag)
+	{
+		// Use argument specified hosts.
+		timeServersHost = arg.hosts;
+	}
+	else
+	{
+		// No argument hosts, use default hosts.
+		timeServersHost.push_back("time-a.nist.gov");				// NIST, Gaithersburg, Maryland .
+		timeServersHost.push_back("time-b.nist.gov");				// NIST, Gaithersburg, Maryland .
+		timeServersHost.push_back("time-a.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
+		timeServersHost.push_back("time-b.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
+		timeServersHost.push_back("time-c.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
+		timeServersHost.push_back("nist1.symmetricom.com");			// Symmetricom, San Jose, California .
+		timeServersHost.push_back("nist1-sj.glassey.com");			// Abovenet, San Jose, California .
+		timeServersHost.push_back("india.colorado.edu");			// 
+	}
 
-	//timeServersHost.push_back("www.time.ac.cn");	// 国家授时中心.
-	timeServersHost.push_back("time-a.nist.gov");	// NIST, Gaithersburg, Maryland .
-	timeServersHost.push_back("time-b.nist.gov");	// NIST, Gaithersburg, Maryland .
-	timeServersHost.push_back("time-a.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
-	timeServersHost.push_back("time-b.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
-	timeServersHost.push_back("time-c.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
-	//timeServersHost.push_back("utcnist.colorado.edu");	// University of Colorado, Boulder .
-	//timeServersHost.push_back("time.nist.gov");	// NCAR, Boulder, Colorado .
-	//timeServersHost.push_back("time-nw.nist.gov");	// Microsoft, Redmond, Washington .
-	timeServersHost.push_back("nist1.symmetricom.com");	// Symmetricom, San Jose, California .
-	//timeServersHost.push_back("nist1-dc.glassey.com");	// Abovenet, Virginia .
-	//timeServersHost.push_back("nist1-ny.glassey.com");	// Abovenet, New York City .
-	timeServersHost.push_back("nist1-sj.glassey.com");	// Abovenet, San Jose, California .
-	timeServersHost.push_back("nist1.aol-ca.truetime.com");	// TrueTime, AOL facility, Sunnyvale, California .
-	//timeServersHost.push_back("nist1.aol-va.truetime.com");	// TrueTime, AOL facility, Virginia.
-
-	SYSTEMTIME st = getTimeFromInternet(timeServersHost);
+	SYSTEMTIME st = getTimeFromInternet(timeServersHost, 
+										Arg::sc_timeout & arg.flag ? arg.timeout : sc_timeOut,
+										Arg::sc_sp & arg.flag ? arg.sp : SyncProtocol::DEFAULT);
 	if (isValidSystemTime(st))
 	{
 #ifndef DEBUG
@@ -319,6 +475,8 @@ int main()
 	timeServersHost.push_back("nist1-sj.glassey.com");	// Abovenet, San Jose, California .
 	timeServersHost.push_back("nist1.aol-ca.truetime.com");	// TrueTime, AOL facility, Sunnyvale, California .
 	timeServersHost.push_back("nist1.aol-va.truetime.com");	// TrueTime, AOL facility, Virginia.
+
+	timeServersHost.push_back("india.colorado.edu");	// 
 
 	// Time service testing.
 	unordered_map<string, unsigned> hostCnt;
