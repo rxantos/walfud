@@ -182,7 +182,20 @@ std::string wStrToStr(const std::wstring &wstr);
  *
  */
 std::string intToStr(int num, unsigned radix = 10);
+
+template <typename T>
+T strToNum(const std::string &str)
+{
+	T t;
+
+	std::istringstream iss(str);
+	iss >>t;
+
+	return t;
+}
 int strToInt(const std::string &str);
+unsigned strToUnsigned(const std::string &str);
+double strToDouble(const std::string &str);
 
 /*
  *
