@@ -104,15 +104,13 @@ string intToStr(int num, unsigned radix)
 	reverse(str.begin(), str.end());
 	return str;
 }
+
 int strToInt(const string &str)
-{
-	int i = 0;
-
-	istringstream iss(str);
-	iss >>i;
-
-	return i;
-}
+{ return strToNum<int>(str); }
+unsigned strToUnsigned(const std::string &str)
+{ return strToNum<unsigned>(str); }
+double strToDouble(const string &str)
+{ return strToNum<double>(str); }
 
 vector<string> strSplit(const string &str, const char delim)
 {
