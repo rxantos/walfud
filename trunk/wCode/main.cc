@@ -9,11 +9,18 @@ using namespace w;
 
 int main(/*int argc, char *argv[]*/)
 {
-	IniHelper ini("C:\\Users\\songdeming\\Desktop\\test.ini");
+	auto s = getServiceInfoByPid(404);
+	for (const auto &i : s)
+	{
+		auto d = getDependentServicesInfo(i.name);
 
-	ini.load();
-	ini.save();
-	
+		cout <<i.name <<" : ";
+		for (const auto &j : d)
+		{
+			cout <<j.name <<"\t";
+		}
+		cout <<endl;
+	}
 
 	return 0;
 }
