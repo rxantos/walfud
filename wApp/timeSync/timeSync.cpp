@@ -76,6 +76,7 @@ string hostnameToIp(const string &hostname)
  */
 time_t syncTimeFromIp_tp_tcp(const sockaddr_in &sa)
 {
+cout <<"\t" <<"[tp/tcp]";
 	time_t elapsedSecond = 0;
 
 	// Send request to time server.
@@ -87,7 +88,7 @@ time_t syncTimeFromIp_tp_tcp(const sockaddr_in &sa)
 			// Receive internet time.
 			// The value returned by internet is the second elapsed since 1900/1/1 0:0:0.			
 			recv(sock, reinterpret_cast<char *>(&elapsedSecond), sizeof(elapsedSecond), 0);
-			elapsedSecond = ntohl(static_cast<unsigned long>(elapsedSecond) - 2208988800);	
+			elapsedSecond = ntohl(static_cast<unsigned long>(elapsedSecond)) - 2208988800;
 		}//if (connect
 
 		closesocket(sock);
@@ -97,6 +98,7 @@ time_t syncTimeFromIp_tp_tcp(const sockaddr_in &sa)
 }
 time_t syncTimeFromIp_tp_udp(const sockaddr_in &sa)
 {
+cout <<"\t" <<"[tp/udp]";
 	time_t elapsedSecond = 0;
 
 	// Send request to time server.
@@ -107,7 +109,7 @@ time_t syncTimeFromIp_tp_udp(const sockaddr_in &sa)
 		// The value returned by internet is the second elapsed since 1900/1/1 0:0:0.
 		sendto(sock, NULL, 0, 0, reinterpret_cast<const sockaddr *>(&sa), sizeof(sa));
 		recvfrom(sock, reinterpret_cast<char *>(&elapsedSecond), sizeof(elapsedSecond), 0, nullptr, 0);
-		elapsedSecond = ntohl(static_cast<unsigned long>(elapsedSecond) - 2208988800);
+		elapsedSecond = ntohl(static_cast<unsigned long>(elapsedSecond)) - 2208988800;
 
 		closesocket(sock);
 	}//if (sock
@@ -128,12 +130,14 @@ time_t syncTimeFromIp_tp(const sockaddr_in &sa, NetworkProtocol np = NetworkProt
  */
 time_t syncTimeFromIp_ntp_tcp(const sockaddr_in &sa)
 {
+cout <<"\t" <<"[ntp/tcp]";
 	assert(false && "NetworkTimeProtocol only support UDP. Please call 'syncTimeFromIp_ntp_udp' instead.");
 
 	return 0;
 }
 time_t syncTimeFromIp_ntp_udp(const sockaddr_in &sa)
 {
+cout <<"\t" <<"[ntp/udp]";
 	time_t elapsedSecond = 0;
 
 	SOCKET sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -168,27 +172,30 @@ SYSTEMTIME syncTimeFromIp(const string &timeServerIp, unsigned timeoutPerTry,
 						  SyncProtocol sp = SyncProtocol::NetworkTimeProtocol, NetworkProtocol np = NetworkProtocol::TCP)
 {
 	SYSTEMTIME st = {};
+	time_t elapsedSecond = 0;
 
 	// Network time protocol.
 	// Construct socket address.
 	sockaddr_in sa = {};
 	sa.sin_family = AF_INET;
+	sa.sin_addr.S_un.S_addr = inet_addr(timeServerIp.c_str());
 	switch (sp)
 	{
 	case SyncProtocol::DEFAULT:
 		// Fall through.
 	case SyncProtocol::NetworkTimeProtocol:
 		sa.sin_port = htons(IPPORT_NTP);
+		elapsedSecond = syncTimeFromIp_ntp(sa, np);
 		break;
 	case SyncProtocol::TimeProtocol:
 		sa.sin_port = htons(IPPORT_TIMESERVER);
+		elapsedSecond = syncTimeFromIp_tp(sa, np);
 		break;
 	default:
 		break;
 	}
-	sa.sin_addr.S_un.S_addr = inet_addr(timeServerIp.c_str());
 
-	if (time_t elapsedSecond = syncTimeFromIp_ntp(sa, np))
+	if (elapsedSecond != 0)
 	{
 		if (tm *p = gmtime(&elapsedSecond))
 		{
@@ -207,25 +214,19 @@ SYSTEMTIME syncTimeFromIp(const string &timeServerIp, unsigned timeoutPerTry,
 	return st;
 }
 
-SYSTEMTIME getTimeFromInternet(vector<string> serversHost, unsigned timeoutPerTry, 
-							   SyncProtocol sp = SyncProtocol::NetworkTimeProtocol, NetworkProtocol np = NetworkProtocol::UDP)
+SYSTEMTIME getTimeFromInternet(vector<string> serversHost, 
+							   unsigned timeoutPerTry = sc_timeOut, 
+							   SyncProtocol sp = SyncProtocol::NetworkTimeProtocol, NetworkProtocol np = NetworkProtocol::UDP,
+							   bool tryAllServers = false)
 {
 	SYSTEMTIME res = {};
 
 	bool found = false;
-#ifdef DEBUG
-	while (!serversHost.empty())
-#else
-	while (!serversHost.empty() && !found)
-#endif // DEBUG.
-	{
-		// Select a time server host and each server only connect once.
-		unsigned r = abs(rand()) % serversHost.size();
-		vector<string>::iterator it = serversHost.begin();
-		advance(it, r);
-		string host = *it;
-		serversHost.erase(it);
 
+	for (vector<string>::const_iterator it = serversHost.cbegin(); 
+		 it != serversHost.cend() && (!found || tryAllServers);		// If in debug mode, NOT exit.
+		 ++it)
+	{
 		// Get system time from internet.
 		typedef tuple<string *,				// In. Host.
 					  string *,				// Out. Ip.
@@ -236,7 +237,7 @@ SYSTEMTIME getTimeFromInternet(vector<string> serversHost, unsigned timeoutPerTr
 					  NetworkProtocol *		// In. Network protocol.
 									> Param;
 		Param *p = new Param;
-		string *pHost = get<0>(*p) = new string(host);
+		string *pHost = get<0>(*p) = new string(*it);
 		string *pIp = get<1>(*p) = new string;
 		unsigned *pTo = get<2>(*p) = new unsigned(timeoutPerTry);
 		atomic_bool *pOwner = get<3>(*p) = new atomic_bool;
@@ -257,7 +258,7 @@ SYSTEMTIME getTimeFromInternet(vector<string> serversHost, unsigned timeoutPerTr
 							SYSTEMTIME *st = get<4>(*p);
 							SyncProtocol *sp = get<5>(*p);
 							NetworkProtocol *np = get<6>(*p);
-cout <<*host;
+cout <<left <<setw(25) <<*host;
 							*ip = hostnameToIp(*host);
 cout <<"\t" <<*ip;
 							*st = syncTimeFromIp(*ip, *to, *sp, *np);
@@ -283,6 +284,7 @@ cout <<"\t" <<*ip;
 			if (isValidSystemTime(*pSt))
 			{
 				res = *pSt;
+
 				found = true;
 cout <<"\t" <<res.wYear <<"-" <<res.wMonth <<"-" <<res.wDay <<" " <<res.wHour <<":" <<res.wMinute <<":" <<res.wSecond <<endl;
 			}
@@ -300,7 +302,7 @@ cout <<"\ttimeout." <<endl;
 		default:
 			break;
 		}//switch
-	}//while (!serversHost
+	}//for
 
 	return res;
 }
@@ -316,7 +318,8 @@ struct Arg
 	static const unsigned sc_hosts	= 1 << 0,
 						  sc_ips	= 1 << 1,
 						  sc_sp		= 1 << 2,
-						  sc_timeout= 1 << 3;
+						  sc_timeout= 1 << 3,
+						  sc_debug	= 1 << 4;		// Only test servers but NOT change system time.
 };
 
 Arg getArg(const int argc, const char * const argv[])
@@ -348,6 +351,9 @@ Arg getArg(const int argc, const char * const argv[])
 				// Time out.
 				flag = Arg::sc_timeout;
 				break;
+			case 'd':
+				// Debug.
+				flag = Arg::sc_debug;
 			default:
 				break;
 			}//switch
@@ -390,6 +396,7 @@ Arg getArg(const int argc, const char * const argv[])
  *		-h: time server host name. seperated by backspace.
  *		-i: time server ip. seperated by backspace. (unimplement)
  *		-t: time out per try, in millisecond. (default is 3000 ms.)
+ *		-d: debug mode. All time server hosts will be tested, but NOT change your system time.
  *
  */
 int main(int argc, char *argv[])
@@ -410,24 +417,31 @@ int main(int argc, char *argv[])
 	else
 	{
 		// No argument hosts, use default hosts.
-		timeServersHost.push_back("time-a.nist.gov");				// NIST, Gaithersburg, Maryland .
-		timeServersHost.push_back("time-b.nist.gov");				// NIST, Gaithersburg, Maryland .
 		timeServersHost.push_back("time-a.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
 		timeServersHost.push_back("time-b.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
 		timeServersHost.push_back("time-c.timefreq.bldrdoc.gov");	// NIST, Boulder, Colorado .
 		timeServersHost.push_back("nist1.symmetricom.com");			// Symmetricom, San Jose, California .
 		timeServersHost.push_back("nist1-sj.glassey.com");			// Abovenet, San Jose, California .
 		timeServersHost.push_back("india.colorado.edu");			// 
+		timeServersHost.push_back("time-a.nist.gov");				// NIST, Gaithersburg, Maryland .
+		timeServersHost.push_back("time-b.nist.gov");				// NIST, Gaithersburg, Maryland .
 	}
 
-	SYSTEMTIME st = getTimeFromInternet(timeServersHost, 
-										Arg::sc_timeout & arg.flag ? arg.timeout : sc_timeOut,
-										Arg::sc_sp & arg.flag ? arg.sp : SyncProtocol::DEFAULT);
-	if (isValidSystemTime(st))
+	unsigned timeout = Arg::sc_timeout & arg.flag ? arg.timeout : sc_timeOut;
+	SyncProtocol sp = Arg::sc_sp & arg.flag ? arg.sp : SyncProtocol::DEFAULT;
+	NetworkProtocol np = sp == SyncProtocol::TimeProtocol ? NetworkProtocol::TCP		// Only TimeProtocol uses TCP,
+														  : NetworkProtocol::UDP;		// Otherwise use UDP.
+	bool debugMode = (Arg::sc_debug & arg.flag) != 0 ? true : false;
+	SYSTEMTIME st = getTimeFromInternet(timeServersHost, timeout, sp, np, debugMode);
+
+	if (!(Arg::sc_debug & arg.flag))
 	{
+		if (isValidSystemTime(st))
+		{
 #ifndef DEBUG
-		SetSystemTime(&st);
+			SetSystemTime(&st);
 #endif // DEBUG.
+		}
 	}
 
 	WSACleanup();
