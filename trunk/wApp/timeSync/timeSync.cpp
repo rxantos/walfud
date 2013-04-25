@@ -1,4 +1,6 @@
-// timeSync.cpp : Defines the entry point for the console application.
+
+
+// timeSync.cpp
 //
 
 #include <Winsock2.h>
