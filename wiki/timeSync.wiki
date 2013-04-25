@@ -17,4 +17,4 @@ _Param: _
  *		-d: debug mode. In this mode, all time server hosts will be tested and NOT change you system time.
 
 = Example =
-timeSync.exe -p ntp -h india.colorado.edu time-b.nist.gov -t 300
+timeSync.exe -p ntp -h india.colorado.edu time-b.nist.gov -t 300 -d
