@@ -3,7 +3,7 @@
 //
 
 #include "stdafx.h"
-#include "gdtHelper.h"
+#include "main.h"
 #include "gdtHelperDlg.h"
 
 #ifdef _DEBUG
