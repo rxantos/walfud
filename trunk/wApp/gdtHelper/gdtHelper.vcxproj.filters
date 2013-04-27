@@ -14,19 +14,13 @@
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
     <Filter Include="wCode">
-      <UniqueIdentifier>{40f0f1ff-86b2-48ec-955a-de29d76114bf}</UniqueIdentifier>
+      <UniqueIdentifier>{e8524baa-991d-4a71-86b2-354048504aac}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="gdtHelper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gdtHelperDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -34,6 +28,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gdtHelperDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\wCode\src\wConsole.h">
@@ -72,6 +72,9 @@
     <ClInclude Include="..\..\wCode\src\wRpc.h">
       <Filter>wCode</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wService.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\wCode\src\wStrUtil.h">
       <Filter>wCode</Filter>
     </ClInclude>
@@ -87,15 +90,18 @@
     <ClInclude Include="..\..\wCode\src\wWindowsExt.h">
       <Filter>wCode</Filter>
     </ClInclude>
+    <ClInclude Include="wGdtHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="gdtHelper.cpp">
+    <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gdtHelperDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stdafx.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\wCode\src\wConsole.cpp">
@@ -134,6 +140,9 @@
     <ClCompile Include="..\..\wCode\src\wRpc.cc">
       <Filter>wCode</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wService.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\wCode\src\wStrUtil.cc">
       <Filter>wCode</Filter>
     </ClCompile>
@@ -148,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="..\..\wCode\src\wWindowsExt.cpp">
       <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="wGdtHelper.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

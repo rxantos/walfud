@@ -26,10 +26,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110_xp</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
-    <UseOfMfc>Static</UseOfMfc>
+    <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -43,6 +43,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);../../wCode/src;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -53,7 +54,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../../wCode/src;</AdditionalIncludeDirectories>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -78,17 +79,13 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <AdditionalIncludeDirectories>../../wCode/src;</AdditionalIncludeDirectories>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>nafxcw.lib;libcmt.lib</AdditionalDependencies>
-      <IgnoreSpecificDefaultLibraries>uafxcw.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -100,9 +97,6 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
-    <PostBuildEvent>
-      <Command>copy $(TargetPath) $(ProjectDir)..\bin\</Command>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -120,16 +114,18 @@
     <ClInclude Include="..\..\wCode\src\wPipe.h" />
     <ClInclude Include="..\..\wCode\src\wProcess.h" />
     <ClInclude Include="..\..\wCode\src\wRpc.h" />
+    <ClInclude Include="..\..\wCode\src\wService.h" />
     <ClInclude Include="..\..\wCode\src\wStrUtil.h" />
     <ClInclude Include="..\..\wCode\src\wSysUtil.h" />
     <ClInclude Include="..\..\wCode\src\wTaskbarProgress.h" />
     <ClInclude Include="..\..\wCode\src\wTimeMeasurer.h" />
     <ClInclude Include="..\..\wCode\src\wWindowsExt.h" />
-    <ClInclude Include="gdtHelper.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="gdtHelperDlg.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="wGdtHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\wCode\src\wConsole.cpp" />
@@ -144,17 +140,19 @@
     <ClCompile Include="..\..\wCode\src\wPipe.cc" />
     <ClCompile Include="..\..\wCode\src\wProcess.cc" />
     <ClCompile Include="..\..\wCode\src\wRpc.cc" />
+    <ClCompile Include="..\..\wCode\src\wService.cpp" />
     <ClCompile Include="..\..\wCode\src\wStrUtil.cc" />
     <ClCompile Include="..\..\wCode\src\wSysUtil.cc" />
     <ClCompile Include="..\..\wCode\src\wTaskbarProgress.cc" />
     <ClCompile Include="..\..\wCode\src\wTimeMeasurer.cc" />
     <ClCompile Include="..\..\wCode\src\wWindowsExt.cpp" />
-    <ClCompile Include="gdtHelper.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="gdtHelperDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="wGdtHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="gdtHelper.rc" />
