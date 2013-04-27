@@ -89,28 +89,17 @@ string wStrToStr(const wstring &wstr)
 	return str;
 }
 
-string intToStr(int num, unsigned radix)
-{
-	//ostringstream oss;
-	//oss <<(radix == 10 ? dec : radix == 16 ? hex : radix == 8 ? oct : ???) <<num;
+string intToStr(int num, int radix)
+{ return numToStr<int>(num, radix); }
+string unsignedToStr(unsigned num, unsigned radix)
+{ return numToStr<unsigned>(num, radix); }
 
-	string str;
-	do
-	{
-		int reminder = num % radix;
-		str.push_back(static_cast<char>(reminder < 10 ? reminder + '0' : reminder - 10 + 'a'));
-	} while (num /= radix);
-
-	reverse(str.begin(), str.end());
-	return str;
-}
-
-int strToInt(const string &str)
-{ return strToNum<int>(str); }
-unsigned strToUnsigned(const std::string &str)
-{ return strToNum<unsigned>(str); }
-double strToDouble(const string &str)
-{ return strToNum<double>(str); }
+int strToInt(const string &str, unsigned radix)
+{ return strToNum<int>(str, radix); }
+unsigned strToUnsigned(const std::string &str, unsigned radix)
+{ return strToNum<unsigned>(str, radix); }
+double strToDouble(const string &str, unsigned radix)
+{ return strToNum<double>(str, radix); }
 
 vector<string> strSplit(const string &str, const char delim)
 {

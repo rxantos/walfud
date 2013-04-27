@@ -181,21 +181,40 @@ std::string wStrToStr(const std::wstring &wstr);
  *		More details: http://en.cppreference.com/w/cpp/string/basic_string/to_string.
  *
  */
-std::string intToStr(int num, unsigned radix = 10);
+template <typename T>
+std::string numToStr(T num, short radix = 10)
+{
+	string str;
+	do
+	{
+		T reminder = num % radix;
+		str.push_back(static_cast<char>(reminder < 10 ? reminder + '0' : reminder - 10 + 'a'));
+	} while (num /= radix);
+
+	std::reverse(str.begin(), str.end());
+	return str;
+}
+std::string intToStr(int num, int radix = 10);
+std::string unsignedToStr(unsigned num, unsigned radix = 10);
 
 template <typename T>
-T strToNum(const std::string &str)
+T strToNum(const std::string &str, unsigned radix = 10)
 {
-	T t;
+	T t = 0;
 
-	std::istringstream iss(str);
-	iss >>t;
+	unsigned base = 1;
+	for (std::string::const_reverse_iterator it = str.rbegin(); it != str.rend(); ++it)
+	{
+		t += base * charToDigit(*it);
+
+		base *= radix;
+	}
 
 	return t;
 }
-int strToInt(const std::string &str);
-unsigned strToUnsigned(const std::string &str);
-double strToDouble(const std::string &str);
+int strToInt(const std::string &str, unsigned radix = 10);
+unsigned strToUnsigned(const std::string &str, unsigned radix = 10);
+double strToDouble(const std::string &str, unsigned radix = 10);
 
 /*
  *
