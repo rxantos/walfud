@@ -182,7 +182,7 @@ std::string wStrToStr(const std::wstring &wstr);
  *
  */
 template <typename T>
-std::string numToStr(T num, short radix = 10)
+std::string numToStr(T num, unsigned radix = 10)
 {
 	string str;
 	do

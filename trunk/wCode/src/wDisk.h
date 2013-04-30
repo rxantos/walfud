@@ -1,6 +1,6 @@
 
 
-// W_DISK_H
+// wDisk.h
 //
 
 #ifndef W_DISK_H
