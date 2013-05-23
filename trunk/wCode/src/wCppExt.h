@@ -40,6 +40,7 @@
 #include <windows.h>
 #include <process.h>
 #include <Dbghelp.h>
+#include <winternl.h>
 
 #include "wStrUtil.h"
 #include "wSysUtil.h"

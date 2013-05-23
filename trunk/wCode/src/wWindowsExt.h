@@ -175,6 +175,61 @@ extern decltype(FuncZwQuerySystemInformation) *ZwQuerySystemInformation;
 extern decltype(FuncZwQueryInformationFile) *ZwQueryInformationFile;
 extern decltype(FuncZwQueryObject) *ZwQueryObject;
 
+
+#define ThreadBasicInformation	THREADINFOCLASS(0)
+
+typedef enum _SC_SERVICE_TAG_QUERY_TYPE 
+{
+	ServiceNameFromTagInformation = 1,
+	ServiceNamesReferencingModuleInformation,
+	ServiceNameTagMappingInformation
+} SC_SERVICE_TAG_QUERY_TYPE, *PSC_SERVICE_TAG_QUERY_TYPE;
+
+typedef struct _SC_SERVICE_TAG_QUERY
+{
+    ULONG ProcessId;
+    ULONG ServiceTag;
+    ULONG Unknown;
+    PVOID Buffer;
+} SC_SERVICE_TAG_QUERY, *PSC_SERVICE_TAG_QUERY;
+
+typedef ULONG (NTAPI *_I_QueryTagInformation)(
+	__in PVOID Unknown,
+	__in SC_SERVICE_TAG_QUERY_TYPE QueryType,
+	__inout PSC_SERVICE_TAG_QUERY Query
+);
+
+typedef ULONG (NTAPI *_I_QueryTagInformation)(
+	__in PVOID Unknown,
+	__in SC_SERVICE_TAG_QUERY_TYPE QueryType,
+	__inout PSC_SERVICE_TAG_QUERY Query
+);
+
+NTSYSAPI NTSTATUS NTAPI NtReadVirtualMemory(
+	IN HANDLE               ProcessHandle,
+	IN PVOID                BaseAddress,
+	OUT PVOID               Buffer,
+	IN ULONG                NumberOfBytesToRead,
+	OUT PULONG              NumberOfBytesReaded OPTIONAL
+);
+
+typedef struct 
+{
+	HANDLE UniqueProcess;
+	HANDLE UniqueThread;
+} CLIENT_ID;
+
+typedef LONG KPRIORITY;
+
+typedef struct _THREAD_BASIC_INFORMATION 
+{
+	NTSTATUS                ExitStatus;
+	PVOID                   TebBaseAddress;
+	CLIENT_ID               ClientId;
+	KAFFINITY               AffinityMask;
+	KPRIORITY               Priority;
+	KPRIORITY               BasePriority;
+} THREAD_BASIC_INFORMATION, *PTHREAD_BASIC_INFORMATION;
 }
 
 #endif // W_WINDOWSEXT_H

@@ -15,7 +15,7 @@ struct ServiceInfo
 {
 	std::string name,					// Service name.
 				desc,					// Service description.
-				fullpath;				// Service containing dll fullpath.
+				fullpath;				// Service DLL fullpath.
 
 	unsigned type,					// Service type. See: http://msdn.microsoft.com/en-us/library/windows/desktop/ms685992(v=vs.85).aspx.
 			 status,				// Service status. See: http://msdn.microsoft.com/en-us/library/windows/desktop/ms685992(v=vs.85).aspx.
@@ -53,6 +53,26 @@ std::set<ServiceInfo> getServiceInfoByPid(unsigned pid);
  *
  */
 std::set<ServiceInfo> getDependentServicesInfo(const std::string &name);
+
+/*
+ *
+ *		Get service name from ProcessIdentifier and SubProcessTag. 
+ *	For details: http://wj32.org/wp/2010/03/30/howto-use-i_querytaginformation/.
+ *
+ *	Note:
+ *		Architecture sensitive!. You MUST use 32 bit app on 32 bit OS, and 64 bit 
+ *	app on 64 bit OS.
+ *
+ */
+std::string getServiceNameFromPidTid(unsigned pid, unsigned tid);
+/*
+ *
+ *		The function will enumerate all process information, find the pid which 
+ *	the tid belongs to. 
+ *		This function is low efficiency than 'getServiceNameFromPidSpt(unsigned pid, unsigned tid)'.
+ *
+ */
+std::string getServiceNameFromTid(unsigned tid);
 
 }
 
