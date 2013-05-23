@@ -193,25 +193,31 @@ typedef struct _SC_SERVICE_TAG_QUERY
     PVOID Buffer;
 } SC_SERVICE_TAG_QUERY, *PSC_SERVICE_TAG_QUERY;
 
-typedef ULONG (NTAPI *_I_QueryTagInformation)(
+ULONG NTAPI FuncI_QueryTagInformation(
 	__in PVOID Unknown,
 	__in SC_SERVICE_TAG_QUERY_TYPE QueryType,
 	__inout PSC_SERVICE_TAG_QUERY Query
 );
 
-typedef ULONG (NTAPI *_I_QueryTagInformation)(
-	__in PVOID Unknown,
-	__in SC_SERVICE_TAG_QUERY_TYPE QueryType,
-	__inout PSC_SERVICE_TAG_QUERY Query
+NTSTATUS WINAPI FuncNtQueryInformationThread(
+  _In_       HANDLE ThreadHandle,
+  _In_       THREADINFOCLASS ThreadInformationClass,
+  _Inout_    PVOID ThreadInformation,
+  _In_       ULONG ThreadInformationLength,
+  _Out_opt_  PULONG ReturnLength
 );
 
-NTSYSAPI NTSTATUS NTAPI NtReadVirtualMemory(
+NTSYSAPI NTSTATUS NTAPI FuncNtReadVirtualMemory(
 	IN HANDLE               ProcessHandle,
 	IN PVOID                BaseAddress,
 	OUT PVOID               Buffer,
 	IN ULONG                NumberOfBytesToRead,
 	OUT PULONG              NumberOfBytesReaded OPTIONAL
 );
+
+extern decltype(FuncNtQueryInformationThread) *NtQueryInformationThread;
+extern decltype(FuncNtReadVirtualMemory) *NtReadVirtualMemory;
+extern decltype(FuncI_QueryTagInformation) *I_QueryTagInformation;
 
 typedef struct 
 {

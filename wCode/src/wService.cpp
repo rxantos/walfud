@@ -178,7 +178,7 @@ set<ServiceInfo> getServiceInfoByPid(unsigned pid)
  */
 static unsigned long getSptByPidTid(unsigned pid, unsigned tid)
 {
-#if defined _WIN32
+#if defined WIN32
 	#define OFF_SUBPROCESSTAG 0x0f60
 #elif defined _WIN64
 	#define OFF_SUBPROCESSTAG 0x1720
@@ -186,31 +186,20 @@ static unsigned long getSptByPidTid(unsigned pid, unsigned tid)
 #endif // _WIN32
 
 	unsigned long subProcessTag = 0;
-
-	if (HMODULE hNtdll = LoadLibrary("ntdll.dll"))
-	{
-		auto pfnNtQueryInformationThread = reinterpret_cast<decltype(NtQueryInformationThread) *>(GetProcAddress(hNtdll, "NtQueryInformationThread"));
-		auto pfnNtReadVirtualMemory = reinterpret_cast<decltype(NtReadVirtualMemory) *>(GetProcAddress(hNtdll, "NtReadVirtualMemory"));
-		if (pfnNtQueryInformationThread != nullptr && pfnNtReadVirtualMemory != nullptr)
-		{
-			THREAD_BASIC_INFORMATION basicInfo = {};
+	THREAD_BASIC_INFORMATION basicInfo = {};
 	
-			HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid),
-				   hThread = OpenThread(THREAD_ALL_ACCESS, FALSE, tid);
+	HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid),
+			hThread = OpenThread(THREAD_ALL_ACCESS, FALSE, tid);
 
-			pfnNtQueryInformationThread(hThread, ThreadBasicInformation, &basicInfo, sizeof(basicInfo), nullptr);
-			pfnNtReadVirtualMemory(hProcess, 
-								   reinterpret_cast<void *>(reinterpret_cast<ULONG_PTR>(basicInfo.TebBaseAddress) + OFF_SUBPROCESSTAG), // x86 == 0xf60, x64 == 0x1720.
-								   reinterpret_cast<void *>(&subProcessTag), 
-								   sizeof(subProcessTag), 
-								   nullptr);
+	NtQueryInformationThread(hThread, ThreadBasicInformation, &basicInfo, sizeof(basicInfo), nullptr);
+	NtReadVirtualMemory(hProcess, 
+						reinterpret_cast<void *>(reinterpret_cast<ULONG_PTR>(basicInfo.TebBaseAddress) + OFF_SUBPROCESSTAG), // x86 == 0xf60, x64 == 0x1720.
+						reinterpret_cast<void *>(&subProcessTag), 
+						sizeof(subProcessTag), 
+						nullptr);
 
-			CloseHandle(hThread);
-			CloseHandle(hProcess);
-		}
-
-		FreeLibrary(hNtdll);
-	}
+	CloseHandle(hThread);
+	CloseHandle(hProcess);
 
 	return subProcessTag;
 }
@@ -219,27 +208,18 @@ string getServiceNameFromPidTid(unsigned pid, unsigned tid)
 {
 	string svcName;
 
-	if (HMODULE hAdvapi32 = LoadLibrary("advapi32.dll"))
-	{
-		if (_I_QueryTagInformation I_QueryTagInformation = reinterpret_cast<_I_QueryTagInformation>(GetProcAddress(hAdvapi32, "I_QueryTagInformation")))
-		{
-			SC_SERVICE_TAG_QUERY query;
-			query.ProcessId = pid;
-			query.ServiceTag = getSptByPidTid(pid, tid);
-			query.Unknown = 0;
-			query.Buffer = nullptr;
+	SC_SERVICE_TAG_QUERY query;
+	query.ProcessId = pid;
+	query.ServiceTag = getSptByPidTid(pid, tid);
+	query.Unknown = 0;
+	query.Buffer = nullptr;
     
-			if (I_QueryTagInformation(nullptr, ServiceNameFromTagInformation, &query) == 0)
-			{
-				svcName = wStrToStr(static_cast<wchar_t *>(query.Buffer));
+	if (I_QueryTagInformation(nullptr, ServiceNameFromTagInformation, &query) == 0)
+	{
+		svcName = wStrToStr(static_cast<wchar_t *>(query.Buffer));
 
-				LocalFree(query.Buffer);
-			}
-
-		}//if (_I_QueryTagInformation
-
-		FreeLibrary(hAdvapi32);
-	}//if (HMODULE
+		LocalFree(query.Buffer);
+	}
 
 	return svcName;
 }
