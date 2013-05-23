@@ -60,7 +60,7 @@ vector<string> getDrivesName()
 	fill(buf, buf + size, '\0');
 
 	// Get valid drives in the system.
-	GetLogicalDriveStrings(size, buf);
+	GetLogicalDriveStrings(static_cast<DWORD>(size), buf);
 
 	// Split into vector.
 	drives = w::strSplit(buf, buf + size, '\0');

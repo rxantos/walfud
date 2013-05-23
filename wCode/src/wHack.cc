@@ -29,7 +29,7 @@ bool remoteCall(unsigned targetProcessId, unsigned long (__stdcall *func)(void *
 							 MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE))
 		{
 			// Remote write.
-			DWORD written = 0;
+			SIZE_T written = 0;
 			if (WriteProcessMemory(hRemoteProcess,								// 'PROCESS_VM_OPERATION | PROCESS_VM_WRITE'.
 								   remoteMemory, 
 								   param, paramSize, 
@@ -79,7 +79,7 @@ bool remoteInject(unsigned targetProcessId, const string &injectedDllFullpath)
 
 	return remoteCall(targetProcessId, 
 					  reinterpret_cast<unsigned long (__stdcall *)(void *)>(LoadLibraryA), 
-					  const_cast<char *>(injectedDllFullpath.c_str()), injectedDllFullpath.length() * sizeof(injectedDllFullpath[0]),
+					  const_cast<char *>(injectedDllFullpath.c_str()), static_cast<unsigned>(injectedDllFullpath.length() * sizeof(injectedDllFullpath[0])),
 					  true); 
 }
 bool remoteInject(const string &targetProcessName, const string &injectedDllFullpath)

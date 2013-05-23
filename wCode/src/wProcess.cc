@@ -42,13 +42,19 @@ vector<int> getThreadsInfo(DWORD processId)
 	te.dwSize = sizeof(te); 
 	if (Thread32First(snapshot, &te))
 	{
-		threadsId.push_back(te.th32ThreadID);
-		
-		while (Thread32Next(snapshot, &te))
+		if (te.th32OwnerProcessID == processId)
 		{
 			threadsId.push_back(te.th32ThreadID);
 		}
-	}
+		
+		while (Thread32Next(snapshot, &te))
+		{
+			if (te.th32OwnerProcessID == processId)
+			{
+				threadsId.push_back(te.th32ThreadID);
+			}
+		}//while (Thread32Next
+	}//if (Thread32First
 
 	return threadsId;
 }
@@ -66,28 +72,30 @@ map<int, ProcessInfo> getProcessesInfo()
 	{
 		ProcessInfo pi = {};
 		pi.name = pe.szExeFile;
-		pi.id = pe.th32ProcessID, pi.parentId = pe.th32ParentProcessID;
+		pi.id = pe.th32ProcessID;
+		pi.parentId = pe.th32ParentProcessID;
 		res[pe.th32ProcessID] = pi;
 
 		while (Process32Next(snapshot, &pe))
 		{
 			ProcessInfo pi = {};
 			pi.name = pe.szExeFile;
-			pi.id = pe.th32ProcessID, pi.parentId = pe.th32ParentProcessID;
+			pi.id = pe.th32ProcessID;
+			pi.parentId = pe.th32ParentProcessID;
 			res[pe.th32ProcessID] = pi;		
 		}
 	}
 
 	// Fill module information.
-	for (map<int, ProcessInfo>::iterator it = res.begin(); it != res.end(); ++it)
+	for (auto &i : res)
 	{
-		it->second.modules = getModulesInfo(pe.th32ProcessID);		
+		i.second.modules = getModulesInfo(i.first);
 	}
 
 	// Fill thread information.
-	for (map<int, ProcessInfo>::iterator it = res.begin(); it != res.end(); ++it)
+	for (auto &i : res)
 	{
-		it->second.threadsId = getThreadsInfo(pe.th32ProcessID);		
+		i.second.threadsId = getThreadsInfo(i.first);
 	}
 
 	CloseHandle(snapshot);

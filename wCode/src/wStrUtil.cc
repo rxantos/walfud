@@ -59,8 +59,8 @@ wstring strToWStr(const string &str)
 	fill(buf, buf + str.size(), L'\0');
 
 	if (const int size = MultiByteToWideChar(CP_ACP, 0,
-											str.c_str(), str.size(), 
-											buf, str.size()))
+											str.c_str(), static_cast<int>(str.size()), 
+											buf, static_cast<int>(str.size())))
 	{
 		wstr.assign(buf, buf + size);
 	}
@@ -77,9 +77,9 @@ string wStrToStr(const wstring &wstr)
 	fill(buf, buf + bufSize, '\0');
 
 	if (const int size = WideCharToMultiByte(CP_ACP, 0, 
-											wstr.c_str(), wstr.length(), 
-											buf, bufSize, 
-											nullptr, nullptr))
+											 wstr.c_str(), static_cast<int>(wstr.length()), 
+											 buf, static_cast<int>(bufSize), 
+											 nullptr, nullptr))
 	{
 		str.assign(buf, buf + size);
 	}
