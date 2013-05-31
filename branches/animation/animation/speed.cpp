@@ -23,9 +23,9 @@ unsigned MySpeed::prev()
 }
 unsigned MySpeed::next()
 {
-	++m_var;
+	m_var += 1;
 
-	return static_cast<unsigned>(sin((m_var % 360) * M_PI / 180) * 20 + 30);
+	return static_cast<unsigned>(cos((m_var % 360) * M_PI / 180) * 30 + 40);
 }
 unsigned MySpeed::reset()
 {

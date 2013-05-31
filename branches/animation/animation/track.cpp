@@ -23,8 +23,8 @@ Coordinate_2D MyTrack::prev()
 }
 Coordinate_2D MyTrack::next()
 {
-	++m_graphCenter.x;
-	m_graphCenter.y = static_cast<unsigned>(-sin((m_graphCenter.x % 360) * M_PI / 180) * 30 + 50);
+	m_graphCenter.x += 1;
+	m_graphCenter.y = static_cast<unsigned>(-cos((m_graphCenter.x % 360) * M_PI / 180) * 30 + 50);
 
 	return m_graphCenter;
 }
