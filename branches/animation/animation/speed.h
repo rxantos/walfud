@@ -44,4 +44,11 @@ protected:
 	// logic.
 };
 
+class MySpeed2 : public MySpeed
+{
+public:
+	// Interface.
+	virtual unsigned next();
+};
+
 #endif // SPEED_H

@@ -28,6 +28,7 @@ protected:
 
 class MyTrack : public Track<Coordinate_2D>
 {
+protected:
 	// data.
 	Coordinate_2D m_graphCenter;
 
@@ -43,6 +44,18 @@ public:
 
 protected:
 	// logic.
+};
+class MyTrack2 : public MyTrack
+{
+	// data.
+	int m_direction;
+
+public:
+	MyTrack2();
+
+public:
+	// Interface.
+	virtual Coordinate_2D next();
 };
 
 #endif // TRACK_H

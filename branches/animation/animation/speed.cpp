@@ -31,3 +31,10 @@ unsigned MySpeed::reset()
 {
 	return 0;
 }
+
+// MySpeed2.
+// Interface.
+unsigned MySpeed2::next()
+{
+	return 10;
+}

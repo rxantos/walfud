@@ -12,6 +12,7 @@
 #include <thread>
 #include <chrono>
 #include <future>
+#include <mutex>
 using namespace std;
 
 #ifdef _DEBUG
@@ -20,20 +21,37 @@ using namespace std;
 
 
 // CanimationDlg dialog
+static mutex s_lock1, s_lock2;
 
-void Animation(MyGraph &mg, MyTrack &mt, Speed &s)
+void Animation(MyGraph &mg, MyTrack &mt, Speed &s, mutex &m)
 {
 	while (true)
 	{
+		m.lock();
+
 		Coordinate_2D pos = mt.next();
 		mg.setCoordinate(pos);
 
 		mg.draw();
 
 		this_thread::sleep_for(chrono::milliseconds(s.next()));
+
+		m.unlock();
 	}
 }
 
+void BeginAnimation(HDC dc)
+{
+	MyGraph mg1(dc, RGB(123, 62, 200)), mg2(dc, RGB(240, 240, 240));
+	MyTrack2 mt;
+	MySpeed2 s;
+
+	async(Animation, mg1, mt, s, ref(s_lock1));
+	this_thread::sleep_for(chrono::milliseconds(1000));
+	async(Animation, mg2, mt, s, ref(s_lock2));
+	
+	this_thread::sleep_for(chrono::milliseconds(10000000));
+}
 
 
 CanimationDlg::CanimationDlg(CWnd* pParent /*=NULL*/)
@@ -50,6 +68,8 @@ void CanimationDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CanimationDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_BUTTON_START, &CanimationDlg::OnBnClickedButtonStart)
+	ON_BN_CLICKED(IDC_BUTTON_PAUSE, &CanimationDlg::OnBnClickedButtonPause)
 END_MESSAGE_MAP()
 
 
@@ -66,12 +86,7 @@ BOOL CanimationDlg::OnInitDialog()
 
 	// TODO: Add extra initialization here
 	HDC dc = ::GetDC(m_hWnd);
-
-	MyGraph mg(dc, RGB(123, 62, 200));
-	MyTrack mt;
-	MySpeed s;
-
-	async(Animation, mg, mt, s);
+	async(BeginAnimation, dc);
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -97,7 +112,7 @@ void CanimationDlg::OnPaint()
 
 		// Draw the icon
 		dc.DrawIcon(x, y, m_hIcon);
-	}
+	} 
 	else
 	{
 		CDialogEx::OnPaint();
@@ -111,3 +126,15 @@ HCURSOR CanimationDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+void CanimationDlg::OnBnClickedButtonStart()
+{
+	s_lock1.unlock(), s_lock2.unlock();
+}
+
+
+void CanimationDlg::OnBnClickedButtonPause()
+{
+	s_lock1.lock(), s_lock2.lock();
+}
