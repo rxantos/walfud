@@ -22,6 +22,12 @@ using namespace std;
 
 // CanimationDlg dialog
 static mutex s_lock1, s_lock2;
+static enum class Stat : int
+{
+	Running,
+	Paused,
+	Stopped,
+} s_stat;
 
 void Animation(MyGraph &mg, MyTrack &mt, Speed &s, mutex &m)
 {
@@ -46,6 +52,7 @@ void BeginAnimation(HDC dc)
 	MyTrack2 mt;
 	MySpeed2 s;
 
+	s_stat = Stat::Running;
 	async(Animation, mg1, mt, s, ref(s_lock1));
 	this_thread::sleep_for(chrono::milliseconds(1000));
 	async(Animation, mg2, mt, s, ref(s_lock2));
@@ -130,11 +137,20 @@ HCURSOR CanimationDlg::OnQueryDragIcon()
 
 void CanimationDlg::OnBnClickedButtonStart()
 {
-	s_lock1.unlock(), s_lock2.unlock();
+	if (s_stat == Stat::Paused
+		|| s_stat == Stat::Stopped)
+	{
+		s_stat = Stat::Running;
+		s_lock1.unlock(), s_lock2.unlock();
+	}
 }
 
 
 void CanimationDlg::OnBnClickedButtonPause()
 {
-	s_lock1.lock(), s_lock2.lock();
+	if (s_stat == Stat::Running)
+	{
+		s_stat = Stat::Paused;
+		s_lock1.lock(), s_lock2.lock();
+	}
 }
