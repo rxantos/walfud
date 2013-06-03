@@ -208,7 +208,7 @@ string getServiceNameFromPidTid(unsigned pid, unsigned tid)
 {
 	string svcName;
 
-	SC_SERVICE_TAG_QUERY query;
+	SC_SERVICE_TAG_QUERY query = {};
 	query.ProcessId = pid;
 	query.ServiceTag = getSptByPidTid(pid, tid);
 	query.Unknown = 0;
