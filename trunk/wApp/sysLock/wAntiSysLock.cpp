@@ -16,11 +16,24 @@ AntiSysLock::AntiSysLock(unsigned actInterval) : m_keeper(), m_stat(Stat::Defaul
 	//m_stat = Stat::DefaultLock;
 	m_pause.lock();
 
-	m_keeper = async(&AntiSysLock::Keeper, this, KeeperParam(m_stat, m_pause, actInterval));
+	m_keeper = async(&AntiSysLock::Keeper, this, new KeeperParam(m_stat, m_pause, actInterval));
 }
 AntiSysLock::~AntiSysLock()
 {
-	m_stat = Stat::Quit;
+	switch (m_stat)
+	{
+	case Stat::DefaultLock:
+		m_stat = Stat::Quit;
+		m_pause.unlock();
+		break;
+	case Stat::AntiLock:
+		break;
+	case Stat::Quit:
+		break;
+	default:
+		break;
+	}
+
 	m_keeper.wait();
 }
 
@@ -49,14 +62,14 @@ void AntiSysLock::StopKeeping()
 }
 
 // private.
-void AntiSysLock::Keeper(KeeperParam param)
+void AntiSysLock::Keeper(KeeperParam *param)
 {
-	while (bool running = true)
+	bool running = true;
+	while (running)
 	{
-		param.pause.lock();
+		param->pause.lock();
 
-		Stat s = param.stat;
-		switch (s)
+		switch (param->stat)
 		{
 		case Stat::DefaultLock:
 			SetThreadExecutionState(ES_CONTINUOUS);
@@ -65,16 +78,17 @@ void AntiSysLock::Keeper(KeeperParam param)
 			SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED);
 			break;
 		case Stat::Quit:
-			running = true;
+			running = false;
 			break;
 		default:
 			break;
 		}
 
-		param.pause.unlock();
-		this_thread::sleep_for(chrono::milliseconds(param.interval));
+		param->pause.unlock();
+		this_thread::sleep_for(chrono::milliseconds(param->interval));
 	}
 
+	delete []param;
 	return;
 }
 
