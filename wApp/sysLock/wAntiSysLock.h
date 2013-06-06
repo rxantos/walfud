@@ -25,11 +25,11 @@ class AntiSysLock
 	};
 	struct KeeperParam
 	{
-		const Stat &stat;
+		std::atomic<Stat> &stat;
 		std::mutex &pause;
 		unsigned interval;
 
-		KeeperParam(const Stat &s, std::mutex &p, unsigned i) : stat(s), pause(p), interval(i) {}
+		KeeperParam(std::atomic<Stat> &s, std::mutex &p, unsigned i) : stat(s), pause(p), interval(i) {}
 	};
 
 	// data.
@@ -48,7 +48,7 @@ public:
 
 private:
 	// logic.
-	void Keeper(KeeperParam param);
+	void Keeper(KeeperParam *param);
 };
 
 }
