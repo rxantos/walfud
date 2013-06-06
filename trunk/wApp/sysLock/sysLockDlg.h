@@ -5,6 +5,7 @@
 #pragma once
 
 #include "wAntiSysLock.h"
+#include "afxwin.h"
 
 // CsysLockDlg dialog
 class CsysLockDlg : public CDialogEx
