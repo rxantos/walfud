@@ -11,6 +11,7 @@
 #include <future>
 #include <atomic>
 #include <mutex>
+#include <memory>
 
 namespace w
 {
@@ -30,6 +31,7 @@ class AntiSysLock
 		unsigned interval;
 
 		KeeperParam(std::atomic<Stat> &s, std::mutex &p, unsigned i) : stat(s), pause(p), interval(i) {}
+		~KeeperParam() {}
 	};
 
 	// data.
@@ -43,12 +45,12 @@ public:
 
 public:
 	// Interface.
-	void KeepWorking(unsigned atLeastMS = 1 * 60 * 60 * 1000);
+	void KeepWorking();
 	void StopKeeping();
 
 private:
 	// logic.
-	void Keeper(KeeperParam *param);
+	void Keeper(std::shared_ptr<KeeperParam> param);
 };
 
 }

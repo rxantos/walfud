@@ -13,10 +13,9 @@ namespace w
 // AntiSysLock.
 AntiSysLock::AntiSysLock(unsigned actInterval) : m_keeper(), m_stat(Stat::DefaultLock), m_pause()
 {
-	//m_stat = Stat::DefaultLock;
 	m_pause.lock();
 
-	m_keeper = async(&AntiSysLock::Keeper, this, new KeeperParam(m_stat, m_pause, actInterval));
+	m_keeper = async(&AntiSysLock::Keeper, this, shared_ptr<KeeperParam>(new KeeperParam(m_stat, m_pause, actInterval)));
 }
 AntiSysLock::~AntiSysLock()
 {
@@ -38,7 +37,7 @@ AntiSysLock::~AntiSysLock()
 }
 
 // Interface.
-void AntiSysLock::KeepWorking(unsigned atLeastMS)
+void AntiSysLock::KeepWorking()
 {
 	Stat old = m_stat;
 
@@ -62,7 +61,7 @@ void AntiSysLock::StopKeeping()
 }
 
 // private.
-void AntiSysLock::Keeper(KeeperParam *param)
+void AntiSysLock::Keeper(shared_ptr<KeeperParam> param)
 {
 	bool running = true;
 	while (running)
@@ -87,9 +86,6 @@ void AntiSysLock::Keeper(KeeperParam *param)
 		param->pause.unlock();
 		this_thread::sleep_for(chrono::milliseconds(param->interval));
 	}
-
-	delete []param;
-	return;
 }
 
 }
