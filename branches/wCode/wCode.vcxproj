@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -19,27 +19,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cc" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="src\wConsole.cpp" />
-    <ClCompile Include="src\wCppExt.cc">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\wDir.cc" />
-    <ClCompile Include="src\wDisk.cc" />
-    <ClCompile Include="src\wFilePermission.cc" />
-    <ClCompile Include="src\wHack.cc" />
+    <ClCompile Include="src\wCppExt.cpp" />
+    <ClCompile Include="src\wDir.cpp" />
+    <ClCompile Include="src\wDisk.cpp" />
+    <ClCompile Include="src\wFilePermission.cpp" />
+    <ClCompile Include="src\wHack.cpp" />
     <ClCompile Include="src\wIniHelper.cpp" />
     <ClCompile Include="src\wMath.cpp" />
-    <ClCompile Include="src\wOtherUtil.cc" />
-    <ClCompile Include="src\wPipe.cc" />
-    <ClCompile Include="src\wProcess.cc" />
-    <ClCompile Include="src\wRpc.cc" />
+    <ClCompile Include="src\wOtherUtil.cpp" />
+    <ClCompile Include="src\wPipe.cpp" />
+    <ClCompile Include="src\wProcess.cpp" />
+    <ClCompile Include="src\wRpc.cpp" />
     <ClCompile Include="src\wService.cpp" />
-    <ClCompile Include="src\wStrUtil.cc" />
-    <ClCompile Include="src\wSysUtil.cc" />
-    <ClCompile Include="src\wTaskbarProgress.cc" />
-    <ClCompile Include="src\wTimeMeasurer.cc" />
+    <ClCompile Include="src\wStrUtil.cpp" />
+    <ClCompile Include="src\wSysUtil.cpp" />
+    <ClCompile Include="src\wTaskbarProgress.cpp" />
+    <ClCompile Include="src\wTimeMeasurer.cpp" />
     <ClCompile Include="src\wWindowsExt.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -71,26 +68,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
