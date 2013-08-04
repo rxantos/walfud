@@ -263,7 +263,7 @@ string strRandom(unsigned cnt)
 	string meaningless(cnt, '\0');
 
 	static default_random_engine dre;
-	uniform_int_distribution<char> nd('a', 'z');
+	uniform_int_distribution<int> nd('a', 'z');
 
 	for (unsigned i = 0; i < 100; ++i)
 	{
