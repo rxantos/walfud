@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -19,14 +19,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110_xp</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
@@ -118,6 +118,7 @@
     <ClInclude Include="..\..\wCode\src\wPipe.h" />
     <ClInclude Include="..\..\wCode\src\wProcess.h" />
     <ClInclude Include="..\..\wCode\src\wRpc.h" />
+    <ClInclude Include="..\..\wCode\src\wService.h" />
     <ClInclude Include="..\..\wCode\src\wStrUtil.h" />
     <ClInclude Include="..\..\wCode\src\wSysUtil.h" />
     <ClInclude Include="..\..\wCode\src\wTaskbarProgress.h" />
@@ -131,21 +132,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\wCode\src\wConsole.cpp" />
-    <ClCompile Include="..\..\wCode\src\wCppExt.cc" />
-    <ClCompile Include="..\..\wCode\src\wDir.cc" />
-    <ClCompile Include="..\..\wCode\src\wDisk.cc" />
-    <ClCompile Include="..\..\wCode\src\wFilePermission.cc" />
-    <ClCompile Include="..\..\wCode\src\wHack.cc" />
+    <ClCompile Include="..\..\wCode\src\wCppExt.cpp" />
+    <ClCompile Include="..\..\wCode\src\wDir.cpp" />
+    <ClCompile Include="..\..\wCode\src\wDisk.cpp" />
+    <ClCompile Include="..\..\wCode\src\wFilePermission.cpp" />
+    <ClCompile Include="..\..\wCode\src\wHack.cpp" />
     <ClCompile Include="..\..\wCode\src\wIniHelper.cpp" />
     <ClCompile Include="..\..\wCode\src\wMath.cpp" />
-    <ClCompile Include="..\..\wCode\src\wOtherUtil.cc" />
-    <ClCompile Include="..\..\wCode\src\wPipe.cc" />
-    <ClCompile Include="..\..\wCode\src\wProcess.cc" />
-    <ClCompile Include="..\..\wCode\src\wRpc.cc" />
-    <ClCompile Include="..\..\wCode\src\wStrUtil.cc" />
-    <ClCompile Include="..\..\wCode\src\wSysUtil.cc" />
-    <ClCompile Include="..\..\wCode\src\wTaskbarProgress.cc" />
-    <ClCompile Include="..\..\wCode\src\wTimeMeasurer.cc" />
+    <ClCompile Include="..\..\wCode\src\wOtherUtil.cpp" />
+    <ClCompile Include="..\..\wCode\src\wPipe.cpp" />
+    <ClCompile Include="..\..\wCode\src\wProcess.cpp" />
+    <ClCompile Include="..\..\wCode\src\wRpc.cpp" />
+    <ClCompile Include="..\..\wCode\src\wService.cpp" />
+    <ClCompile Include="..\..\wCode\src\wStrUtil.cpp" />
+    <ClCompile Include="..\..\wCode\src\wSysUtil.cpp" />
+    <ClCompile Include="..\..\wCode\src\wTaskbarProgress.cpp" />
+    <ClCompile Include="..\..\wCode\src\wTimeMeasurer.cpp" />
     <ClCompile Include="..\..\wCode\src\wWindowsExt.cpp" />
     <ClCompile Include="DropToListTemplate.cpp" />
     <ClCompile Include="DropToListTemplateDlg.cpp" />
@@ -156,9 +158,6 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DropToListTemplate.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="res\DropToListTemplate.rc2" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\DropToListTemplate.ico" />
