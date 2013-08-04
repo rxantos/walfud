@@ -26,6 +26,7 @@
 #include <numeric>
 #include <limits>
 #include <functional>
+#include <cstring>
 #include <atomic>
 #include <thread>
 #include <future>
@@ -67,6 +68,7 @@
 
 #pragma warning(disable: 4800) 		// 'BOOL' : forcing value to bool 'true' or 'false'.
 #pragma warning(disable: 4996)		// 'tmpnam': This function or variable may be unsafe.
+#pragma warning(disable: 4503)		// decorated name length exceeded, name was truncated.
 
 namespace w
 {

@@ -267,7 +267,7 @@ string strRandom(unsigned cnt)
 
 	for (unsigned i = 0; i < 100; ++i)
 	{
-		meaningless.push_back(nd(dre));
+		meaningless.push_back(static_cast<char>(nd(dre)));
 	}
 
 	return meaningless;
