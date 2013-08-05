@@ -202,4 +202,23 @@ bool singleProcess(const string &unionName)
 	return true;
 }
 
+vector<string> getArgv()
+{
+	vector<string> args;
+
+	if (wchar_t *p = GetCommandLineW())
+	{
+		int argc = 0;
+		if (wchar_t **argv = CommandLineToArgvW(p, &argc))
+		{
+			for (int i = 0; i < argc && argv[i] != nullptr; ++i)
+			{
+				args.push_back(w::wStrToStr(argv[i]));
+			}
+		}
+	}
+
+	return args;
+}
+
 }

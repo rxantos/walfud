@@ -89,6 +89,8 @@ bool runAndWait(const std::string &filepath, const std::string &param, DWORD tim
  */
 bool singleProcess(const std::string &unionName);
 
+std::vector<std::string> getArgv();
+
 }
 
 #endif // W_PROCESS_H
