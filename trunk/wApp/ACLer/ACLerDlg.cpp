@@ -58,6 +58,39 @@ BOOL CDropToListTemplateDlg::OnInitDialog()
 	// Initialize widget.
 	m_list.InsertColumn(sc_colIndex_targetFullpath, sc_colTitle_targetFullpath, LVCFMT_LEFT, sc_colWidth_targetFullpath);
 	m_list.InsertColumn(sc_colIndex_permission, sc_colTitle_permission, LVCFMT_LEFT, sc_colWidth_permission);
+
+	// Target fullpath through command line.
+	vector<string> argv = w::getArgv();
+	if (argv.size() >= 3)
+	{
+		int rtn = 0;
+
+		argv[0];			// Exec fullpath.
+		argv[1];			// `grant/strip`.
+		argv[2];			// Targets fullpath...
+		for (size_t i = 2; i < argv.size(); ++i)
+		{
+			m_res[argv[i]] = Res::UNKNOWN;
+		}
+
+		// Handle automatically.
+		if (argv[1] == "grant")
+		{
+			grantAll();
+		}
+		else if (argv[1] == "strip")
+		{
+			stripAll();
+		}
+		else
+		{
+			rtn = -1;
+			cerr <<"unknown op. `" <<argv[1] <<"`." <<endl;
+		}
+
+		exit(rtn);
+	}
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
