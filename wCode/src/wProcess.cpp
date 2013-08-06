@@ -252,31 +252,32 @@ bool TakeOwnership(const string &target)
 	bool res = false;
 
 	// Get privilege.
-	SetPrivilege(SE_TAKE_OWNERSHIP_NAME, true);
-
-	char username[MAX_PATH] = {};
-	DWORD usernameLen = arrCnt(username);
-	char sid[1024] = {};
-	DWORD sidLen = sizeof(sid);
-	ZeroMemory(sid, sidLen);
-	char domain[MAX_PATH] = {};
-	DWORD domainLen = MAX_PATH;
-	SID_NAME_USE snu = {};
-	
-	if (GetUserName(username, &usernameLen) 
-		&& LookupAccountName(nullptr, username, sid, &sidLen, domain, &domainLen, &snu))
+	if (SetPrivilege(SE_TAKE_OWNERSHIP_NAME, true))
 	{
-		char obj[MAX_PATH] = {};
-		strcpy(obj, target.c_str());
-		if (SetNamedSecurityInfo(obj, SE_FILE_OBJECT, OWNER_SECURITY_INFORMATION, 
-								 sid, nullptr, nullptr, nullptr) == ERROR_SUCCESS)
+		char username[MAX_PATH] = {};
+		DWORD usernameLen = arrCnt(username);
+		char sid[1024] = {};
+		DWORD sidLen = sizeof(sid);
+		ZeroMemory(sid, sidLen);
+		char domain[MAX_PATH] = {};
+		DWORD domainLen = MAX_PATH;
+		SID_NAME_USE snu = {};
+	
+		if (GetUserName(username, &usernameLen) 
+			&& LookupAccountName(nullptr, username, sid, &sidLen, domain, &domainLen, &snu))
 		{
-			res = true;
+			char obj[MAX_PATH] = {};
+			strcpy(obj, target.c_str());
+			if (SetNamedSecurityInfo(obj, SE_FILE_OBJECT, OWNER_SECURITY_INFORMATION, 
+									 sid, nullptr, nullptr, nullptr) == ERROR_SUCCESS)
+			{
+				res = true;
+			}
 		}
-	}
 
-	// Release privilege.
-	SetPrivilege(SE_TAKE_OWNERSHIP_NAME, false);
+		// Release privilege.
+		SetPrivilege(SE_TAKE_OWNERSHIP_NAME, false);
+	}
 
 	return res;
 }
