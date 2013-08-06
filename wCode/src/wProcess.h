@@ -91,6 +91,10 @@ bool singleProcess(const std::string &unionName);
 
 std::vector<std::string> getArgv();
 
+bool SetPrivilege(const std::string &privilege, bool grant);
+
+bool TakeOwnership(const std::string &target);
+
 }
 
 #endif // W_PROCESS_H
