@@ -221,4 +221,71 @@ vector<string> getArgv()
 	return args;
 }
 
+bool SetPrivilege(const string &privilege, bool grant)
+{
+	bool res = false;
+
+	HANDLE token;
+	if (OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES, &token))
+		
+	{
+		LUID luid = {};
+		if (LookupPrivilegeValue(nullptr, privilege.c_str(), &luid))
+		{
+			TOKEN_PRIVILEGES tp = {};
+			tp.PrivilegeCount = 1;
+			tp.Privileges[0].Luid = luid;tp.Privileges[0].Attributes 
+					= grant ? SE_PRIVILEGE_ENABLED : SE_PRIVILEGE_REMOVED;
+
+			if (AdjustTokenPrivileges(token, FALSE, &tp, sizeof(tp), nullptr, nullptr))
+			{
+				res = true;
+			}
+		}
+	}
+
+	return res;
+}
+
+bool TakeOwnership(const string &target)
+{
+	bool res = false;
+
+	// Get privilege.
+	SetPrivilege(SE_TAKE_OWNERSHIP_NAME, true);
+
+	char username[MAX_PATH] = {};
+	DWORD usernameLen = arrCnt(username);
+	char sid[1024] = {};
+	DWORD sidLen = sizeof(sid);
+	ZeroMemory(sid, sidLen);
+	char domain[MAX_PATH] = {};
+	DWORD domainLen = MAX_PATH;
+	SID_NAME_USE snu = {};
+	
+	if (GetUserName(username, &usernameLen) 
+		&& LookupAccountName(nullptr, username, sid, &sidLen, domain, &domainLen, &snu))
+	{
+		char *strSid = new char[MAX_PATH];
+		ZeroMemory(strSid, MAX_PATH);
+		if (ConvertSidToStringSid(sid, &strSid))
+		{
+			OutputDebugString(strSid);
+		}
+
+		char obj[MAX_PATH] = {};
+		strcpy(obj, target.c_str());
+		if (SetNamedSecurityInfo(obj, SE_FILE_OBJECT, OWNER_SECURITY_INFORMATION, 
+								 sid, nullptr, nullptr, nullptr) == ERROR_SUCCESS)
+		{
+			res = true;
+		}
+	}
+
+	// Release privilege.
+	SetPrivilege(SE_TAKE_OWNERSHIP_NAME, false);
+
+	return res;
+}
+
 }
