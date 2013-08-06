@@ -171,12 +171,12 @@ CDropToListTemplateDlg::Res CDropToListTemplateDlg::handleOne(const string &targ
 	{
 		// Rewrite privilege.
 		HANDLE file = CreateFile(target.c_str(),
-									READ_CONTROL | WRITE_DAC | WRITE_OWNER ,
-									0,
-									nullptr,
-									OPEN_EXISTING,
-									0,
-									nullptr);
+								 READ_CONTROL | WRITE_DAC,		// Caution: Here can NOT combine `WRITE_OWNER` privilege.
+								 0,
+								 nullptr,
+								 OPEN_EXISTING,
+								 0,
+								 nullptr);
 		if (file != INVALID_HANDLE_VALUE)
 		{
 			PSECURITY_DESCRIPTOR pSd = nullptr;
