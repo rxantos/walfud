@@ -266,13 +266,6 @@ bool TakeOwnership(const string &target)
 	if (GetUserName(username, &usernameLen) 
 		&& LookupAccountName(nullptr, username, sid, &sidLen, domain, &domainLen, &snu))
 	{
-		char *strSid = new char[MAX_PATH];
-		ZeroMemory(strSid, MAX_PATH);
-		if (ConvertSidToStringSid(sid, &strSid))
-		{
-			OutputDebugString(strSid);
-		}
-
 		char obj[MAX_PATH] = {};
 		strcpy(obj, target.c_str());
 		if (SetNamedSecurityInfo(obj, SE_FILE_OBJECT, OWNER_SECURITY_INFORMATION, 
