@@ -166,50 +166,53 @@ CDropToListTemplateDlg::Res CDropToListTemplateDlg::handleOne(const string &targ
 	// Get file size.
 	Res res = Res::UNKNOWN;
 
-	// Open file.
-	HANDLE file = CreateFile(target.c_str(),
-							 READ_CONTROL | WRITE_DAC,
-							 0,
-							 nullptr,
-							 OPEN_EXISTING,
-							 0,	
-							 nullptr);
-	if (file != INVALID_HANDLE_VALUE)
+	// Take owner.
+	if (w::TakeOwnership(target))
 	{
-		// Get old acl.
-		PSECURITY_DESCRIPTOR pSd = nullptr;
-		PACL pNewDacl = nullptr;
-
-		// Construct new acl.
-		EXPLICIT_ACCESS ea = {};
-		ea.grfAccessMode = SET_ACCESS;
-		ea.grfAccessPermissions = grant ? GENERIC_ALL : READ_CONTROL | WRITE_DAC | SYNCHRONIZE;
-		ea.grfInheritance = NO_INHERITANCE;
-		ea.Trustee.TrusteeForm = TRUSTEE_IS_NAME;
-		ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
-		ea.Trustee.ptstrName = "everyone";
-		if (SetEntriesInAcl(1, &ea, nullptr, &pNewDacl) == ERROR_SUCCESS)
+		// Rewrite privilege.
+		HANDLE file = CreateFile(target.c_str(),
+									READ_CONTROL | WRITE_DAC | WRITE_OWNER ,
+									0,
+									nullptr,
+									OPEN_EXISTING,
+									0,
+									nullptr);
+		if (file != INVALID_HANDLE_VALUE)
 		{
-			// Bind new acl to target.
-			if (SetSecurityInfo(file,					// Erase old DACL.
-							    SE_FILE_OBJECT, 
-								DACL_SECURITY_INFORMATION, 
-								nullptr, nullptr, 
-								nullptr, nullptr) == ERROR_SUCCESS
-				&& SetSecurityInfo(file,				// Set new and the only ACE.
-								   SE_FILE_OBJECT, 
-								   DACL_SECURITY_INFORMATION, 
-								   nullptr, nullptr, 
-								   pNewDacl, nullptr) == ERROR_SUCCESS)
+			PSECURITY_DESCRIPTOR pSd = nullptr;
+			PACL pNewDacl = nullptr;
+
+			// Construct new acl.
+			EXPLICIT_ACCESS ea = {};
+			ea.grfAccessMode = SET_ACCESS;
+			ea.grfAccessPermissions = grant ? GENERIC_ALL : READ_CONTROL | WRITE_DAC | WRITE_OWNER | SYNCHRONIZE;
+			ea.grfInheritance = NO_INHERITANCE;
+			ea.Trustee.TrusteeForm = TRUSTEE_IS_NAME;
+			ea.Trustee.TrusteeType = TRUSTEE_IS_USER;
+			ea.Trustee.ptstrName = "everyone";
+			if (SetEntriesInAcl(1, &ea, nullptr, &pNewDacl) == ERROR_SUCCESS)
 			{
-				res = grant ? Res::GRANT : Res::STRIP;
+				// Bind new acl to target.
+				if (SetSecurityInfo(file,					// Erase old DACL.
+									SE_FILE_OBJECT,
+									DACL_SECURITY_INFORMATION,
+									nullptr, nullptr,
+									nullptr, nullptr) == ERROR_SUCCESS
+					&& SetSecurityInfo(file,				// Set new and the only ACE.
+										SE_FILE_OBJECT,
+										DACL_SECURITY_INFORMATION,
+										nullptr, nullptr,
+										pNewDacl, nullptr) == ERROR_SUCCESS)
+				{
+					res = grant ? Res::GRANT : Res::STRIP;
+				}
+
+				LocalFree(pNewDacl);
 			}
 
-			LocalFree(pNewDacl);
+			LocalFree(pSd);
+			CloseHandle(file);
 		}
-	
-		LocalFree(pSd);
-		CloseHandle(file);
 	}
 
 	return res;
