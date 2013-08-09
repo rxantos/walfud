@@ -234,8 +234,8 @@ bool SetPrivilege(const string &privilege, bool grant)
 		{
 			TOKEN_PRIVILEGES tp = {};
 			tp.PrivilegeCount = 1;
-			tp.Privileges[0].Luid = luid;tp.Privileges[0].Attributes 
-					= grant ? SE_PRIVILEGE_ENABLED : SE_PRIVILEGE_REMOVED;
+			tp.Privileges[0].Luid = luid;
+			tp.Privileges[0].Attributes = grant ? SE_PRIVILEGE_ENABLED : SE_PRIVILEGE_REMOVED;
 
 			if (AdjustTokenPrivileges(token, FALSE, &tp, sizeof(tp), nullptr, nullptr))
 			{
