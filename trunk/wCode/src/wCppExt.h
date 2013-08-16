@@ -44,6 +44,7 @@
 #include <winternl.h>
 #include <Aclapi.h>
 #include <Sddl.h>
+#include <Shlwapi.h>
 
 #include "wStrUtil.h"
 #include "wSysUtil.h"
