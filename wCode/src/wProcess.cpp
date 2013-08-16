@@ -166,7 +166,7 @@ string getCurrentProcessName()
 	char moduleName[MAX_PATH] = {};
 	GetModuleFileName(nullptr, moduleName, arrCnt(moduleName));
 
-	return moduleName;
+	return PathFindFileName(moduleName);
 }
 
 bool runAndWait(const string &file, const string &param, DWORD timeout, bool show)
