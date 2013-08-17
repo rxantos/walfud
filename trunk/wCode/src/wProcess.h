@@ -95,8 +95,7 @@ bool SetPrivilege(const std::string &privilege, bool grant);
 
 bool TakeOwnership(const std::string &target);
 
-// Read 32-bit process from 32-bit process, or 
-// read 64-bit process from 64-bit process.
+// Read 32-bit process from 32-bit process.
 std::string getProcessFullpath(int pid);
 std::string getProcessCmdLine(int pid);
 std::string getProcessCurrentDirectory(int pid);
