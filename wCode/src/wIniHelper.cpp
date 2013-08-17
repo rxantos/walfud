@@ -65,14 +65,12 @@ string IniHelper::get(const string &section, const string &key) const
 {
 	string val;
 
-	unordered_map<string, unordered_map<string, string>>::const_iterator it = m_data.find(section);
-	if (it != m_data.end())
+	auto keyVal = get(section);
+	auto it = findInMap(keyVal, key, m_caseSensitive);
+
+	if (it != keyVal.end())
 	{
-		unordered_map<string, string>::const_iterator jt = it->second.find(key);
-		if (jt != it->second.end())
-		{
-			val = jt->second;
-		}
+		val = it->second;
 	}
 
 	return val;
@@ -81,7 +79,8 @@ unordered_map<string, string> IniHelper::get(const string &section) const
 {
 	unordered_map<string, string> keyVal;
 
-	unordered_map<string, unordered_map<string, string>>::const_iterator it = m_data.find(section);
+	auto it = findInMap(m_data, section, m_caseSensitive);
+
 	if (it != m_data.end())
 	{
 		keyVal = it->second;
