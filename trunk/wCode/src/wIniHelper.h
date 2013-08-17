@@ -48,7 +48,7 @@ class IniHelper
 
 public:
 	IniHelper();
-	IniHelper(const std::string &iniFullpath, bool caseSensitive = false);
+	IniHelper(const std::string &iniFullpath, bool caseSensitive = true);
 
 public:
 	// Interface.
@@ -65,6 +65,32 @@ public:
 private:
 	// logic.
 	void parseLine(const std::string &str);
+	template <typename T>
+	typename std::unordered_map<std::string, T>::const_iterator findInMap(const std::unordered_map<std::string, T> &m, 
+																		  const std::string &str, 
+																		  bool caseSensitive) const
+	{
+		auto res = m.end();
+
+		if (caseSensitive)
+		{
+			// Find case sensitive.
+			res = m.find(str);
+		}
+		else
+		{
+			// No sensitive.
+			for (res = m.begin(); res != m.end(); ++res)
+			{
+				if (w::strICmp(res->first, str))
+				{
+					break;
+				}
+			}
+		}
+
+		return res;
+	}
 };
 
 }
