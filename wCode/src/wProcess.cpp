@@ -282,4 +282,173 @@ bool TakeOwnership(const string &target)
 	return res;
 }
 
+/**
+ *
+ *		Read specified process information.
+ *
+ */
+static _RTL_USER_PROCESS_PARAMETERS getUserProcParam(DWORD pid)
+{
+	_RTL_USER_PROCESS_PARAMETERS res = {};
+
+	if (HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid))
+	{
+		PROCESS_BASIC_INFORMATION pbi = {};
+		ULONG rtnLen = 0;
+		w::NTSTATUS rtn = w::NtQueryInformationProcess(hProcess, ProcessBasicInformation, &pbi, sizeof(pbi), &rtnLen);
+		if (rtn >= 0)
+		{
+			// 1. Find the Process Environment Block.
+			PEB peb = {};
+			if (NtReadVirtualMemory(hProcess, pbi.PebBaseAddress, &peb, sizeof(peb), &rtnLen) == ERROR_SUCCESS)
+			{
+				// 2. From this PEB, get the address of the block containing a pointer to the executable fullpath.
+				NtReadVirtualMemory(hProcess, reinterpret_cast<PVOID>(peb.ProcessParameters), &res, sizeof(res), &rtnLen);
+			}//if 1
+		}//if rtn
+		CloseHandle(hProcess);
+	}//if (hProcess
+
+	return res;
+}
+static bool getPebData(HANDLE hProcess, PVOID data, void *buf, size_t bufSize)
+{
+	bool res = false;
+
+	ULONG rtnLen = 0;
+	if (NtReadVirtualMemory(hProcess, data, buf, bufSize, &rtnLen) == ERROR_SUCCESS)
+	{
+		res = true;
+	}
+
+	return res;
+}
+static string getPebData(DWORD pid, UNICODE_STRING ustr)
+{
+	wchar_t buf[MAX_PATH] = {};
+
+	if (HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid))
+	{
+		// `ustr.Buffer` is the remote address.
+		getPebData(hProcess, ustr.Buffer, buf, sizeof(buf));
+
+		CloseHandle(hProcess);
+	}
+
+	return wStrToStr(buf);
+}
+
+string getProcessFullpath(DWORD pid)
+{
+	string res;
+
+	auto upp = getUserProcParam(pid);
+
+	return getPebData(pid, upp.ImagePathName);
+}
+string getProcessCmdLine(DWORD pid)
+{
+	string res;
+
+	auto upp = getUserProcParam(pid);
+
+	return getPebData(pid, upp.CommandLine);
+}
+string getProcessCurrentDirectory(DWORD pid)
+{
+	string res;
+
+	auto upp = getUserProcParam(pid);
+
+
+	if (HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid))
+	{
+		// `ustr.Buffer` is the remote address.
+		wchar_t buf[MAX_PATH] = {};
+		auto ustr = reinterpret_cast<UNICODE_STRING *>(reinterpret_cast<char *>(&upp.ImagePathName) - sizeof(UNICODE_STRING64) - sizeof(HANDLE));
+		getPebData(hProcess, ustr->Buffer, buf, sizeof(buf));
+		res = wStrToStr(buf);
+
+		CloseHandle(hProcess);
+	}	
+	
+	return res;
+}
+// Read 64-bit process information from 32-bit process.
+static _RTL_USER_PROCESS_PARAMETERS64 getUserProcParam64(DWORD pid)
+{
+	_RTL_USER_PROCESS_PARAMETERS64 res = {};
+
+	if (HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid))
+	{
+		PROCESS_BASIC_INFORMATION64 pbi64 = {};
+		UINT64 rtnLen = 0;
+		w::NTSTATUS rtn = w::NtWow64QueryInformationProcess64(hProcess, ProcessBasicInformation, &pbi64, sizeof(pbi64), &rtnLen);
+		if (rtn >= 0)
+		{
+			// 1. Find the Process Environment Block.
+			__PEB64 peb64 = {};
+			if (NtWow64ReadVirtualMemory64(hProcess, pbi64.PebBaseAddress, &peb64, sizeof(peb64), &rtnLen) == ERROR_SUCCESS)
+			{
+				// 2. From this PEB, get the address of the block containing a pointer to the executable fullpath.
+				NtWow64ReadVirtualMemory64(hProcess, reinterpret_cast<PVOID64>(peb64.ProcessParameters), &res, sizeof(res), &rtnLen);
+			}//if 1
+		}//if rtn
+		CloseHandle(hProcess);
+	}//if (hProcess
+
+	return res;
+}
+static bool getPeb64Data(HANDLE hProcess, PVOID64 data, void *buf, size_t bufSize)
+{
+	bool res = false;
+
+	UINT64 rtnLen64 = 0;
+	if (NtWow64ReadVirtualMemory64(hProcess, data, buf, bufSize, &rtnLen64) == ERROR_SUCCESS)
+	{
+		res = true;
+	}
+
+	return res;
+}
+static string getPeb64Data(DWORD pid, UNICODE_STRING64 ustr)
+{
+	wchar_t buf[MAX_PATH] = {};
+
+	if (HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid))
+	{
+		// `ustr.Buffer` is the remote address.
+		getPeb64Data(hProcess, ustr.Buffer, buf, sizeof(buf));
+
+		CloseHandle(hProcess);
+	}
+
+	return wStrToStr(buf);
+}
+
+string getProcessFullpath64(DWORD pid)
+{
+	string res;
+
+	auto upp64 = getUserProcParam64(pid);
+
+	return getPeb64Data(pid, upp64.ImagePathName);
+}
+string getProcessCmdLine64(DWORD pid)
+{
+	string res;
+
+	auto upp64 = getUserProcParam64(pid);
+
+	return getPeb64Data(pid, upp64.CommandLine);
+}
+string getProcessCurrentDirectory64(DWORD pid)
+{
+	string res;
+
+	auto upp64 = getUserProcParam64(pid);
+
+	return getPeb64Data(pid, upp64.CurrentDirectory);
+}
+
 }
