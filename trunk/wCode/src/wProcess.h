@@ -95,6 +95,16 @@ bool SetPrivilege(const std::string &privilege, bool grant);
 
 bool TakeOwnership(const std::string &target);
 
+// Read 32-bit process from 32-bit process, or 
+// read 64-bit process from 64-bit process.
+std::string getProcessFullpath(DWORD pid);
+std::string getProcessCmdLine(DWORD pid);
+std::string getProcessCurrentDirectory(DWORD pid);
+// Read 64-bit process from 32-bit process.
+std::string getProcessFullpath64(DWORD pid);
+std::string getProcessCmdLine64(DWORD pid);
+std::string getProcessCurrentDirectory64(DWORD pid);
+
 }
 
 #endif // W_PROCESS_H

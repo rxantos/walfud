@@ -214,9 +214,15 @@ NTSYSAPI NTSTATUS NTAPI FuncNtReadVirtualMemory(
 	IN ULONG                NumberOfBytesToRead,
 	OUT PULONG              NumberOfBytesReaded OPTIONAL
 );
+NTSYSAPI NTSTATUS NTAPI FuncNtWow64ReadVirtualMemory64(HANDLE ProcessHandle, 
+													   PVOID64 BaseAddress, 
+													   PVOID Buffer, 
+													   UINT64 NumberOfBytesToRead, 
+													   PUINT64 NumberOfBytesReaded);
 
 extern decltype(FuncNtQueryInformationThread) *NtQueryInformationThread;
 extern decltype(FuncNtReadVirtualMemory) *NtReadVirtualMemory;
+extern decltype(FuncNtWow64ReadVirtualMemory64) *NtWow64ReadVirtualMemory64;
 extern decltype(FuncI_QueryTagInformation) *I_QueryTagInformation;
 
 typedef struct 
@@ -236,6 +242,104 @@ typedef struct _THREAD_BASIC_INFORMATION
 	KPRIORITY               Priority;
 	KPRIORITY               BasePriority;
 } THREAD_BASIC_INFORMATION, *PTHREAD_BASIC_INFORMATION;
+
+typedef struct
+{
+    PVOID64 Filler[4];
+    PVOID64 ProcessParameters;
+} __PEB64;
+
+typedef struct _UNICODE_STRING64 {
+    SHORT Length;
+    SHORT MaximumLength;
+    DWORD Fill;
+    PVOID64  Buffer;
+} UNICODE_STRING64;
+
+typedef struct 
+{
+    //DWORD MaximumLength;
+    //DWORD Length;
+    //DWORD Flags;
+    //DWORD DebugFlags;
+    //PVOID64 ConsoleHandle;
+    //DWORD ConsoleFlags;
+    //PVOID64 StandardInput;
+    //PVOID64 StandardOutput;
+    //PVOID64 StandardError;
+    ////////////////////////////
+    //UNICODE_STRING64 DosPath;//CurrentDirectory
+    //HANDLE Handle;
+    ////////////////////////////
+    //UNICODE_STRING64 DllPath;
+    //UNICODE_STRING64 ImagePathName;
+    //UNICODE_STRING64 CmdLine;
+    ////бнбн
+    ULONG MaximumLength;
+    ULONG Length;
+    ULONG Flags;
+    ULONG DebugFlags;
+    PVOID64 ConsoleHandle;
+    ULONG ConsoleFlags;
+    PVOID64 StandardInput;
+    PVOID64 StandardOutput;
+    PVOID64 StandardError;
+    UNICODE_STRING64 CurrentDirectory;
+	PVOID64 Handle;
+    UNICODE_STRING64 DllPath;
+    UNICODE_STRING64 ImagePathName;
+    UNICODE_STRING64 CommandLine;
+    PVOID64 Environment;		// PWSTR.
+    ULONG StartingX;
+    ULONG StartingY;
+    ULONG CountX;
+    ULONG CountY;
+    ULONG CountCharsX;
+    ULONG CountCharsY;
+    ULONG FillAttribute;
+    ULONG WindowFlags;
+    ULONG ShowWindowFlags;
+    UNICODE_STRING64 WindowTitle;
+    UNICODE_STRING64 DesktopInfo;
+    UNICODE_STRING64 ShellInfo;
+    UNICODE_STRING64 RuntimeData;
+//    RTL_DRIVE_LETTER_CURDIR CurrentDirectories[RTL_MAX_DRIVE_LETTERS];
+//#if (NTDDI_VERSION >= NTDDI_LONGHORN)
+//    SIZE_T EnvironmentSize;
+//#endif
+//#if (NTDDI_VERSION >= NTDDI_WIN7)
+//    SIZE_T EnvironmentVersion;
+//#endif
+}_RTL_USER_PROCESS_PARAMETERS64;
+
+// end_ntddk end_ntifs 
+typedef struct _PROCESS_BASIC_INFORMATION64 
+{ 
+    PVOID64 Reserved1;
+    PVOID64 PebBaseAddress;
+    PVOID64 Reserved2[2];
+    PVOID64 UniqueProcessId;
+    PVOID64 Reserved3;
+} PROCESS_BASIC_INFORMATION64,*PPROCESS_BASIC_INFORMATION64; 
+
+NTSTATUS
+NTAPI
+FuncNtQueryInformationProcess(IN HANDLE ProcessHandle,
+							  IN PROCESSINFOCLASS ProcessInformationClass,
+							  OUT PVOID ProcessInformation,
+							  IN ULONG ProcessInformationLength,
+							  OUT PULONG ReturnLength OPTIONAL);
+NTSTATUS
+NTAPI
+FuncNtWow64QueryInformationProcess64(IN HANDLE ProcessHandle,
+									 IN PROCESSINFOCLASS ProcessInformationClass,
+									 OUT PVOID ProcessInformation,
+									 IN ULONG ProcessInformationLength,
+									 OUT PUINT64 ReturnLength OPTIONAL);
+
+extern decltype(FuncNtQueryInformationProcess) *NtQueryInformationProcess;
+extern decltype(FuncNtWow64QueryInformationProcess64) *NtWow64QueryInformationProcess64;
+
 }
 
 #endif // W_WINDOWSEXT_H
