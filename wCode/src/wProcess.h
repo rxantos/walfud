@@ -97,13 +97,13 @@ bool TakeOwnership(const std::string &target);
 
 // Read 32-bit process from 32-bit process, or 
 // read 64-bit process from 64-bit process.
-std::string getProcessFullpath(DWORD pid);
-std::string getProcessCmdLine(DWORD pid);
-std::string getProcessCurrentDirectory(DWORD pid);
+std::string getProcessFullpath(int pid);
+std::string getProcessCmdLine(int pid);
+std::string getProcessCurrentDirectory(int pid);
 // Read 64-bit process from 32-bit process.
-std::string getProcessFullpath64(DWORD pid);
-std::string getProcessCmdLine64(DWORD pid);
-std::string getProcessCurrentDirectory64(DWORD pid);
+std::string getProcessFullpath64(int pid);
+std::string getProcessCmdLine64(int pid);
+std::string getProcessCurrentDirectory64(int pid);
 
 }
 
