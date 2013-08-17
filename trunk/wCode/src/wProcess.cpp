@@ -287,7 +287,7 @@ bool TakeOwnership(const string &target)
  *		Read specified process information.
  *
  */
-static _RTL_USER_PROCESS_PARAMETERS getUserProcParam(DWORD pid)
+static _RTL_USER_PROCESS_PARAMETERS getUserProcParam(int pid)
 {
 	_RTL_USER_PROCESS_PARAMETERS res = {};
 
@@ -323,7 +323,7 @@ static bool getPebData(HANDLE hProcess, PVOID data, void *buf, size_t bufSize)
 
 	return res;
 }
-static string getPebData(DWORD pid, UNICODE_STRING ustr)
+static string getPebData(int pid, UNICODE_STRING ustr)
 {
 	wchar_t buf[MAX_PATH] = {};
 
@@ -338,7 +338,7 @@ static string getPebData(DWORD pid, UNICODE_STRING ustr)
 	return wStrToStr(buf);
 }
 
-string getProcessFullpath(DWORD pid)
+string getProcessFullpath(int pid)
 {
 	string res;
 
@@ -346,7 +346,7 @@ string getProcessFullpath(DWORD pid)
 
 	return getPebData(pid, upp.ImagePathName);
 }
-string getProcessCmdLine(DWORD pid)
+string getProcessCmdLine(int pid)
 {
 	string res;
 
@@ -354,7 +354,7 @@ string getProcessCmdLine(DWORD pid)
 
 	return getPebData(pid, upp.CommandLine);
 }
-string getProcessCurrentDirectory(DWORD pid)
+string getProcessCurrentDirectory(int pid)
 {
 	string res;
 
@@ -375,11 +375,11 @@ string getProcessCurrentDirectory(DWORD pid)
 	return res;
 }
 // Read 64-bit process information from 32-bit process.
-static _RTL_USER_PROCESS_PARAMETERS64 getUserProcParam64(DWORD pid)
+static _RTL_USER_PROCESS_PARAMETERS64 getUserProcParam64(int pid)
 {
 	_RTL_USER_PROCESS_PARAMETERS64 res = {};
 
-	if (HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid))
+	if (HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, static_cast<DWORD>(pid)))
 	{
 		PROCESS_BASIC_INFORMATION64 pbi64 = {};
 		UINT64 rtnLen = 0;
@@ -411,11 +411,11 @@ static bool getPeb64Data(HANDLE hProcess, PVOID64 data, void *buf, size_t bufSiz
 
 	return res;
 }
-static string getPeb64Data(DWORD pid, UNICODE_STRING64 ustr)
+static string getPeb64Data(int pid, UNICODE_STRING64 ustr)
 {
 	wchar_t buf[MAX_PATH] = {};
 
-	if (HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, pid))
+	if (HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, static_cast<DWORD>(pid)))
 	{
 		// `ustr.Buffer` is the remote address.
 		getPeb64Data(hProcess, ustr.Buffer, buf, sizeof(buf));
@@ -426,7 +426,7 @@ static string getPeb64Data(DWORD pid, UNICODE_STRING64 ustr)
 	return wStrToStr(buf);
 }
 
-string getProcessFullpath64(DWORD pid)
+string getProcessFullpath64(int pid)
 {
 	string res;
 
@@ -434,7 +434,7 @@ string getProcessFullpath64(DWORD pid)
 
 	return getPeb64Data(pid, upp64.ImagePathName);
 }
-string getProcessCmdLine64(DWORD pid)
+string getProcessCmdLine64(int pid)
 {
 	string res;
 
@@ -442,7 +442,7 @@ string getProcessCmdLine64(DWORD pid)
 
 	return getPeb64Data(pid, upp64.CommandLine);
 }
-string getProcessCurrentDirectory64(DWORD pid)
+string getProcessCurrentDirectory64(int pid)
 {
 	string res;
 
