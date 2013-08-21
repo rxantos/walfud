@@ -16,9 +16,9 @@ For GUI:
 
 No matter "grant" or "strip", the program will change the target's ownership to your current user.
 
-If "grant", the target will be grant all access permission to "everyone"(user name).
+If "grant", the target will be grant all access permissions to "everyone"(user name).
 
-If "strip", all access permission will be stripped except regrant permission. In this case, no one can read or write target without regrant.
+If "strip", all access permissions will be stripped except regrant permission. In this case, no one can read or write target without regrant.
 
 = History =
 
