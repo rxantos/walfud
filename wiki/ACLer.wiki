@@ -1,8 +1,8 @@
-#Grant file all permissions to everyone, or strip all permissions except regrant permission.
-
 = Introduction =
 
 Grant target all permissions to everyone, or strip permissions.
+
+[https://walfud.googlecode.com/svn/trunk/wApp/bin/ACLer.exe Download]
 
 
 = Details =
