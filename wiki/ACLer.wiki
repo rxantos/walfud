@@ -1,0 +1,29 @@
+#Grant file all permissions to everyone, or strip all permissions except regrant permission.
+
+= Introduction =
+
+Grant target all permissions to everyone, or strip permissions.
+
+
+= Details =
+
+You can use both command line both GUI.
+
+For command line:
+   ACLer.exe   [grant|strip]   "target1"   "target2"   ...
+
+For GUI:
+   Just drag target to the list, then click "grant" or "strip" button.
+
+
+
+= History =
+
+1.0.0.3
+   Support XPx32.
+
+1.0.0.2
+   Disable file redirection, but program may not run under XPx32.
+
+1.0.0.1
+   Can grant/strip permission to a file.
