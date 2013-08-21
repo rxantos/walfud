@@ -43,6 +43,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);../../wCode/src;</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -106,24 +107,24 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wConsole.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wCppExt.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wDir.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wDisk.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wFilePermission.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wHack.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wIniHelper.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wMath.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wOtherUtil.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wPipe.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wProcess.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wRpc.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wService.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wStrUtil.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wSysUtil.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wTaskbarProgress.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wTimeMeasurer.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wWindowsExt.h" />
+    <ClInclude Include="..\..\wCode\src\wConsole.h" />
+    <ClInclude Include="..\..\wCode\src\wCppExt.h" />
+    <ClInclude Include="..\..\wCode\src\wDir.h" />
+    <ClInclude Include="..\..\wCode\src\wDisk.h" />
+    <ClInclude Include="..\..\wCode\src\wFilePermission.h" />
+    <ClInclude Include="..\..\wCode\src\wHack.h" />
+    <ClInclude Include="..\..\wCode\src\wIniHelper.h" />
+    <ClInclude Include="..\..\wCode\src\wMath.h" />
+    <ClInclude Include="..\..\wCode\src\wOtherUtil.h" />
+    <ClInclude Include="..\..\wCode\src\wPipe.h" />
+    <ClInclude Include="..\..\wCode\src\wProcess.h" />
+    <ClInclude Include="..\..\wCode\src\wRpc.h" />
+    <ClInclude Include="..\..\wCode\src\wService.h" />
+    <ClInclude Include="..\..\wCode\src\wStrUtil.h" />
+    <ClInclude Include="..\..\wCode\src\wSysUtil.h" />
+    <ClInclude Include="..\..\wCode\src\wTaskbarProgress.h" />
+    <ClInclude Include="..\..\wCode\src\wTimeMeasurer.h" />
+    <ClInclude Include="..\..\wCode\src\wWindowsExt.h" />
     <ClInclude Include="ACLer.h" />
     <ClInclude Include="ACLerDlg.h" />
     <ClInclude Include="Resource.h" />
@@ -131,24 +132,24 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wConsole.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wCppExt.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wDir.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wDisk.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wFilePermission.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wHack.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wIniHelper.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wMath.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wOtherUtil.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wPipe.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wProcess.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wRpc.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wService.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wStrUtil.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wSysUtil.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wTaskbarProgress.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wTimeMeasurer.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wWindowsExt.cpp" />
+    <ClCompile Include="..\..\wCode\src\wConsole.cpp" />
+    <ClCompile Include="..\..\wCode\src\wCppExt.cpp" />
+    <ClCompile Include="..\..\wCode\src\wDir.cpp" />
+    <ClCompile Include="..\..\wCode\src\wDisk.cpp" />
+    <ClCompile Include="..\..\wCode\src\wFilePermission.cpp" />
+    <ClCompile Include="..\..\wCode\src\wHack.cpp" />
+    <ClCompile Include="..\..\wCode\src\wIniHelper.cpp" />
+    <ClCompile Include="..\..\wCode\src\wMath.cpp" />
+    <ClCompile Include="..\..\wCode\src\wOtherUtil.cpp" />
+    <ClCompile Include="..\..\wCode\src\wPipe.cpp" />
+    <ClCompile Include="..\..\wCode\src\wProcess.cpp" />
+    <ClCompile Include="..\..\wCode\src\wRpc.cpp" />
+    <ClCompile Include="..\..\wCode\src\wService.cpp" />
+    <ClCompile Include="..\..\wCode\src\wStrUtil.cpp" />
+    <ClCompile Include="..\..\wCode\src\wSysUtil.cpp" />
+    <ClCompile Include="..\..\wCode\src\wTaskbarProgress.cpp" />
+    <ClCompile Include="..\..\wCode\src\wTimeMeasurer.cpp" />
+    <ClCompile Include="..\..\wCode\src\wWindowsExt.cpp" />
     <ClCompile Include="ACLer.cpp" />
     <ClCompile Include="ACLerDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
