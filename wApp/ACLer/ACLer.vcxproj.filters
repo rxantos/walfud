@@ -4,58 +4,58 @@
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="ACLer.cpp" />
     <ClCompile Include="ACLerDlg.cpp" />
-    <ClCompile Include="..\..\..\trunk\wCode\src\wConsole.cpp">
+    <ClCompile Include="..\..\wCode\src\wConsole.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wCppExt.cpp">
+    <ClCompile Include="..\..\wCode\src\wCppExt.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wDir.cpp">
+    <ClCompile Include="..\..\wCode\src\wDir.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wDisk.cpp">
+    <ClCompile Include="..\..\wCode\src\wDisk.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wFilePermission.cpp">
+    <ClCompile Include="..\..\wCode\src\wFilePermission.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wHack.cpp">
+    <ClCompile Include="..\..\wCode\src\wHack.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wIniHelper.cpp">
+    <ClCompile Include="..\..\wCode\src\wIniHelper.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wMath.cpp">
+    <ClCompile Include="..\..\wCode\src\wMath.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wOtherUtil.cpp">
+    <ClCompile Include="..\..\wCode\src\wOtherUtil.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wPipe.cpp">
+    <ClCompile Include="..\..\wCode\src\wPipe.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wProcess.cpp">
+    <ClCompile Include="..\..\wCode\src\wProcess.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wRpc.cpp">
+    <ClCompile Include="..\..\wCode\src\wRpc.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wService.cpp">
+    <ClCompile Include="..\..\wCode\src\wService.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wStrUtil.cpp">
+    <ClCompile Include="..\..\wCode\src\wStrUtil.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wSysUtil.cpp">
+    <ClCompile Include="..\..\wCode\src\wSysUtil.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wTaskbarProgress.cpp">
+    <ClCompile Include="..\..\wCode\src\wTaskbarProgress.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wTimeMeasurer.cpp">
+    <ClCompile Include="..\..\wCode\src\wTimeMeasurer.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\trunk\wCode\src\wWindowsExt.cpp">
+    <ClCompile Include="..\..\wCode\src\wWindowsExt.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
   </ItemGroup>
@@ -67,58 +67,58 @@
     </ClInclude>
     <ClInclude Include="ACLer.h" />
     <ClInclude Include="ACLerDlg.h" />
-    <ClInclude Include="..\..\..\trunk\wCode\src\wConsole.h">
+    <ClInclude Include="..\..\wCode\src\wConsole.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wCppExt.h">
+    <ClInclude Include="..\..\wCode\src\wCppExt.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wDir.h">
+    <ClInclude Include="..\..\wCode\src\wDir.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wDisk.h">
+    <ClInclude Include="..\..\wCode\src\wDisk.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wFilePermission.h">
+    <ClInclude Include="..\..\wCode\src\wFilePermission.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wHack.h">
+    <ClInclude Include="..\..\wCode\src\wHack.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wIniHelper.h">
+    <ClInclude Include="..\..\wCode\src\wIniHelper.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wMath.h">
+    <ClInclude Include="..\..\wCode\src\wMath.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wOtherUtil.h">
+    <ClInclude Include="..\..\wCode\src\wOtherUtil.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wPipe.h">
+    <ClInclude Include="..\..\wCode\src\wPipe.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wProcess.h">
+    <ClInclude Include="..\..\wCode\src\wProcess.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wRpc.h">
+    <ClInclude Include="..\..\wCode\src\wRpc.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wService.h">
+    <ClInclude Include="..\..\wCode\src\wService.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wStrUtil.h">
+    <ClInclude Include="..\..\wCode\src\wStrUtil.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wSysUtil.h">
+    <ClInclude Include="..\..\wCode\src\wSysUtil.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wTaskbarProgress.h">
+    <ClInclude Include="..\..\wCode\src\wTaskbarProgress.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wTimeMeasurer.h">
+    <ClInclude Include="..\..\wCode\src\wTimeMeasurer.h">
       <Filter>wCode</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\trunk\wCode\src\wWindowsExt.h">
+    <ClInclude Include="..\..\wCode\src\wWindowsExt.h">
       <Filter>wCode</Filter>
     </ClInclude>
   </ItemGroup>
