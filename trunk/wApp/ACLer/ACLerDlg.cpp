@@ -55,8 +55,13 @@ BOOL CDropToListTemplateDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
-	void *old = nullptr;
-	Wow64DisableWow64FsRedirection(&old);
+	auto pfnWow64DisableWow64FsRedirection
+		= reinterpret_cast<decltype(Wow64DisableWow64FsRedirection) *>(GetProcAddress(GetModuleHandle("Kernel32.dll"), "Wow64DisableWow64FsRedirection"));
+	if (pfnWow64DisableWow64FsRedirection != nullptr)
+	{
+		void *old = nullptr;
+		pfnWow64DisableWow64FsRedirection(&old);
+	}
 
 	// Initialize widget.
 	m_list.InsertColumn(sc_colIndex_targetFullpath, sc_colTitle_targetFullpath, LVCFMT_LEFT, sc_colWidth_targetFullpath);
