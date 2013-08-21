@@ -2,11 +2,6 @@
 
 Grant target all permissions to everyone, or strip permissions.
 
-[https://walfud.googlecode.com/svn/trunk/wApp/bin/ACLer.exe Download]
-
-
-= Details =
-
 You can use both command line both GUI.
 
 For command line:
@@ -15,7 +10,15 @@ For command line:
 For GUI:
    Just drag target to the list, then click "grant" or "strip" button.
 
+[https://walfud.googlecode.com/svn/trunk/wApp/bin/ACLer.exe Download]
 
+= Details =
+
+No matter "grant" or "strip", the program will change the target's ownership to your current user.
+
+If "grant", the target will be grant all access permission to "everyone"(user name).
+
+If "strip", all access permission will be stripped except regrant permission. In this case, no one can read or write target without regrant.
 
 = History =
 
