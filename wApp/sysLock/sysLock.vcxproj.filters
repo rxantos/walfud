@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{c819295b-8a27-4c63-ae66-ef8bad87c69f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -36,6 +39,21 @@
     <ClInclude Include="wAntiSysLock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\animation\animation\coordinate.h">
+      <Filter>animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\animation\animation\graph.h">
+      <Filter>animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\animation\animation\speed.h">
+      <Filter>animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\animation\animation\track.h">
+      <Filter>animation</Filter>
+    </ClInclude>
+    <ClInclude Include="..\animation\animation\animation.h">
+      <Filter>animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sysLock.cpp">
@@ -49,6 +67,18 @@
     </ClCompile>
     <ClCompile Include="wAntiSysLock.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\animation\animation\graph.cpp">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\animation\animation\speed.cpp">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\animation\animation\track.cpp">
+      <Filter>animation</Filter>
+    </ClCompile>
+    <ClCompile Include="..\animation\animation\animation.cpp">
+      <Filter>animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
