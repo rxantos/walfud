@@ -11,42 +11,83 @@ using namespace chrono;
 
 // MyAnimation.
 MyAnimation::MyAnimation() 
-	: m_graph1(nullptr, RGB(123, 62, 200)), m_graph2(nullptr, RGB(240, 240, 240)), 
-	  m_track1(), m_track2(),
-	  m_speed(),
-	  m_cv1(), m_cv2(), m_lock(), m_b1(false), m_b2(false)
+	: m_board(nullptr),
+	  m_dc(nullptr),
+	  m_init(false),
+	  m_cv1(), m_cv2(), m_lock(), m_b1(false), m_b2(false),
+	  m_quit(false)
 {}
+MyAnimation::~MyAnimation() { stop(); }
 
 // Interface.
 void MyAnimation::setBoard(HWND drawHWnd) 
 {
-	m_graph1.setDC(GetDC(drawHWnd));
-	m_graph2.setDC(GetDC(drawHWnd));
+	ReleaseDC(m_board, m_dc);
+	m_board = drawHWnd;	
+	m_dc = GetDC(drawHWnd);
 }
 
 // impl.
 void MyAnimation::start()
 {
-	call_once(m_initFlag, &MyAnimation::init, this);
+	// Create working thread.
+	if (!m_init)
+	{
+		m_quit = false;
+		m_b1 = false;
+		m_w1 = async(&MyAnimation::animation1, this);
+		m_b2 = false;
+		m_w2 = async(&MyAnimation::animation2, this);
+	}
 
-	// Start animate.
+	// Start line 1.
 	{
 		lock_guard<mutex> lg(m_lock);
 		m_b1 = true;
 	}
 	m_cv1.notify_one();
 
-	call_once(m_distanceFlag, []{ sleep_for(seconds(1)); });
+	// Wait.
+	if (!m_init)
+	{
+		sleep_for(seconds(1));
+	}
 
+	// Start line 2.
 	{
 		lock_guard<mutex> lg(m_lock);
 		m_b2 = true;
 	}
 	m_cv2.notify_one();
+
+	// Refresh status.
+	m_init = true;
 }
 void MyAnimation::stop()
 {
-	// TODO: Clear board.
+	if (m_init)
+	{
+		// Clean board.
+		InvalidateRect(m_board, nullptr, TRUE);
+
+		// Quit working thread.
+		m_quit = true;
+		{
+			lock_guard<mutex> lg(m_lock);
+			m_b1 = true;
+		}
+		m_cv1.notify_one();
+		m_w1.wait();
+		{
+			lock_guard<mutex> lg(m_lock);
+			m_b2 = true;
+		}
+		m_cv2.notify_one();
+		m_w2.wait();
+
+		// Refresh status.
+		m_init = false;
+	}
 }
 void MyAnimation::pause()
 {
@@ -57,22 +98,24 @@ void MyAnimation::pause()
 	}
 }
 
-void MyAnimation::init()
-{
-	async(&MyAnimation::animation1, this);
-	async(&MyAnimation::animation2, this);
-}
 void MyAnimation::animation1()
 {
 	// Animation 1.
-	animationBase(m_graph1, m_track1, m_speed, m_lock, m_b1, m_cv1);
+	animationBase(shared_ptr<Graph<Coordinate_2D>>(new MyGraph(m_dc, RGB(123, 62, 200))), 
+				  shared_ptr<Track<Coordinate_2D>>(new MyTrack2), 
+				  shared_ptr<Speed>(new MySpeed2), 
+				  m_lock, m_b1, m_cv1, m_quit);
 }
 void MyAnimation::animation2()
 {
 	// Animation 2.
-	animationBase(m_graph2, m_track2, m_speed, m_lock, m_b2, m_cv2);
+	animationBase(shared_ptr<Graph<Coordinate_2D>>(new MyGraph(m_dc, RGB(240, 240, 240))), 
+				  shared_ptr<Track<Coordinate_2D>>(new MyTrack2), 
+				  shared_ptr<Speed>(new MySpeed2), 
+				  m_lock, m_b2, m_cv2, m_quit);
 }
-void MyAnimation::animationBase(MyGraph &g, MyTrack &mt, Speed &s, mutex &l, bool &b, condition_variable &cv)
+void MyAnimation::animationBase(shared_ptr<Graph<Coordinate_2D>> g, shared_ptr<Track<Coordinate_2D>> mt, shared_ptr<Speed> s, 
+								mutex &l, bool &b, condition_variable &cv, atomic<bool> &q)
 {
 	while (true)
 	{
@@ -80,12 +123,17 @@ void MyAnimation::animationBase(MyGraph &g, MyTrack &mt, Speed &s, mutex &l, boo
 			unique_lock<mutex> ul(l);
 			cv.wait(ul, [&b](){ return b; });
 		}
+		if (q)
+		{
+			// thread quit.
+			break;
+		}
 
-		Coordinate_2D pos = mt.next();
-		g.setCoordinate(pos);
+		Coordinate_2D pos = mt->next();
+		g->setCoordinate(pos);
 
-		g.draw();
+		g->draw();
 
-		sleep_for(milliseconds(s.next()));
+		sleep_for(milliseconds(s->next()));
 	}
 }

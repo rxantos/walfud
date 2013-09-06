@@ -34,6 +34,7 @@ BEGIN_MESSAGE_MAP(CanimationDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON_START, &CanimationDlg::OnBnClickedButtonStart)
 	ON_BN_CLICKED(IDC_BUTTON_PAUSE, &CanimationDlg::OnBnClickedButtonPause)
+	ON_BN_CLICKED(IDC_BUTTON_STOP, &CanimationDlg::OnBnClickedButtonStop)
 END_MESSAGE_MAP()
 
 
@@ -102,3 +103,8 @@ void CanimationDlg::OnBnClickedButtonPause()
 	s_ma.pause();
 }
 
+
+void CanimationDlg::OnBnClickedButtonStop()
+{
+	s_ma.stop();
+}

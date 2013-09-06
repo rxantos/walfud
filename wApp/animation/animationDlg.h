@@ -31,4 +31,5 @@ protected:
 public:
 	afx_msg void OnBnClickedButtonStart();
 	afx_msg void OnBnClickedButtonPause();
+	afx_msg void OnBnClickedButtonStop();
 };
