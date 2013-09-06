@@ -10,7 +10,10 @@
 #include "track.h"
 #include "speed.h"
 #include <mutex>
+#include <future>
 #include <condition_variable>
+#include <atomic>
+#include <memory>
 #include <windows.h>
 
 class Animation
@@ -28,17 +31,19 @@ public:
 class MyAnimation : public Animation
 {
 	// data.
-	MyGraph m_graph1, m_graph2;
-	MyTrack2 m_track1, m_track2;
-	MySpeed2 m_speed;
+	HWND m_board;
+	HDC m_dc;
 
-	std::once_flag m_initFlag, m_distanceFlag;
+	bool m_init;
+	std::future<void> m_w1, m_w2;
 	std::condition_variable m_cv1, m_cv2;
 	std::mutex m_lock;
 	bool m_b1, m_b2;
+	std::atomic<bool> m_quit;
 
 public:
 	MyAnimation();
+	~MyAnimation();
 
 public:
 	// Interface.
@@ -49,11 +54,11 @@ public:
 	virtual void stop() override;
 	virtual void pause() override;
 
-	void init();
 	void animation1();
 	void animation2();
-	void animationBase(MyGraph &g, MyTrack &t, Speed &s, 
-					   std::mutex &l, bool &b, std::condition_variable &cv);
+	void animationBase(std::shared_ptr<Graph<Coordinate_2D>> g, std::shared_ptr<Track<Coordinate_2D>> mt, std::shared_ptr<Speed> s,
+					   std::mutex &l, bool &b, std::condition_variable &cv,
+					   std::atomic<bool> &q);
 };
 
 #endif // ANIMATION_H
