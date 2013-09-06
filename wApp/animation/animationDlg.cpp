@@ -3,16 +3,10 @@
 //
 
 #include "stdafx.h"
-#include "animation.h"
+#include "main.h"
 #include "animationDlg.h"
 #include "afxdialogex.h"
-#include "animation/graph.h"
-#include "animation/track.h"
-#include "animation/speed.h"
-#include <thread>
-#include <chrono>
-#include <future>
-#include <mutex>
+#include "animation/animation.h"
 using namespace std;
 
 #ifdef _DEBUG
@@ -21,45 +15,8 @@ using namespace std;
 
 
 // CanimationDlg dialog
-static mutex s_lock1, s_lock2;
-static enum class Stat : int
-{
-	Running,
-	Paused,
-	Stopped,
-} s_stat;
 
-void Animation(MyGraph &mg, MyTrack &mt, Speed &s, mutex &m)
-{
-	while (true)
-	{
-		m.lock();
-
-		Coordinate_2D pos = mt.next();
-		mg.setCoordinate(pos);
-
-		mg.draw();
-
-		this_thread::sleep_for(chrono::milliseconds(s.next()));
-
-		m.unlock();
-	}
-}
-
-void BeginAnimation(HDC dc)
-{
-	MyGraph mg1(dc, RGB(123, 62, 200)), mg2(dc, RGB(240, 240, 240));
-	MyTrack2 mt;
-	MySpeed2 s;
-
-	s_stat = Stat::Running;
-	async(Animation, mg1, mt, s, ref(s_lock1));
-	this_thread::sleep_for(chrono::milliseconds(1000));
-	async(Animation, mg2, mt, s, ref(s_lock2));
-	
-	this_thread::sleep_for(chrono::milliseconds(10000000));
-}
-
+MyAnimation s_ma;
 
 CanimationDlg::CanimationDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CanimationDlg::IDD, pParent)
@@ -92,8 +49,7 @@ BOOL CanimationDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-	HDC dc = ::GetDC(m_hWnd);
-	async(BeginAnimation, dc);
+	s_ma.setBoard(m_hWnd);
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -137,20 +93,12 @@ HCURSOR CanimationDlg::OnQueryDragIcon()
 
 void CanimationDlg::OnBnClickedButtonStart()
 {
-	if (s_stat == Stat::Paused
-		|| s_stat == Stat::Stopped)
-	{
-		s_stat = Stat::Running;
-		s_lock1.unlock(), s_lock2.unlock();
-	}
+	s_ma.start();
 }
 
 
 void CanimationDlg::OnBnClickedButtonPause()
 {
-	if (s_stat == Stat::Running)
-	{
-		s_stat = Stat::Paused;
-		s_lock1.lock(), s_lock2.lock();
-	}
+	s_ma.pause();
 }
+

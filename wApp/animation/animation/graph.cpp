@@ -21,6 +21,11 @@ void MyGraph::rotate()
 void MyGraph::zoom()
 {}
 
+void MyGraph::setDC(HDC dc)
+{
+	m_hDc = dc;
+}
+
 Coordinate_2D MyGraph::setCoordinate(const Coordinate_2D &newCenter)
 {
 	Coordinate_2D old = m_graphCenter;
