@@ -1,5 +1,5 @@
 
-// animation.h : main header file for the PROJECT_NAME application
+// animationBase.h : main header file for the PROJECT_NAME application
 //
 
 #pragma once
@@ -12,7 +12,7 @@
 
 
 // CanimationApp:
-// See animation.cpp for the implementation of this class
+// See animationBase.cpp for the implementation of this class
 //
 
 class CanimationApp : public CWinApp

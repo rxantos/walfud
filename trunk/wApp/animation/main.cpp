@@ -1,9 +1,9 @@
 
-// animation.cpp : Defines the class behaviors for the application.
+// animationBase.cpp : Defines the class behaviors for the application.
 //
 
 #include "stdafx.h"
-#include "animation.h"
+#include "main.h"
 #include "animationDlg.h"
 
 #ifdef _DEBUG

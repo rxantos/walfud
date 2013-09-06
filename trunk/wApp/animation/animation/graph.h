@@ -27,6 +27,8 @@ public:
 	virtual void rotate() = 0;
 	virtual void zoom() = 0;
 
+	virtual void setDC(HDC dc) = 0;
+
 	virtual D setCoordinate(const D &d) = 0;
 	virtual D getCoordinate() const = 0;
 
@@ -49,6 +51,8 @@ public:
 	virtual void draw();
 	virtual void rotate();
 	virtual void zoom();
+
+	virtual void setDC(HDC dc) override;
 
 	virtual Coordinate_2D setCoordinate(const Coordinate_2D &newCenter);
 	virtual Coordinate_2D getCoordinate() const;
