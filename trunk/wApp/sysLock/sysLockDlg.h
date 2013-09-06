@@ -6,12 +6,14 @@
 
 #include "wAntiSysLock.h"
 #include "afxwin.h"
+#include "../animation/animation/animation.h"
 
 // CsysLockDlg dialog
 class CsysLockDlg : public CDialogEx
 {
 	// data.
 	w::AntiSysLock m_antiLocker;
+	MyAnimation m_ma;
 
 // Construction
 public:
