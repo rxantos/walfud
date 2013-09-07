@@ -30,7 +30,7 @@ class MyTrack : public Track<Coordinate_2D>
 {
 protected:
 	// data.
-	Coordinate_2D m_graphCenter;
+	Coordinate_2D m_trackCenter;
 
 public:
 	MyTrack();
@@ -48,7 +48,7 @@ protected:
 class MyTrack2 : public MyTrack
 {
 	// data.
-	int m_direction;
+	unsigned m_step;
 
 public:
 	MyTrack2();

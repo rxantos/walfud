@@ -24,10 +24,10 @@ Coordinate_2D MyTrack::prev()
 }
 Coordinate_2D MyTrack::next()
 {
-	m_graphCenter.x += 1;
-	m_graphCenter.y = static_cast<unsigned>(-cos((m_graphCenter.x % 360) * M_PI / 180) * 30 + 50);
+	m_trackCenter.x += 1;
+	m_trackCenter.y = static_cast<unsigned>(-cos((m_trackCenter.x % 360) * M_PI / 180) * 30 + 100);
 
-	return m_graphCenter;
+	return m_trackCenter;
 }
 Coordinate_2D MyTrack::reset()
 {
@@ -36,26 +36,29 @@ Coordinate_2D MyTrack::reset()
 }
 
 // MyTrack2.
-MyTrack2::MyTrack2() : MyTrack(), m_direction(0)
-{}
+MyTrack2::MyTrack2() : MyTrack(), m_step(0)
+{
+	m_trackCenter.x = 240;
+	m_trackCenter.y = 120;
+}
 
 // Interface.
 Coordinate_2D MyTrack2::next()
 {
-	if (m_graphCenter.x == 0)
+	Coordinate_2D pos;
+
+	if (0 <= m_step && m_step < 180)
 	{
-		m_direction = 1;
+		pos.x = m_trackCenter.x + m_step;
+		pos.y = m_trackCenter.y - static_cast<int>(sin(m_step*M_PI/180)  * 100);
 	}
-	else if (m_graphCenter.x == 360)
+	else // (180 <= m_step && m_step < 360)
 	{
-		m_direction = -1;
+		pos.x = m_trackCenter.x + (360 - m_step);
+		pos.y = m_trackCenter.y - static_cast<int>(sin(m_step*M_PI/180)  * 100);
 	}
-	else
-	{}
 
-	m_graphCenter.x += m_direction;
-	m_graphCenter.y = static_cast<unsigned>(-sin((m_graphCenter.x % 360) * M_PI / 180) * m_direction * 100 + 200);
-
-
-	return m_graphCenter;
+	++m_step;
+	m_step %= 360;
+	return pos;
 }

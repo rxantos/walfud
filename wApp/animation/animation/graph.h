@@ -14,11 +14,11 @@ class Graph
 {
 protected:
 	// data.
-	D m_graphCenter;
+	D m_trackCenter;
 
 public:
-	Graph() : m_graphCenter() {}
-	Graph(const D &d) : m_graphCenter(d) {}
+	Graph() : m_trackCenter() {}
+	Graph(const D &d) : m_trackCenter(d) {}
 	virtual ~Graph() {}
 
 public:

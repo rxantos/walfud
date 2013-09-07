@@ -9,13 +9,13 @@
 struct Coordinate {};
 struct Coordinate_1D : public Coordinate
 {
-	unsigned x;
+	int x;
 
 	Coordinate_1D(unsigned a = 0) : x(a) {}
 };
 struct Coordinate_2D : public Coordinate_1D
 {
-	unsigned y;
+	int y;
 
 	Coordinate_2D(unsigned a = 0, unsigned b = 0) : Coordinate_1D(a), y(b) {}
 };

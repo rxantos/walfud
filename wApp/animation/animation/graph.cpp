@@ -14,7 +14,7 @@ MyGraph::~MyGraph()
 // Interface.
 void MyGraph::draw()
 {
-	SetPixel(m_hDc, m_graphCenter.x, m_graphCenter.y, m_color);
+	SetPixel(m_hDc, m_trackCenter.x, m_trackCenter.y, m_color);
 }
 void MyGraph::rotate()
 {}
@@ -28,11 +28,11 @@ void MyGraph::setDC(HDC dc)
 
 Coordinate_2D MyGraph::setCoordinate(const Coordinate_2D &newCenter)
 {
-	Coordinate_2D old = m_graphCenter;
+	Coordinate_2D old = m_trackCenter;
 
-	m_graphCenter = newCenter;
+	m_trackCenter = newCenter;
 
 	return old;
 }
 Coordinate_2D MyGraph::getCoordinate() const
-{ return m_graphCenter; }
+{ return m_trackCenter; }
