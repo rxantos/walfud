@@ -13,7 +13,7 @@ class CsysLockDlg : public CDialogEx
 {
 	// data.
 	w::AntiSysLock m_antiLocker;
-	MyAnimation m_ma;
+	MyAnimation m_maL, m_maR;
 
 // Construction
 public:

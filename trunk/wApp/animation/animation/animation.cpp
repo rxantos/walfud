@@ -137,3 +137,5 @@ void MyAnimation::animationBase(shared_ptr<Graph<Coordinate_2D>> g, shared_ptr<T
 		sleep_for(milliseconds(s->next()));
 	}
 }
+
+// MyAnimation2.
