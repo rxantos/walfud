@@ -49,7 +49,8 @@ BOOL CsysLockDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-	m_ma.setBoard(m_hWnd);
+	m_maL.setBoard(m_hWnd);
+	m_maR.setBoard(m_hWnd);
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -107,12 +108,12 @@ void CsysLockDlg::OnBnClickedButtonLock()
 void CsysLockDlg::OnBnClickedButtonAntiLock()
 {
 	m_antiLocker.KeepWorking();
-	m_ma.start();
+	m_maL.start();
 }
 
 
 void CsysLockDlg::OnBnClickedButtonDefaultLock()
 {
 	m_antiLocker.StopKeeping();
-	m_ma.pause();
+	m_maL.pause();
 }

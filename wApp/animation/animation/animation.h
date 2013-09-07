@@ -14,6 +14,7 @@
 #include <condition_variable>
 #include <atomic>
 #include <memory>
+#include <functional>
 #include <windows.h>
 
 class Animation
@@ -59,6 +60,12 @@ public:
 	void animationBase(std::shared_ptr<Graph<Coordinate_2D>> g, std::shared_ptr<Track<Coordinate_2D>> mt, std::shared_ptr<Speed> s,
 					   std::mutex &l, bool &b, std::condition_variable &cv,
 					   std::atomic<bool> &q);
+};
+
+class MyAnimation2 : public MyAnimation
+{
+	// data.
+	std::function<void (void *)> m_cycleDoneCallback;
 };
 
 #endif // ANIMATION_H
