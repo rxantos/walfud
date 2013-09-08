@@ -73,5 +73,13 @@ public:
 
 	virtual Track *clone() const override { auto _type(*this); return new decltype(_type)(*this); }
 };
+class MyTrack3 : public MyTrack2
+{
+public:
+	// Interface.
+	virtual Coordinate_2D next() override;
+
+	virtual Track *clone() const override { auto _type(*this); return new decltype(_type)(*this); }
+};
 
 #endif // TRACK_H

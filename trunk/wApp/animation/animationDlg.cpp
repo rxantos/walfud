@@ -51,26 +51,54 @@ BOOL CanimationDlg::OnInitDialog()
 
 	// TODO: Add extra initialization here
 	{
+		m_maLH.setBoard(m_hWnd);
+		m_maLH.setGraph(MyGraph2(RGB(123, 62, 200)));
+		m_maLH.setTrack(MyTrack3());
+		m_maLH.setSpeed(MySpeed2());
+		m_maLH.setDoneCallback([](void *param)
+		{
+			auto p = reinterpret_cast<CanimationDlg *>(param);
+			p->m_maLH.stop(false);
+		}, this);
+	}
+	{
+		m_maLT.setBoard(m_hWnd);
+		m_maLT.setGraph(MyGraph(RGB(240, 240, 240)));
+		m_maLT.setTrack(MyTrack3());
+		m_maLT.setSpeed(MySpeed2());
+		m_maLT.setDoneCallback([](void *param)
+		{
+			auto p = reinterpret_cast<CanimationDlg *>(param);
+			p->m_maLT.stop(false);
+			p->m_maH.start();
+			sleep_for(milliseconds(777));
+			p->m_maT.start();
+		}, this);
+	}
+	{
 		m_maH.setBoard(m_hWnd);
-		m_maH.setGraph(MyGraph2(RGB(123, 62, 200)));
+		m_maH.setGraph(MyGraph(RGB(123, 62, 200)));
 		m_maH.setTrack(MyTrack2());
 		m_maH.setSpeed(MySpeed2());
-		m_maH.setDoneCallback([&](void *param)
+		m_maH.setDoneCallback([](void *param)
 		{
-			auto pMa = reinterpret_cast<MyAnimation2 *>(param);
-			pMa->stop(false);
-		}, &m_maH);
+			auto p = reinterpret_cast<CanimationDlg *>(param);
+			p->m_maH.stop(false);
+		}, this);
 	}
 	{
 		m_maT.setBoard(m_hWnd);
 		m_maT.setGraph(MyGraph(RGB(240, 240, 240)));
 		m_maT.setTrack(MyTrack2());
 		m_maT.setSpeed(MySpeed2());
-		m_maT.setDoneCallback([&](void *param)
+		m_maT.setDoneCallback([](void *param)
 		{
-			auto pMa = reinterpret_cast<MyAnimation2 *>(param);
-			pMa->stop(false);
-		}, &m_maT);
+			auto p = reinterpret_cast<CanimationDlg *>(param);
+			p->m_maT.stop(false);
+			p->m_maLH.start();
+			sleep_for(milliseconds(777));
+			p->m_maLT.start();
+		}, this);
 	}
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -115,13 +143,16 @@ HCURSOR CanimationDlg::OnQueryDragIcon()
 
 void CanimationDlg::OnBnClickedButtonStart()
 {
-	m_maH.start();
-	if (!(m_maH.getStatus() == MyAnimation2::Status::Running && m_maT.getStatus() == MyAnimation2::Status::Running
-		  || m_maH.getStatus() == MyAnimation2::Status::Paused && m_maT.getStatus() == MyAnimation2::Status::Paused))
-	{
-		sleep_for(milliseconds(777));
-	}
-	m_maT.start();
+	//m_maH.start();
+	//if (!(m_maH.getStatus() == MyAnimation2::Status::Running && m_maT.getStatus() == MyAnimation2::Status::Running
+	//	  || m_maH.getStatus() == MyAnimation2::Status::Paused && m_maT.getStatus() == MyAnimation2::Status::Paused))
+	//{
+	//	sleep_for(milliseconds(777));
+	//}
+	//m_maT.start();
+	m_maLH.start();
+	sleep_for(milliseconds(777));
+	m_maLT.start();
 }
 
 
