@@ -23,11 +23,9 @@ public:
 
 public:
 	// Interface.
-	virtual void draw() = 0;
+	virtual void draw(HDC dc) = 0;
 	virtual void rotate() = 0;
 	virtual void zoom() = 0;
-
-	virtual void setDC(HDC dc) = 0;
 
 	virtual D setCoordinate(const D &d) = 0;
 	virtual D getCoordinate() const = 0;
@@ -38,21 +36,19 @@ protected:
 
 class MyGraph : public Graph<Coordinate_2D>
 {
+protected:
 	// data.
-	HDC m_hDc;
 	COLORREF m_color;
 
 public:
-	MyGraph(HDC dc, COLORREF color);
+	MyGraph(COLORREF color);
 	virtual ~MyGraph();
 
 public:
 	// Interface.
-	virtual void draw();
+	virtual void draw(HDC dc);
 	virtual void rotate();
 	virtual void zoom();
-
-	virtual void setDC(HDC dc) override;
 
 	virtual Coordinate_2D setCoordinate(const Coordinate_2D &newCenter);
 	virtual Coordinate_2D getCoordinate() const;

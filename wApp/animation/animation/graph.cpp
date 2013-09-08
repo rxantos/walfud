@@ -6,25 +6,20 @@
 #include "../stdafx.h"
 #include "graph.h"
 
-MyGraph::MyGraph(HDC dc, COLORREF color) : m_hDc(dc), m_color(color)
+MyGraph::MyGraph(COLORREF color) : m_color(color)
 {}
 MyGraph::~MyGraph()
 {}
 
 // Interface.
-void MyGraph::draw()
+void MyGraph::draw(HDC dc)
 {
-	SetPixel(m_hDc, m_trackCenter.x, m_trackCenter.y, m_color);
+	SetPixel(dc, m_trackCenter.x, m_trackCenter.y, m_color);
 }
 void MyGraph::rotate()
 {}
 void MyGraph::zoom()
 {}
-
-void MyGraph::setDC(HDC dc)
-{
-	m_hDc = dc;
-}
 
 Coordinate_2D MyGraph::setCoordinate(const Coordinate_2D &newCenter)
 {

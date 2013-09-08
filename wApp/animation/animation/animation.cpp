@@ -4,7 +4,8 @@
 //
 
 #include "animation.h"
-#include <future>
+#include <thread>
+#include <chrono>
 using namespace std;
 using namespace this_thread;
 using namespace chrono;
@@ -13,8 +14,10 @@ using namespace chrono;
 MyAnimation::MyAnimation() 
 	: m_board(nullptr),
 	  m_dc(nullptr),
-	  m_init(false),
-	  m_cv1(), m_cv2(), m_lock(), m_b1(false), m_b2(false),
+	  m_g(nullptr), 
+	  m_t(nullptr),
+	  m_s(nullptr),
+	  m_cv(), m_lock(), m_b(false),
 	  m_quit(false)
 {}
 MyAnimation::~MyAnimation() { stop(); }
@@ -31,62 +34,30 @@ void MyAnimation::setBoard(HWND drawHWnd)
 void MyAnimation::start()
 {
 	// Create working thread.
-	if (!m_init)
-	{
-		m_quit = false;
-		m_b1 = false;
-		m_w1 = async(&MyAnimation::animation1, this);
-		m_b2 = false;
-		m_w2 = async(&MyAnimation::animation2, this);
-	}
+	m_quit = false;
+	m_b = false;
+	m_w = async(&MyAnimation::animation, this);
 
-	// Start line 1.
+	// Start.
 	{
 		lock_guard<mutex> lg(m_lock);
-		m_b1 = true;
+		m_b = true;
 	}
-	m_cv1.notify_one();
-
-	// Wait.
-	if (!m_init)
-	{
-		sleep_for(seconds(1));
-	}
-
-	// Start line 2.
-	{
-		lock_guard<mutex> lg(m_lock);
-		m_b2 = true;
-	}
-	m_cv2.notify_one();
-
-	// Refresh status.
-	m_init = true;
+	m_cv.notify_one();
 }
-void MyAnimation::stop()
+void MyAnimation::stop(bool waitDone)
 {
-	if (m_init)
+	// Quit working thread.
+	m_quit = true;
 	{
-		// Clean board.
-		InvalidateRect(m_board, nullptr, TRUE);
+		lock_guard<mutex> lg(m_lock);
+		m_b = true;
+	}
 
-		// Quit working thread.
-		m_quit = true;
-		{
-			lock_guard<mutex> lg(m_lock);
-			m_b1 = true;
-		}
-		m_cv1.notify_one();
-		m_w1.wait();
-		{
-			lock_guard<mutex> lg(m_lock);
-			m_b2 = true;
-		}
-		m_cv2.notify_one();
-		m_w2.wait();
-
-		// Refresh status.
-		m_init = false;
+	m_cv.notify_one();
+	if (waitDone)
+	{
+		m_w.wait();
 	}
 }
 void MyAnimation::pause()
@@ -94,48 +65,72 @@ void MyAnimation::pause()
 	// Pause animate.
 	{
 		lock_guard<mutex> lg(m_lock);
-		m_b1 = m_b2 = false;
+		m_b = false;
 	}
 }
 
-void MyAnimation::animation1()
+void MyAnimation::clear() { InvalidateRect(m_board, nullptr, TRUE); }
+
+void MyAnimation::animation()
 {
-	// Animation 1.
-	animationBase(shared_ptr<Graph<Coordinate_2D>>(new MyGraph(m_dc, RGB(123, 62, 200))), 
-				  shared_ptr<Track<Coordinate_2D>>(new MyTrack2), 
-				  shared_ptr<Speed>(new MySpeed2), 
-				  m_lock, m_b1, m_cv1, m_quit);
-}
-void MyAnimation::animation2()
-{
-	// Animation 2.
-	animationBase(shared_ptr<Graph<Coordinate_2D>>(new MyGraph(m_dc, RGB(240, 240, 240))), 
-				  shared_ptr<Track<Coordinate_2D>>(new MyTrack2), 
-				  shared_ptr<Speed>(new MySpeed2), 
-				  m_lock, m_b2, m_cv2, m_quit);
-}
-void MyAnimation::animationBase(shared_ptr<Graph<Coordinate_2D>> g, shared_ptr<Track<Coordinate_2D>> mt, shared_ptr<Speed> s, 
-								mutex &l, bool &b, condition_variable &cv, atomic<bool> &q)
-{
+	// Animation.
 	while (true)
 	{
 		{
-			unique_lock<mutex> ul(l);
-			cv.wait(ul, [&b](){ return b; });
+			unique_lock<mutex> ul(m_lock);
+			m_cv.wait(ul, [&](){ return m_b; });
 		}
-		if (q)
+		if (m_quit)
 		{
 			// thread quit.
 			break;
 		}
 
-		Coordinate_2D pos = mt->next();
-		g->setCoordinate(pos);
+		Coordinate_2D pos = m_t->next();
+		m_g->setCoordinate(pos);
 
-		g->draw();
+		m_g->draw(m_dc);
 
-		sleep_for(milliseconds(s->next()));
+		sleep_for(milliseconds(m_s->next()));
 	}
 }
 
 // MyAnimation2.
+void MyAnimation2::setDoneCallback(function<void (void *)> cb, void *param)
+{
+	m_cycleDoneCallback = cb; 
+	m_cbParam = param;
+}
+
+// logic.
+void MyAnimation2::animation()
+{
+	// Animation.
+	while (true)
+	{
+		{
+			unique_lock<mutex> ul(m_lock);
+			m_cv.wait(ul, [&](){ return m_b; });
+		}
+		if (m_quit)
+		{
+			// Thread quit.
+			break;
+		}
+
+		// Draw current image.
+		Coordinate_2D pos = m_t->next();
+		m_g->setCoordinate(pos);
+		m_g->draw(m_dc);
+		sleep_for(milliseconds(m_s->next()));
+
+		if (m_t->isCycleDone())
+		{
+			// When a cycle is done.
+			if (m_cycleDoneCallback)
+			{
+				m_cycleDoneCallback(m_cbParam);
+			}
+		}
+	}
+}
