@@ -6,8 +6,10 @@
 #include "main.h"
 #include "animationDlg.h"
 #include "afxdialogex.h"
-#include "animation/animation.h"
+#include <chrono>
 using namespace std;
+using namespace this_thread;
+using namespace chrono;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -15,8 +17,6 @@ using namespace std;
 
 
 // CanimationDlg dialog
-
-MyAnimation s_ma;
 
 CanimationDlg::CanimationDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CanimationDlg::IDD, pParent)
@@ -50,7 +50,37 @@ BOOL CanimationDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-	s_ma.setBoard(m_hWnd);
+	{
+		auto pG = new MyGraph(RGB(123, 62, 200));
+		auto pT = new MyTrack2;
+		auto pS = new MySpeed2;
+
+		m_maH.setBoard(m_hWnd);
+		m_maH.setGraph(shared_ptr<Graph<Coordinate_2D>>(pG));
+		m_maH.setTrack(shared_ptr<Track2<Coordinate_2D>>(pT));
+		m_maH.setSpeed(shared_ptr<Speed>(pS));
+		m_maH.setDoneCallback([&](void *param)
+		{
+			auto pMa = reinterpret_cast<MyAnimation2 *>(param);
+			pMa->stop(false);
+		}, &m_maH);
+	}
+	{
+		auto pG = new MyGraph(RGB(240, 240, 240));
+		auto pT = new MyTrack2;
+		auto pS = new MySpeed2;
+
+		m_maT.setBoard(m_hWnd);
+		m_maT.setGraph(shared_ptr<Graph<Coordinate_2D>>(pG));
+		m_maT.setTrack(shared_ptr<Track2<Coordinate_2D>>(pT));
+		m_maT.setSpeed(shared_ptr<Speed>(pS));
+		m_maT.setDoneCallback([&](void *param)
+		{
+			auto pMa = reinterpret_cast<MyAnimation2 *>(param);
+			pMa->stop(false);
+			//OnBnClickedButtonStart();
+		}, &m_maT);
+	}
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -94,17 +124,19 @@ HCURSOR CanimationDlg::OnQueryDragIcon()
 
 void CanimationDlg::OnBnClickedButtonStart()
 {
-	s_ma.start();
+	m_maH.start();
+	sleep_for(milliseconds(777));
+	m_maT.start();
 }
 
 
 void CanimationDlg::OnBnClickedButtonPause()
 {
-	s_ma.pause();
+	m_maH.pause();
 }
 
 
 void CanimationDlg::OnBnClickedButtonStop()
 {
-	s_ma.stop();
+	m_maH.stop();
 }

@@ -19,6 +19,7 @@ MyTrack::~MyTrack()
 // Interface.
 Coordinate_2D MyTrack::prev()
 {
+	// NOT impl.
 	Coordinate_2D pos;
 	return pos;
 }
@@ -28,11 +29,6 @@ Coordinate_2D MyTrack::next()
 	m_trackCenter.y = static_cast<unsigned>(-cos((m_trackCenter.x % 360) * M_PI / 180) * 30 + 100);
 
 	return m_trackCenter;
-}
-Coordinate_2D MyTrack::reset()
-{
-	Coordinate_2D pos;
-	return pos;
 }
 
 // MyTrack2.
@@ -60,5 +56,6 @@ Coordinate_2D MyTrack2::next()
 
 	++m_step;
 	m_step %= 360;
+	m_cycleDone = m_step == 0;
 	return pos;
 }
