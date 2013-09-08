@@ -10,7 +10,8 @@
 // CanimationDlg dialog
 class CanimationDlg : public CDialogEx
 {
-	MyAnimation2 m_maH, m_maT;
+	MyAnimation2 m_maH, m_maT,
+				 m_maLH, m_maLT;			// Left animation.
 	std::once_flag m_distance;
 
 // Construction

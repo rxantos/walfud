@@ -59,3 +59,25 @@ Coordinate_2D MyTrack2::next()
 	m_cycleDone = m_step == 0;
 	return pos;
 }
+
+// MyTrack3.
+Coordinate_2D MyTrack3::next()
+{
+	Coordinate_2D pos;
+
+	if (0 <= m_step && m_step < 180)
+	{
+		pos.x = m_trackCenter.x - m_step;
+		pos.y = m_trackCenter.y - static_cast<int>(sin(m_step*M_PI/180)  * 100);
+	}
+	else // (180 <= m_step && m_step < 360)
+	{
+		pos.x = m_trackCenter.x - (360 - m_step);
+		pos.y = m_trackCenter.y - static_cast<int>(sin(m_step*M_PI/180)  * 100);
+	}
+
+	++m_step;
+	m_step %= 360;
+	m_cycleDone = m_step == 0;
+	return pos;
+}
