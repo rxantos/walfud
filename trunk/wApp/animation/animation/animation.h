@@ -42,6 +42,7 @@ protected:
 	std::unique_ptr<Track2<Coordinate_2D>> m_t;
 	std::unique_ptr<Speed> m_s;
 
+	std::atomic<bool> m_inited;
 	std::future<void> m_w;
 	std::condition_variable m_cv;
 	std::mutex m_lock;
@@ -65,7 +66,7 @@ public:
 	virtual void stop(bool waitDone = true) override;
 	virtual void pause() override;
 
-	virtual void clear() override;
+	virtual void clear() override;						// Clear the board.
 
 protected:
 	// logic.
@@ -80,14 +81,28 @@ protected:
  */
 class MyAnimation2 : public MyAnimation
 {
+public:
+	enum class Status : int
+	{
+		Default = 0,
+		Running,
+		Paused,
+		Stopped,
+	};
+
 protected:
 	// data.
 	std::function<void (void *)> m_cycleDoneCallback;
 	void *m_cbParam;
+	std::atomic<Status> m_status;
+
+public:
+	MyAnimation2() : m_cycleDoneCallback(), m_cbParam(), m_status() {}
 
 public:
 	// Interface.
 	void setDoneCallback(std::function<void (void *)> cb, void *param = nullptr);
+	Status getStatus() const { return m_status; }
 
 protected:
 	// logic.

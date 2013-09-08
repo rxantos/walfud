@@ -58,7 +58,7 @@ BOOL CanimationDlg::OnInitDialog()
 		m_maH.setDoneCallback([&](void *param)
 		{
 			auto pMa = reinterpret_cast<MyAnimation2 *>(param);
-			//pMa->stop(false);
+			pMa->stop(false);
 		}, &m_maH);
 	}
 	{
@@ -69,7 +69,7 @@ BOOL CanimationDlg::OnInitDialog()
 		m_maT.setDoneCallback([&](void *param)
 		{
 			auto pMa = reinterpret_cast<MyAnimation2 *>(param);
-			//pMa->stop(false);
+			pMa->stop(false);
 		}, &m_maT);
 	}
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -116,7 +116,11 @@ HCURSOR CanimationDlg::OnQueryDragIcon()
 void CanimationDlg::OnBnClickedButtonStart()
 {
 	m_maH.start();
-	call_once(m_distance, []{ sleep_for(milliseconds(777)); });
+	if (!(m_maH.getStatus() == MyAnimation2::Status::Running && m_maT.getStatus() == MyAnimation2::Status::Running
+		  || m_maH.getStatus() == MyAnimation2::Status::Paused && m_maT.getStatus() == MyAnimation2::Status::Paused))
+	{
+		sleep_for(milliseconds(777));
+	}
 	m_maT.start();
 }
 
