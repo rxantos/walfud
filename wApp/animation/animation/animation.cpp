@@ -17,6 +17,8 @@ MyAnimation::MyAnimation()
 	  m_g(nullptr), 
 	  m_t(nullptr),
 	  m_s(nullptr),
+	  m_inited(false), 
+	  m_w(), 
 	  m_cv(), m_lock(), m_b(false),
 	  m_quit(false)
 {}
@@ -37,7 +39,7 @@ void MyAnimation::start()
 	m_quit = false;
 	m_b = false;
 
-	if (!m_w.valid())
+	if (!m_inited)
 	{
 		m_w = async(&MyAnimation::animation, this);
 	}
@@ -64,8 +66,7 @@ void MyAnimation::stop(bool waitDone)
 		// Wait the animation done.
 		if (m_w.valid())
 		{
-			// Reset the animation worker.
-			m_w.get();
+			m_w.wait();
 		}
 	}
 }
@@ -114,27 +115,44 @@ void MyAnimation2::setDoneCallback(function<void (void *)> cb, void *param)
 // logic.
 void MyAnimation2::animation()
 {
+	// Clone resource to function scope.
+	decltype(m_g) g(m_g->clone());
+	decltype(m_t) t(dynamic_cast<decltype(m_t.release())>(m_t->clone()));
+	decltype(m_s) s(m_s->clone());
+
 	// Begin animation.
+	m_inited = true;
 	while (true)
 	{
 		{
 			unique_lock<mutex> ul(m_lock);
-			m_cv.wait(ul, [&](){ return m_b; });
+			m_cv.wait(ul, [&]()
+			{
+				if (!m_b)
+				{
+					m_status = Status::Paused;
+				}
+
+				return m_b; 
+			});
 		}
 		if (m_quit)
 		{
 			// Thread quit.
+			m_inited = false;
+			m_status = Status::Stopped;
 			break;
 		}
 
+		m_status = Status::Running;
 		// Draw current image.
-		Coordinate_2D pos = m_t->next();
-		m_g->setCoordinate(pos);
-		m_g->draw(m_dc);
-		sleep_for(milliseconds(m_s->next()));
+		Coordinate_2D pos = t->next();
+		g->setCoordinate(pos);
+		g->draw(m_dc);
+		sleep_for(milliseconds(s->next()));
 
 		// Cycle done callback.
-		if (m_t->isCycleDone())
+		if (t->isCycleDone())
 		{
 			// When a cycle is done.
 			if (m_cycleDoneCallback)
