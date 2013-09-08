@@ -5,11 +5,14 @@
 #pragma once
 
 #include "animation/animation.h"
+#include <mutex>
 
 // CanimationDlg dialog
 class CanimationDlg : public CDialogEx
 {
 	MyAnimation2 m_maH, m_maT;
+	std::once_flag m_distance;
+
 // Construction
 public:
 	CanimationDlg(CWnd* pParent = NULL);	// standard constructor

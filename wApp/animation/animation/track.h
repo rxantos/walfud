@@ -23,6 +23,8 @@ public:
 	virtual D next() = 0;
 	virtual D reset() = 0;
 
+	virtual Track *clone() const = 0;
+
 protected:
 	// logic.
 };
@@ -49,6 +51,8 @@ public:
 	virtual Coordinate_2D next() override;
 	virtual Coordinate_2D reset() override { return m_trackCenter; }
 
+	virtual Track *clone() const override { auto _type(*this); return new decltype(_type)(*this); }
+
 protected:
 	// logic.
 };
@@ -66,6 +70,8 @@ public:
 	// Interface.
 	virtual Coordinate_2D next() override;
 	virtual bool isCycleDone() override { return m_cycleDone; }
+
+	virtual Track *clone() const override { auto _type(*this); return new decltype(_type)(*this); }
 };
 
 #endif // TRACK_H
