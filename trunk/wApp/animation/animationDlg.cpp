@@ -51,34 +51,25 @@ BOOL CanimationDlg::OnInitDialog()
 
 	// TODO: Add extra initialization here
 	{
-		auto pG = new MyGraph(RGB(123, 62, 200));
-		auto pT = new MyTrack2;
-		auto pS = new MySpeed2;
-
 		m_maH.setBoard(m_hWnd);
-		m_maH.setGraph(shared_ptr<Graph<Coordinate_2D>>(pG));
-		m_maH.setTrack(shared_ptr<Track2<Coordinate_2D>>(pT));
-		m_maH.setSpeed(shared_ptr<Speed>(pS));
+		m_maH.setGraph(MyGraph2(RGB(123, 62, 200)));
+		m_maH.setTrack(MyTrack2());
+		m_maH.setSpeed(MySpeed2());
 		m_maH.setDoneCallback([&](void *param)
 		{
 			auto pMa = reinterpret_cast<MyAnimation2 *>(param);
-			pMa->stop(false);
+			//pMa->stop(false);
 		}, &m_maH);
 	}
 	{
-		auto pG = new MyGraph(RGB(240, 240, 240));
-		auto pT = new MyTrack2;
-		auto pS = new MySpeed2;
-
 		m_maT.setBoard(m_hWnd);
-		m_maT.setGraph(shared_ptr<Graph<Coordinate_2D>>(pG));
-		m_maT.setTrack(shared_ptr<Track2<Coordinate_2D>>(pT));
-		m_maT.setSpeed(shared_ptr<Speed>(pS));
+		m_maT.setGraph(MyGraph(RGB(240, 240, 240)));
+		m_maT.setTrack(MyTrack2());
+		m_maT.setSpeed(MySpeed2());
 		m_maT.setDoneCallback([&](void *param)
 		{
 			auto pMa = reinterpret_cast<MyAnimation2 *>(param);
-			pMa->stop(false);
-			//OnBnClickedButtonStart();
+			//pMa->stop(false);
 		}, &m_maT);
 	}
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -125,7 +116,7 @@ HCURSOR CanimationDlg::OnQueryDragIcon()
 void CanimationDlg::OnBnClickedButtonStart()
 {
 	m_maH.start();
-	sleep_for(milliseconds(777));
+	call_once(m_distance, []{ sleep_for(milliseconds(777)); });
 	m_maT.start();
 }
 
@@ -133,10 +124,12 @@ void CanimationDlg::OnBnClickedButtonStart()
 void CanimationDlg::OnBnClickedButtonPause()
 {
 	m_maH.pause();
+	m_maT.pause();
 }
 
 
 void CanimationDlg::OnBnClickedButtonStop()
 {
 	m_maH.stop();
+	m_maT.stop();
 }

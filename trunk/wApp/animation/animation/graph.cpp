@@ -31,3 +31,10 @@ Coordinate_2D MyGraph::setCoordinate(const Coordinate_2D &newCenter)
 }
 Coordinate_2D MyGraph::getCoordinate() const
 { return m_trackCenter; }
+
+// MyGraph2.
+void MyGraph2::draw(HDC dc)
+{
+	MyGraph::draw(dc);
+	++m_color;
+}

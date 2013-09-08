@@ -38,9 +38,9 @@ protected:
 	// data.
 	HWND m_board;
 	HDC m_dc;
-	std::shared_ptr<Graph<Coordinate_2D>> m_g;
-	std::shared_ptr<Track2<Coordinate_2D>> m_t;
-	std::shared_ptr<Speed> m_s;
+	std::unique_ptr<Graph<Coordinate_2D>> m_g;
+	std::unique_ptr<Track2<Coordinate_2D>> m_t;
+	std::unique_ptr<Speed> m_s;
 
 	std::future<void> m_w;
 	std::condition_variable m_cv;
@@ -56,9 +56,9 @@ public:
 	// Interface.
 	// You must set `Board/Graph/Track/Speed` before `start` the animation.
 	void setBoard(HWND drawHWnd);
-	void setGraph(std::shared_ptr<Graph<Coordinate_2D>> g) { m_g = g; }
-	void setTrack(std::shared_ptr<Track2<Coordinate_2D>> t) { m_t = t; } 
-	void setSpeed(std::shared_ptr<Speed> s) { m_s = s; }
+	void setGraph(const Graph<Coordinate_2D> &g) { m_g.reset(g.clone()); }
+	void setTrack(const Track2<Coordinate_2D> &t) { m_t.reset(dynamic_cast<decltype(m_t.release())>(t.clone())); }
+	void setSpeed(const Speed &s) { m_s.reset(s.clone()); }
 
 	// impl.
 	virtual void start() override;

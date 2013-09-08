@@ -20,7 +20,7 @@ MyAnimation::MyAnimation()
 	  m_cv(), m_lock(), m_b(false),
 	  m_quit(false)
 {}
-MyAnimation::~MyAnimation() { stop(); }
+MyAnimation::~MyAnimation() { stop(true); }
 
 // Interface.
 void MyAnimation::setBoard(HWND drawHWnd) 
@@ -36,7 +36,11 @@ void MyAnimation::start()
 	// Create working thread.
 	m_quit = false;
 	m_b = false;
-	m_w = async(&MyAnimation::animation, this);
+
+	if (!m_w.valid())
+	{
+		m_w = async(&MyAnimation::animation, this);
+	}
 
 	// Start.
 	{
@@ -57,7 +61,12 @@ void MyAnimation::stop(bool waitDone)
 	m_cv.notify_one();
 	if (waitDone)
 	{
-		m_w.wait();
+		// Wait the animation done.
+		if (m_w.valid())
+		{
+			// Reset the animation worker.
+			m_w.get();
+		}
 	}
 }
 void MyAnimation::pause()
@@ -105,7 +114,7 @@ void MyAnimation2::setDoneCallback(function<void (void *)> cb, void *param)
 // logic.
 void MyAnimation2::animation()
 {
-	// Animation.
+	// Begin animation.
 	while (true)
 	{
 		{
@@ -124,6 +133,7 @@ void MyAnimation2::animation()
 		m_g->draw(m_dc);
 		sleep_for(milliseconds(m_s->next()));
 
+		// Cycle done callback.
 		if (m_t->isCycleDone())
 		{
 			// When a cycle is done.
