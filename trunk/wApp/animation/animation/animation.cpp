@@ -78,6 +78,15 @@ void MyAnimation::pause()
 		m_b = false;
 	}
 }
+void MyAnimation::next()
+{
+	Coordinate_2D pos = m_t->next();
+	m_g->setCoordinate(pos);
+
+	m_g->draw(m_dc);
+
+	sleep_for(milliseconds(m_s->next()));
+}
 
 void MyAnimation::clear() { InvalidateRect(m_board, nullptr, TRUE); }
 
@@ -96,12 +105,7 @@ void MyAnimation::animation()
 			break;
 		}
 
-		Coordinate_2D pos = m_t->next();
-		m_g->setCoordinate(pos);
-
-		m_g->draw(m_dc);
-
-		sleep_for(milliseconds(m_s->next()));
+		next();
 	}
 }
 
