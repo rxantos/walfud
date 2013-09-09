@@ -69,35 +69,53 @@ BOOL CanimationDlg::OnInitDialog()
 		m_maLT.setDoneCallback([](void *param)
 		{
 			auto p = reinterpret_cast<CanimationDlg *>(param);
+
+			p->GetDlgItem(IDC_BUTTON_START)->EnableWindow(FALSE);
+			p->GetDlgItem(IDC_BUTTON_PAUSE)->EnableWindow(FALSE);
+			p->GetDlgItem(IDC_BUTTON_STOP)->EnableWindow(FALSE);
+
 			p->m_maLT.stop(false);
-			p->m_maH.start();
+			p->m_maRH.start();
 			sleep_for(milliseconds(777));
-			p->m_maT.start();
+			p->m_maRT.start();
+
+			p->GetDlgItem(IDC_BUTTON_START)->EnableWindow(TRUE);
+			p->GetDlgItem(IDC_BUTTON_PAUSE)->EnableWindow(TRUE);
+			p->GetDlgItem(IDC_BUTTON_STOP)->EnableWindow(TRUE);
 		}, this);
 	}
 	{
-		m_maH.setBoard(m_hWnd);
-		m_maH.setGraph(MyGraph(RGB(123, 62, 200)));
-		m_maH.setTrack(MyTrack2());
-		m_maH.setSpeed(MySpeed2());
-		m_maH.setDoneCallback([](void *param)
+		m_maRH.setBoard(m_hWnd);
+		m_maRH.setGraph(MyGraph(RGB(123, 62, 200)));
+		m_maRH.setTrack(MyTrack2());
+		m_maRH.setSpeed(MySpeed2());
+		m_maRH.setDoneCallback([](void *param)
 		{
 			auto p = reinterpret_cast<CanimationDlg *>(param);
-			p->m_maH.stop(false);
+			p->m_maRH.stop(false);
 		}, this);
 	}
 	{
-		m_maT.setBoard(m_hWnd);
-		m_maT.setGraph(MyGraph(RGB(240, 240, 240)));
-		m_maT.setTrack(MyTrack2());
-		m_maT.setSpeed(MySpeed2());
-		m_maT.setDoneCallback([](void *param)
+		m_maRT.setBoard(m_hWnd);
+		m_maRT.setGraph(MyGraph(RGB(240, 240, 240)));
+		m_maRT.setTrack(MyTrack2());
+		m_maRT.setSpeed(MySpeed2());
+		m_maRT.setDoneCallback([](void *param)
 		{
 			auto p = reinterpret_cast<CanimationDlg *>(param);
-			p->m_maT.stop(false);
+
+			p->GetDlgItem(IDC_BUTTON_START)->EnableWindow(FALSE);
+			p->GetDlgItem(IDC_BUTTON_PAUSE)->EnableWindow(FALSE);
+			p->GetDlgItem(IDC_BUTTON_STOP)->EnableWindow(FALSE);
+
+			p->m_maRT.stop(false);
 			p->m_maLH.start();
 			sleep_for(milliseconds(777));
 			p->m_maLT.start();
+
+			p->GetDlgItem(IDC_BUTTON_START)->EnableWindow(TRUE);
+			p->GetDlgItem(IDC_BUTTON_PAUSE)->EnableWindow(TRUE);
+			p->GetDlgItem(IDC_BUTTON_STOP)->EnableWindow(TRUE);
 		}, this);
 	}
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -143,28 +161,72 @@ HCURSOR CanimationDlg::OnQueryDragIcon()
 
 void CanimationDlg::OnBnClickedButtonStart()
 {
-	//m_maH.start();
-	//if (!(m_maH.getStatus() == MyAnimation2::Status::Running && m_maT.getStatus() == MyAnimation2::Status::Running
-	//	  || m_maH.getStatus() == MyAnimation2::Status::Paused && m_maT.getStatus() == MyAnimation2::Status::Paused))
-	//{
-	//	sleep_for(milliseconds(777));
-	//}
-	//m_maT.start();
-	m_maLH.start();
-	sleep_for(milliseconds(777));
-	m_maLT.start();
+	if (m_maLH.getStatus() == MyAnimation2::Status::Stopped
+		&& m_maLT.getStatus() == MyAnimation2::Status::Stopped
+		&& m_maRH.getStatus() == MyAnimation2::Status::Stopped
+		&& m_maRT.getStatus() == MyAnimation2::Status::Stopped)
+	{
+		// All stopped.
+		GetDlgItem(IDC_BUTTON_START)->EnableWindow(FALSE);
+		GetDlgItem(IDC_BUTTON_PAUSE)->EnableWindow(FALSE);
+		GetDlgItem(IDC_BUTTON_STOP)->EnableWindow(FALSE);
+
+		m_maLH.start();
+		sleep_for(milliseconds(777));
+		m_maLT.start();
+
+		GetDlgItem(IDC_BUTTON_START)->EnableWindow(TRUE);
+		GetDlgItem(IDC_BUTTON_PAUSE)->EnableWindow(TRUE);
+		GetDlgItem(IDC_BUTTON_STOP)->EnableWindow(TRUE);
+	}
+	else if (m_maLH.getStatus() == MyAnimation2::Status::Paused
+			 && m_maLT.getStatus() == MyAnimation2::Status::Paused)
+	{
+		// Left paused.
+		m_maLH.start();
+		m_maLT.start();
+	}
+	else if (m_maRH.getStatus() == MyAnimation2::Status::Paused
+			 && m_maRT.getStatus() == MyAnimation2::Status::Paused)
+	{
+		// Right paused.
+		m_maRH.start();
+		m_maRT.start();
+	}
+	else
+	{
+		// 
+		if (m_maLH.getStatus() == MyAnimation2::Status::Stopped
+			&& (m_maLT.getStatus() == MyAnimation2::Status::Running || m_maLT.getStatus() == MyAnimation2::Status::Paused))
+		{
+			// Left stopping.
+			m_maLT.start();
+		}
+		else if (m_maRH.getStatus() == MyAnimation2::Status::Stopped
+				 && (m_maRT.getStatus() == MyAnimation2::Status::Running || m_maRT.getStatus() == MyAnimation2::Status::Paused))
+		{
+			// Right stopping.
+			m_maRT.start();
+		}
+		else
+		{}
+	}
 }
 
 
 void CanimationDlg::OnBnClickedButtonPause()
 {
-	m_maH.pause();
-	m_maT.pause();
+	m_maLH.pause();
+	m_maLT.pause();
+	m_maRH.pause();
+	m_maRT.pause();
 }
 
 
 void CanimationDlg::OnBnClickedButtonStop()
 {
-	m_maH.stop();
-	m_maT.stop();
+	m_maLH.stop(false);
+	m_maLT.stop(false);
+	m_maRH.stop(false);
+	m_maRT.stop(false);
 }

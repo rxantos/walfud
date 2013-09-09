@@ -139,8 +139,6 @@ void MyAnimation2::animation()
 		if (m_quit)
 		{
 			// Thread quit.
-			m_inited = false;
-			m_status = Status::Stopped;
 			break;
 		}
 
@@ -161,4 +159,8 @@ void MyAnimation2::animation()
 			}
 		}
 	}
+
+	// End animation.
+	m_status = Status::Stopped;
+	m_inited = false;
 }
