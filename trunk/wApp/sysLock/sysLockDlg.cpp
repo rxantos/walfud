@@ -6,6 +6,11 @@
 #include "sysLock.h"
 #include "sysLockDlg.h"
 #include "afxdialogex.h"
+#include <thread>
+#include <chrono>
+using namespace std;
+using namespace this_thread;
+using namespace chrono;
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -49,8 +54,58 @@ BOOL CsysLockDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
-	m_maL.setBoard(m_hWnd);
-	m_maR.setBoard(m_hWnd);
+	{
+		m_maLH.setBoard(m_hWnd);
+		m_maLH.setGraph(MyGraph2(RGB(123, 62, 200)));
+		m_maLH.setTrack(MyTrack3());
+		m_maLH.setSpeed(MySpeed2());
+		m_maLH.setDoneCallback([](void *param)
+		{
+			auto p = reinterpret_cast<CsysLockDlg *>(param);
+			p->m_maLH.stop(false);
+		}, this);
+	}
+	{
+		m_maLT.setBoard(m_hWnd);
+		m_maLT.setGraph(MyGraph(RGB(240, 240, 240)));
+		m_maLT.setTrack(MyTrack3());
+		m_maLT.setSpeed(MySpeed2());
+		m_maLT.setDoneCallback([](void *param)
+		{
+			auto p = reinterpret_cast<CsysLockDlg *>(param);
+
+			p->m_maLT.stop(false);
+			p->m_maRH.start();
+			sleep_for(milliseconds(777));
+			p->m_maRT.start();
+		}, this);
+	}
+	{
+		m_maRH.setBoard(m_hWnd);
+		m_maRH.setGraph(MyGraph(RGB(123, 62, 200)));
+		m_maRH.setTrack(MyTrack2());
+		m_maRH.setSpeed(MySpeed2());
+		m_maRH.setDoneCallback([](void *param)
+		{
+			auto p = reinterpret_cast<CsysLockDlg *>(param);
+			p->m_maRH.stop(false);
+		}, this);
+	}
+	{
+		m_maRT.setBoard(m_hWnd);
+		m_maRT.setGraph(MyGraph(RGB(240, 240, 240)));
+		m_maRT.setTrack(MyTrack2());
+		m_maRT.setSpeed(MySpeed2());
+		m_maRT.setDoneCallback([](void *param)
+		{
+			auto p = reinterpret_cast<CsysLockDlg *>(param);
+
+			p->m_maRT.stop(false);
+			p->m_maLH.start();
+			sleep_for(milliseconds(777));
+			p->m_maLT.start();
+		}, this);
+	}
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -108,12 +163,24 @@ void CsysLockDlg::OnBnClickedButtonLock()
 void CsysLockDlg::OnBnClickedButtonAntiLock()
 {
 	m_antiLocker.KeepWorking();
-	m_maL.start();
+
+	m_maLH.start();
+	sleep_for(milliseconds(777));
+	m_maLT.start();
 }
 
 
 void CsysLockDlg::OnBnClickedButtonDefaultLock()
 {
 	m_antiLocker.StopKeeping();
-	m_maL.pause();
+
+	m_maLH.stop(false);
+	m_maLT.stop(false);
+	m_maRH.stop(false);
+	m_maRT.stop(false);
+	sleep_for(milliseconds(1000));
+	m_maLH.stop(false);
+	m_maLT.stop(false);
+	m_maRH.stop(false);
+	m_maRT.stop(false);
 }
