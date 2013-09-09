@@ -84,8 +84,6 @@ void MyAnimation::next()
 	m_g->setCoordinate(pos);
 
 	m_g->draw(m_dc);
-
-	sleep_for(milliseconds(m_s->next()));
 }
 
 void MyAnimation::clear() { InvalidateRect(m_board, nullptr, TRUE); }
@@ -106,6 +104,7 @@ void MyAnimation::animation()
 		}
 
 		next();
+		sleep_for(milliseconds(m_s->next()));
 	}
 }
 
