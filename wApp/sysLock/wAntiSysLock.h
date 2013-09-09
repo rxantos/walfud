@@ -10,37 +10,18 @@
 #include <thread>
 #include <future>
 #include <atomic>
-#include <mutex>
-#include <memory>
 
 namespace w
 {
 
 class AntiSysLock
 {
-	enum class Stat : unsigned
-	{
-		DefaultLock,
-		AntiLock,
-		Quit,
-	};
-	struct KeeperParam
-	{
-		std::atomic<Stat> &stat;
-		std::mutex &pause;
-		unsigned interval;
-
-		KeeperParam(std::atomic<Stat> &s, std::mutex &p, unsigned i) : stat(s), pause(p), interval(i) {}
-		~KeeperParam() {}
-	};
-
 	// data.
 	std::future<void> m_keeper;
-	std::atomic<Stat> m_stat;
-	std::mutex m_pause;
+	std::atomic<bool> m_antiLock;
 
 public:
-	AntiSysLock(unsigned actInterval = 1000);		// Active working state interval.
+	AntiSysLock();
 	~AntiSysLock();
 
 public:
@@ -50,7 +31,7 @@ public:
 
 private:
 	// logic.
-	void Keeper(std::shared_ptr<KeeperParam> param);
+	void Keeper(void *param);
 };
 
 }

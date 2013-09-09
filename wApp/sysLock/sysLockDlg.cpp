@@ -162,16 +162,25 @@ void CsysLockDlg::OnBnClickedButtonLock()
 
 void CsysLockDlg::OnBnClickedButtonAntiLock()
 {
+	GetDlgItem(IDC_BUTTON_ANTI_LOCK)->EnableWindow(FALSE);
+	GetDlgItem(IDC_BUTTON_DEFAULT_LOCK)->EnableWindow(FALSE);
+
 	m_antiLocker.KeepWorking();
 
 	m_maLH.start();
 	sleep_for(milliseconds(777));
 	m_maLT.start();
+
+	GetDlgItem(IDC_BUTTON_ANTI_LOCK)->EnableWindow(FALSE);
+	GetDlgItem(IDC_BUTTON_DEFAULT_LOCK)->EnableWindow(TRUE);
 }
 
 
 void CsysLockDlg::OnBnClickedButtonDefaultLock()
 {
+	GetDlgItem(IDC_BUTTON_ANTI_LOCK)->EnableWindow(FALSE);
+	GetDlgItem(IDC_BUTTON_DEFAULT_LOCK)->EnableWindow(FALSE);
+
 	m_antiLocker.StopKeeping();
 
 	m_maLH.stop(false);
@@ -183,4 +192,7 @@ void CsysLockDlg::OnBnClickedButtonDefaultLock()
 	m_maLT.stop(false);
 	m_maRH.stop(false);
 	m_maRT.stop(false);
+
+	GetDlgItem(IDC_BUTTON_ANTI_LOCK)->EnableWindow(TRUE);
+	GetDlgItem(IDC_BUTTON_DEFAULT_LOCK)->EnableWindow(FALSE);
 }
