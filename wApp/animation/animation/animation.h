@@ -97,7 +97,7 @@ protected:
 	std::atomic<Status> m_status;
 
 public:
-	MyAnimation2() : m_cycleDoneCallback(), m_cbParam(), m_status() {}
+	MyAnimation2() : m_cycleDoneCallback(), m_cbParam(), m_status(Status::Stopped) {}
 
 public:
 	// Interface.
