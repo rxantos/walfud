@@ -28,6 +28,7 @@ public:
 	virtual void start() = 0;
 	virtual void stop(bool waitDone = true) = 0;
 	virtual void pause() = 0;
+	virtual void next() = 0;
 
 	virtual void clear() = 0;
 };
@@ -65,6 +66,7 @@ public:
 	virtual void start() override;
 	virtual void stop(bool waitDone = true) override;
 	virtual void pause() override;
+	virtual void next() override;
 
 	virtual void clear() override;						// Clear the board.
 
