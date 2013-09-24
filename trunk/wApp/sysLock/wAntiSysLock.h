@@ -17,8 +17,7 @@ namespace w
 class AntiSysLock
 {
 	// data.
-	std::future<void> m_keeper;
-	std::atomic<bool> m_antiLock;
+	DWORD m_originalState;
 
 public:
 	AntiSysLock();
@@ -31,7 +30,6 @@ public:
 
 private:
 	// logic.
-	void Keeper(void *param);
 };
 
 }
