@@ -1,22 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <ClCompile Include="timeSync.cpp" />
     <ClCompile Include="..\..\wCode\src\wConsole.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\wCode\src\wCppExt.cc">
+    <ClCompile Include="..\..\wCode\src\wCppExt.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\wCode\src\wDir.cc">
+    <ClCompile Include="..\..\wCode\src\wDir.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\wCode\src\wDisk.cc">
+    <ClCompile Include="..\..\wCode\src\wDisk.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\wCode\src\wFilePermission.cc">
+    <ClCompile Include="..\..\wCode\src\wFilePermission.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\wCode\src\wHack.cc">
+    <ClCompile Include="..\..\wCode\src\wHack.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
     <ClCompile Include="..\..\wCode\src\wIniHelper.cpp">
@@ -25,34 +26,36 @@
     <ClCompile Include="..\..\wCode\src\wMath.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\wCode\src\wOtherUtil.cc">
+    <ClCompile Include="..\..\wCode\src\wOtherUtil.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\wCode\src\wPipe.cc">
+    <ClCompile Include="..\..\wCode\src\wPipe.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\wCode\src\wProcess.cc">
+    <ClCompile Include="..\..\wCode\src\wProcess.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\wCode\src\wRpc.cc">
+    <ClCompile Include="..\..\wCode\src\wRpc.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\wCode\src\wStrUtil.cc">
+    <ClCompile Include="..\..\wCode\src\wService.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\wCode\src\wSysUtil.cc">
+    <ClCompile Include="..\..\wCode\src\wStrUtil.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\wCode\src\wTaskbarProgress.cc">
+    <ClCompile Include="..\..\wCode\src\wSysUtil.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\wCode\src\wTimeMeasurer.cc">
+    <ClCompile Include="..\..\wCode\src\wTaskbarProgress.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wTimeMeasurer.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
     <ClCompile Include="..\..\wCode\src\wWindowsExt.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
-    <ClCompile Include="timeSync.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="wCode">
@@ -94,6 +97,9 @@
       <Filter>wCode</Filter>
     </ClInclude>
     <ClInclude Include="..\..\wCode\src\wRpc.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wService.h">
       <Filter>wCode</Filter>
     </ClInclude>
     <ClInclude Include="..\..\wCode\src\wStrUtil.h">
