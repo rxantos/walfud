@@ -28,6 +28,15 @@ bool isVistaOrLater();
 bool isXpOrLater();
 bool is2000OrLater();
 
+/**
+ *		Enable or Disable privilege at target token.
+ */
+bool setPrivilege(
+	HANDLE hToken,          // access token handle
+    const std::string &strPrivilege,  // name of privilege to enable/disable
+    bool bEnablePrivilege   // to enable or disable privilege
+    );
+bool setCurTokenPrivilege(const std::string &strPrivilege, bool bEnablePrivilege);
 
 }
 

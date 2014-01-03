@@ -39,4 +39,43 @@ bool isXpOrLater()
 bool is2000OrLater()
 { return osVerCondition(5, 0, VER_GREATER_EQUAL); }
 
+bool setPrivilege(HANDLE hToken, const string &strPrivilege, bool bEnablePrivilege)
+{
+	bool res = false;
+
+	TOKEN_PRIVILEGES tp = {};
+	LUID luid = {};
+    if (LookupPrivilegeValue( 
+			nullptr,		// lookup privilege on local system
+            strPrivilege.c_str(),	// privilege to lookup 
+            &luid))			// receives LUID of privilege
+    {
+		tp.PrivilegeCount = 1;
+		tp.Privileges[0].Luid = luid;
+		tp.Privileges[0].Attributes = bEnablePrivilege ? SE_PRIVILEGE_ENABLED : SE_PRIVILEGE_REMOVED;
+
+		// Enable the privilege or disable all privileges.
+		if (AdjustTokenPrivileges(hToken, FALSE, &tp, sizeof(tp), (PTOKEN_PRIVILEGES)nullptr, (PDWORD)nullptr))
+		{ 
+			  res = TRUE;
+		} 
+    }
+
+	return res;
+}
+bool setCurTokenPrivilege(const string &strPrivilege, bool bEnablePrivilege)
+{
+	bool res = false;
+
+	HANDLE hToken = NULL;
+	if (OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES, &hToken))
+	{
+		res = setPrivilege(hToken, strPrivilege, bEnablePrivilege);
+
+		CloseHandle(hToken);
+	}
+
+	return res;
+}
+
 }
