@@ -6,7 +6,7 @@
 #ifndef W_INI_HELPER_H
 #define W_INI_HELPER_H
 
-#include <wCppExt.h>
+#include "wCppExt.h"
 
 namespace w
 {
