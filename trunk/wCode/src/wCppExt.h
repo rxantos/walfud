@@ -64,6 +64,7 @@
 #include "wIniHelper.h"
 #include "wService.h"
 #include "wSleeper.h"
+#include "wSleeper2.h"
 
 #undef max							// Use C++ inline function instead of C macro. 
 									// Avoiding the most vexing problem: 

@@ -60,7 +60,7 @@ protected:
 	virtual void tranlateToChildWaiter(void *waiter) {}
 };
 
-// BusySleeper.
+// BusySleeper. Dreprecated. use `BusySleeper2` instead.
 class BusySleeper : public SleeperBase
 {
 public:
