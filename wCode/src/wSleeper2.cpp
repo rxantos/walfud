@@ -10,94 +10,123 @@ namespace w
 {
 
 // SleeperBase2.
-SleeperBase2::SleeperBase2()
+void SleeperBase2::sleep(int ms, int id)
 {
-	m_id = 0;
+	auto blocker = addTask(ms, id);
+	(*blocker)->sleep();
+	removeTask(blocker);
 }
-int SleeperBase2::getId()
+void SleeperBase2::wakeup(int id)
 {
-	return m_id.fetch_add(1) + 1;
+	lock_guard<mutex> lock(m_blockerMutex);
+	for (auto &i : m_blocker)
+	{
+		if (i->id == id)
+		{
+			i->wakeup();
+		}
+	}
+}
+void SleeperBase2::wakeupAll()
+{
+	lock_guard<mutex> lock(m_blockerMutex);
+	for (auto &i : m_blocker)
+	{
+		i->wakeup();
+	}
+}
+
+// logic.
+list<SleeperBase2::SleeperBase2Blocker *>::iterator SleeperBase2::addTask(int ms, int id)
+{
+	list<SleeperBase2Blocker *>::iterator res;
+
+	lock_guard<mutex> lock(m_blockerMutex);
+	m_blocker.push_back(createBlocker(ms, id));
+	res = m_blocker.begin();
+	advance(res, m_blocker.size() - 1);
+
+	return res;
+}
+void SleeperBase2::removeTask(list<SleeperBase2Blocker *>::iterator blocker)
+{
+	lock_guard<mutex> lock(m_blockerMutex);
+
+	destroyBlocker(*blocker);
+	m_blocker.erase(blocker);
 }
 
 // BusySleeper2.
-void BusySleeper2::sleep(int ms, int id)
+void BusySleeper2::BusySleeper2Blocker::sleep()
 {
 	auto begTime = clock();
 
-	auto blocker = addTask(id);
 	while (true)
 	{
 		// Time out.
 		auto endTime = clock();
-		if (endTime - begTime >= ms)
+		if (endTime - begTime >= time)
 		{
 			break;
 		}
 
 		// Condition quit.
-		if (!blocker->sleep.load())
+		if (!sleeping)
 		{
 			break;
 		}
 	}
-
-	removeTask(blocker);
 }
-void BusySleeper2::wakeup(int id)
+void BusySleeper2::BusySleeper2Blocker::wakeup()
 {
-	lock_guard<mutex> lock(m_blockerMutex);
-	for (auto &i : m_blocker)
+	sleeping = false;
+}
+
+BusySleeper2::SleeperBase2Blocker *BusySleeper2::createBlocker(int ms, int id)
+{
+	auto *p = new BusySleeper2Blocker;
+	p->id = id;
+	p->time = ms;
+	p->sleeping = true;
+
+	return p;
+}
+void BusySleeper2::destroyBlocker(SleeperBase2Blocker *blocker)
+{
+	delete blocker;
+}
+
+// EventSleeper2.
+void EventSleeper2::EventSleeper2Blocker::sleep()
+{
+	sleeping = true;
+	WaitForSingleObject(sleepEvent, static_cast<DWORD>(time));
+}
+void EventSleeper2::EventSleeper2Blocker::wakeup()
+{
+	SetEvent(sleepEvent);
+	sleeping = false;
+}
+
+EventSleeper2::SleeperBase2Blocker *EventSleeper2::createBlocker(int ms, int id)
+{
+	auto *p = new EventSleeper2Blocker;
+	p->id = id;
+	p->time = ms;
+	p->sleeping = true;
+	p->sleepEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+
+	return p;
+}
+void EventSleeper2::destroyBlocker(SleeperBase2Blocker *blocker)
+{
+	if (auto p = dynamic_cast<EventSleeper2Blocker *>(blocker))
 	{
-		if (i.id == id)
-		{
-			i.sleep = false;
-		}		
-	}
-}
-void BusySleeper2::wakeupAll()
-{
-	lock_guard<mutex> lock(m_blockerMutex);
-	for (auto &i : m_blocker)
-	{
-		i.sleep = false;
-	}
-}
-
-// logic.
-list<BusySleeper2::BusySleeper2Blocker>::iterator BusySleeper2::addTask(int id)
-{
-	list<BusySleeper2::BusySleeper2Blocker>::iterator res;
-
-	// Find the right node.
-	{
-		lock_guard<mutex> lock(m_blockerMutex);
-		auto emptyBlocker = find_if(m_blocker.begin(), m_blocker.end(),
-			[](const BusySleeper2Blocker &b)
-		{
-			// Find a noused blocker, and reuse it.
-			return b.ref == 0;
-		});
-		if (emptyBlocker == m_blocker.end())
-		{
-			m_blocker.push_back(BusySleeper2Blocker());
-			res = m_blocker.begin();
-			advance(res, m_blocker.size() - 1);
-		}
-		else
-		{
-			res = emptyBlocker;
-		}
+		CloseHandle(p->sleepEvent);
+		p->sleepEvent = nullptr;
 	}
 
-	// Fill the blocker.
-	res->id = id;
-	res->sleep = true;
-	res->ref = 1;
-	return res;
-}
-void BusySleeper2::removeTask(list<BusySleeper2Blocker>::iterator blocker)
-{
-	blocker->ref = 0;
+	delete blocker;
 }
 
 }
