@@ -10,13 +10,13 @@
 
 namespace w
 {
-bool remoteCall(unsigned targetProcessId, unsigned long (__stdcall *func)(void *), void *param, unsigned paramSize, bool paramIsPtr);
+bool remoteCall(int targetProcessId, unsigned long (__stdcall *func)(void *), void *param, unsigned paramSize, bool paramIsPtr);
 bool remoteCall(const std::string &targetProcessName, unsigned long (__stdcall *func)(void *), void *param, unsigned paramSize, bool paramIsPtr);
 
-bool remoteInject(unsigned targetProcessId, const std::string &injectedDllFullpath);
+bool remoteInject(int targetProcessId, const std::string &injectedDllFullpath);
 bool remoteInject(const std::string &targetProcessName, const std::string &injectedDllFullpath);
 
-bool remoteAntiinject(unsigned targetProcessId, const std::string &antiinjectedDllFullpath);
+bool remoteAntiinject(int targetProcessId, const std::string &antiinjectedDllFullpath);
 bool remoteAntiinject(const std::string &targetProcessName, const std::string &antiinjectedDllFullpath);
 
 /*

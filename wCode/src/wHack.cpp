@@ -11,7 +11,7 @@ using namespace std;
 namespace w
 {
 
-bool remoteCall(unsigned targetProcessId, unsigned long (__stdcall *func)(void *), void *param, unsigned paramSize, bool paramIsPtr)
+bool remoteCall(int targetProcessId, unsigned long (__stdcall *func)(void *), void *param, unsigned paramSize, bool paramIsPtr)
 {
 	// Open remote process.
 	HANDLE hRemoteProcess = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_READ | PROCESS_VM_WRITE, 
@@ -72,7 +72,7 @@ bool remoteCall(const string &targetProcessName, unsigned long (__stdcall *func)
 	return res > 1;
 }
 
-bool remoteInject(unsigned targetProcessId, const string &injectedDllFullpath)
+bool remoteInject(int targetProcessId, const string &injectedDllFullpath)
 { 
 	char buf[MAX_PATH] = {};
 	copy(injectedDllFullpath.begin(), injectedDllFullpath.end(), buf);
@@ -100,7 +100,7 @@ bool remoteInject(const string &targetProcessName, const string &injectedDllFull
 	return res > 1;
 }
 
-bool remoteAntiinject(unsigned targetProcessId, const string &antiinjectedDllModuleName)
+bool remoteAntiinject(int targetProcessId, const string &antiinjectedDllModuleName)
 {
 	map<string, ModuleInfo> modulesInfo = getModulesInfo(targetProcessId);
 	HMODULE baseAddr = static_cast<HMODULE>(modulesInfo[antiinjectedDllModuleName].baseAddr);
