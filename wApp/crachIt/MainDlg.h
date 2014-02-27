@@ -12,6 +12,8 @@ public:
 	BEGIN_MSG_MAP(CMainDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnLButtonDown)
+		COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
+
 		COMMAND_HANDLER(IDC_BUTTON_CRASHIT, BN_CLICKED, OnBnClickedButtonCrashit)
 		NOTIFY_HANDLER(IDC_LIST_PROC, LVN_COLUMNCLICK, OnProcListHeadClick)
 		NOTIFY_HANDLER(IDC_LIST_PROC, NM_DBLCLK, OnProcListItemClick)
@@ -24,6 +26,12 @@ public:
 
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		EndDialog(wID);
+		return 0;
+	}
+
 	LRESULT OnBnClickedButtonCrashit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnProcListHeadClick(int /*idCtrl*/, LPNMHDR /*pNMHDR*/, BOOL& /*bHandled*/);
 	LRESULT OnProcListItemClick(int /*idCtrl*/, LPNMHDR /*pNMHDR*/, BOOL& /*bHandled*/);
