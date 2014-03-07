@@ -58,14 +58,16 @@ IDR_MAINFRAME           ICON                    "res\\crachIt.ico"
 // Dialog
 //
 
-IDD_MAINDLG DIALOGEX 0, 0, 503, 548
+IDD_MAINDLG DIALOGEX 0, 0, 503, 471
 STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_CAPTION | WS_SYSMENU
 CAPTION "crachIt"
 FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
-    EDITTEXT        IDC_EDIT_TARGET_PID,351,308,128,29,ES_AUTOHSCROLL
-    PUSHBUTTON      "Crash It !!!",IDC_BUTTON_CRASHIT,379,351,68,24
-    CONTROL         "",IDC_LIST_PROC,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,325,534
+    EDITTEXT        IDC_EDIT_TARGET_PID,350,257,128,29,ES_AUTOHSCROLL
+    CONTROL         "",IDC_LIST_PROC,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,7,325,425
+    EDITTEXT        IDC_EDIT_TARGET_PROCNAME,350,220,128,29,ES_AUTOHSCROLL
+    CONTROL         "Refresh Before Crash It",IDC_CHECK_REFRESH_BEFORE_CRASH_IT,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,350,185,114,19
 END
 
 
@@ -82,7 +84,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 496
         TOPMARGIN, 7
-        BOTTOMMARGIN, 541
+        BOTTOMMARGIN, 464
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -118,8 +120,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,0,2
- PRODUCTVERSION 1,0,0,2
+ FILEVERSION 2,0,0,0
+ PRODUCTVERSION 2,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -135,12 +137,12 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "crachIt Module"
-            VALUE "FileVersion", "1.0.0.2"
+            VALUE "FileVersion", "2.0.0.0"
             VALUE "InternalName", "crachIt"
             VALUE "LegalCopyright", "Copyright 2014"
             VALUE "OriginalFilename", "crachIt.exe"
             VALUE "ProductName", "crachIt Module"
-            VALUE "ProductVersion", "1.0.0.2"
+            VALUE "ProductVersion", "2.0.0.0"
         END
     END
     BLOCK "VarFileInfo"

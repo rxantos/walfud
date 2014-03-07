@@ -33,7 +33,14 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR /*
 	// BLOCK: Run application
 	{
 		CMainDlg dlgMain;
-		nRet = dlgMain.DoModal();
+		//nRet = dlgMain.DoModal();
+		RECT rc = {};
+		dlgMain.Create(nullptr, rc, 0);
+		dlgMain.ShowWindow(SW_SHOW);
+		CMessageLoop theLoop;
+		theLoop.AddMessageFilter(&dlgMain);
+		_Module.AddMessageLoop(&theLoop);
+		theLoop.Run();
 	}
 
 	_Module.Term();

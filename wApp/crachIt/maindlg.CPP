@@ -30,6 +30,9 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 
 	m_sort = Sort::ProcName_Asc;
 
+	auto checkRefresh = static_cast<CButton &>(GetDlgItem(IDC_CHECK_REFRESH_BEFORE_CRASH_IT));
+	checkRefresh.SetCheck(TRUE);
+
 	return TRUE;
 }
 LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -47,15 +50,32 @@ LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 
 	return 0;
 }
-LRESULT CMainDlg::OnBnClickedButtonCrashit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
-	CString strPid;
-	GetDlgItem(IDC_EDIT_TARGET_PID).GetWindowText(strPid);
-	
-	//RemoteCall(atoi(strPid), NULL, NULL, 0, false);
+	// If focus is on edit ctrl, we crash the specified program.
+	auto vKey = static_cast<DWORD>(wParam);
+	switch (vKey)
+	{
+	case VK_RETURN:
+		{
+			auto focus = GetFocus();
+			if (focus == GetDlgItem(IDC_EDIT_TARGET_PROCNAME).m_hWnd)
+			{
+				crashByProcname();
+			}
+			else if (focus == GetDlgItem(IDC_EDIT_TARGET_PID).m_hWnd)
+			{
+				crashByPid();
+			}
+		}
+		break;
+
+	default:
+		break;
+	}
+
 	return 0;
 }
-//LRESULT CMainDlg::OnProcListHeadClick(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 LRESULT CMainDlg::OnProcListHeadClick(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bHandled*/)
 {
 	auto pNMListView = (NM_LISTVIEW *)pNMHDR;
@@ -193,5 +213,43 @@ void CMainDlg::crashIt(int index)
 	if (isOs64())
 	{
 		runAndWait(crasher64Fullpath, "-pid:" + intToStr(pid), 0, false);
+	}
+}
+
+BOOL CMainDlg::PreTranslateMessage(MSG* pMsg)
+{
+	BOOL bHandled = FALSE;
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		OnKeyDown(WM_KEYDOWN, pMsg->wParam, pMsg->lParam, bHandled);
+	}
+
+	return CWindow::IsDialogMessage(pMsg);
+}
+
+void CMainDlg::crashByProcname()
+{
+	auto &edit = static_cast<CEdit>(GetDlgItem(IDC_EDIT_TARGET_PROCNAME));
+	CString name;
+	edit.GetWindowText(name);
+	for (int i = 0; i < static_cast<int>(m_procInfo.size()); ++i)
+	{
+		if (name.CompareNoCase(m_procInfo[i].name.c_str()) == 0)
+		{
+			crashIt(i);
+		}
+	}
+}
+void CMainDlg::crashByPid()
+{
+	auto &edit = static_cast<CEdit>(GetDlgItem(IDC_EDIT_TARGET_PID));
+	CString pid;
+	edit.GetWindowText(pid);
+	for (int i = 0; i < static_cast<int>(m_procInfo.size()); ++i)
+	{
+		if (m_procInfo[i].id == strToInt(pid.GetString()))
+		{
+			crashIt(i);
+		}
 	}
 }
