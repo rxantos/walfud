@@ -118,6 +118,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat />
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/EHsc %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -128,6 +129,10 @@
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
+    <PostBuildEvent />
+    <PostBuildEvent>
+      <Command>copy $(TargetPath) $(ProjectDir)..\bin\crashIt\</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\wCode\src\wConsole.cpp" />

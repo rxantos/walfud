@@ -4,7 +4,8 @@
 
 #pragma once
 
-class CMainDlg : public CDialogImpl<CMainDlg>
+class CMainDlg : public CDialogImpl<CMainDlg>,
+				public CMessageFilter
 {
 public:
 	enum { IDD = IDD_MAINDLG };
@@ -12,9 +13,9 @@ public:
 	BEGIN_MSG_MAP(CMainDlg)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
 		MESSAGE_HANDLER(WM_LBUTTONDOWN, OnLButtonDown)
+
 		COMMAND_ID_HANDLER(IDCANCEL, OnCancel)
 
-		COMMAND_HANDLER(IDC_BUTTON_CRASHIT, BN_CLICKED, OnBnClickedButtonCrashit)
 		NOTIFY_HANDLER(IDC_LIST_PROC, LVN_COLUMNCLICK, OnProcListHeadClick)
 		NOTIFY_HANDLER(IDC_LIST_PROC, NM_DBLCLK, OnProcListItemClick)
 	END_MSG_MAP()
@@ -26,15 +27,19 @@ public:
 
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+	LRESULT OnKeyDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
+
 	LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 	{
 		EndDialog(wID);
 		return 0;
 	}
 
-	LRESULT OnBnClickedButtonCrashit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	//LRESULT OnBnClickedButtonCrashit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 	LRESULT OnProcListHeadClick(int /*idCtrl*/, LPNMHDR /*pNMHDR*/, BOOL& /*bHandled*/);
 	LRESULT OnProcListItemClick(int /*idCtrl*/, LPNMHDR /*pNMHDR*/, BOOL& /*bHandled*/);
+
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 
 private:
 	// logic.
@@ -54,4 +59,7 @@ private:
 
 	Sort m_sort;
 	std::vector<w::ProcessInfo> m_procInfo;
+
+	void crashByProcname();
+	void crashByPid();
 };
