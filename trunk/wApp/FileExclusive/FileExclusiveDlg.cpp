@@ -84,8 +84,12 @@ BOOL CFileExclusiveDlg::OnInitDialog()
 	getArgsFromCmdLine();
 
 	// Allow message for lower privilege.
-	ChangeWindowMessageFilter(WM_DROPFILES, MSGFLT_ADD);
-	ChangeWindowMessageFilter(WM_COPYGLOBALDATA, MSGFLT_ADD);
+	using T_ChangeWindowMessageFilter = BOOL (WINAPI *)(_In_  UINT message, _In_  DWORD dwFlag);
+	if (auto pfnChangeWindowMessageFilter = (T_ChangeWindowMessageFilter)GetProcAddress(GetModuleHandle("User32.dll"), "ChangeWindowMessageFilter"))
+	{
+		pfnChangeWindowMessageFilter(WM_DROPFILES, MSGFLT_ADD);
+		pfnChangeWindowMessageFilter(WM_COPYGLOBALDATA, MSGFLT_ADD);
+	}
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
