@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -19,14 +19,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110_xp</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>NotSet</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
@@ -47,7 +47,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);E:\walfud\trunk\wCode\src;</IncludePath>
+    <IncludePath>$(VCInstallDir)include;$(VCInstallDir)atlmfc\include;$(WindowsSDK_IncludePath);../../wCode/src;</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -110,7 +110,26 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\wCode\src\wConsole.h" />
+    <ClInclude Include="..\..\wCode\src\wCppExt.h" />
+    <ClInclude Include="..\..\wCode\src\wDir.h" />
+    <ClInclude Include="..\..\wCode\src\wDisk.h" />
+    <ClInclude Include="..\..\wCode\src\wFilePermission.h" />
+    <ClInclude Include="..\..\wCode\src\wHack.h" />
+    <ClInclude Include="..\..\wCode\src\wIniHelper.h" />
+    <ClInclude Include="..\..\wCode\src\wMath.h" />
+    <ClInclude Include="..\..\wCode\src\wOtherUtil.h" />
+    <ClInclude Include="..\..\wCode\src\wPipe.h" />
+    <ClInclude Include="..\..\wCode\src\wProcess.h" />
+    <ClInclude Include="..\..\wCode\src\wRpc.h" />
+    <ClInclude Include="..\..\wCode\src\wService.h" />
+    <ClInclude Include="..\..\wCode\src\wSleeper.h" />
+    <ClInclude Include="..\..\wCode\src\wSleeper2.h" />
     <ClInclude Include="..\..\wCode\src\wStrUtil.h" />
+    <ClInclude Include="..\..\wCode\src\wSysUtil.h" />
+    <ClInclude Include="..\..\wCode\src\wTaskbarProgress.h" />
+    <ClInclude Include="..\..\wCode\src\wTimeMeasurer.h" />
+    <ClInclude Include="..\..\wCode\src\wWindowsExt.h" />
     <ClInclude Include="FileExclusive.h" />
     <ClInclude Include="FileExclusiveDlg.h" />
     <ClInclude Include="Resource.h" />
@@ -118,7 +137,26 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\wCode\src\wStrUtil.cc" />
+    <ClCompile Include="..\..\wCode\src\wConsole.cpp" />
+    <ClCompile Include="..\..\wCode\src\wCppExt.cpp" />
+    <ClCompile Include="..\..\wCode\src\wDir.cpp" />
+    <ClCompile Include="..\..\wCode\src\wDisk.cpp" />
+    <ClCompile Include="..\..\wCode\src\wFilePermission.cpp" />
+    <ClCompile Include="..\..\wCode\src\wHack.cpp" />
+    <ClCompile Include="..\..\wCode\src\wIniHelper.cpp" />
+    <ClCompile Include="..\..\wCode\src\wMath.cpp" />
+    <ClCompile Include="..\..\wCode\src\wOtherUtil.cpp" />
+    <ClCompile Include="..\..\wCode\src\wPipe.cpp" />
+    <ClCompile Include="..\..\wCode\src\wProcess.cpp" />
+    <ClCompile Include="..\..\wCode\src\wRpc.cpp" />
+    <ClCompile Include="..\..\wCode\src\wService.cpp" />
+    <ClCompile Include="..\..\wCode\src\wSleeper.cpp" />
+    <ClCompile Include="..\..\wCode\src\wSleeper2.cpp" />
+    <ClCompile Include="..\..\wCode\src\wStrUtil.cpp" />
+    <ClCompile Include="..\..\wCode\src\wSysUtil.cpp" />
+    <ClCompile Include="..\..\wCode\src\wTaskbarProgress.cpp" />
+    <ClCompile Include="..\..\wCode\src\wTimeMeasurer.cpp" />
+    <ClCompile Include="..\..\wCode\src\wWindowsExt.cpp" />
     <ClCompile Include="FileExclusive.cpp" />
     <ClCompile Include="FileExclusiveDlg.cpp" />
     <ClCompile Include="stdafx.cpp">
