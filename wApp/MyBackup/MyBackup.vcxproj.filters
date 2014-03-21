@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{134b2331-34c9-4be9-a896-cbc535605c69}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{2ab9e4d5-6f62-4b89-898d-f5e328b31ce9}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{a3fd75e4-6e53-4dda-9aee-c5fb22670e79}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;manifest</Extensions>
+    </Filter>
+    <Filter Include="wCode">
+      <UniqueIdentifier>{1c95da8e-4444-4c42-92f5-c62b596f20c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pugixml">
+      <UniqueIdentifier>{ae5314be-7f95-4433-adf7-087f85d5a8d8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MyBackup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wConsole.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wCppExt.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wDir.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wDisk.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wFilePermission.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wHack.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wIniHelper.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wMath.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wOtherUtil.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wPipe.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wProcess.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wRpc.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wService.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wSleeper.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wSleeper2.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wStrUtil.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wSysUtil.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wTaskbarProgress.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wTimeMeasurer.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wWindowsExt.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="MainDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Common\pugixml-1.4\src\pugixml.cpp">
+      <Filter>pugixml</Filter>
+    </ClCompile>
+    <ClCompile Include="PathParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileOp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wConsole.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wCppExt.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wDir.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wDisk.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wFilePermission.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wHack.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wIniHelper.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wMath.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wOtherUtil.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wPipe.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wProcess.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wRpc.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wService.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wSleeper.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wSleeper2.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wStrUtil.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wSysUtil.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wTaskbarProgress.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wTimeMeasurer.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wWindowsExt.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\pugixml-1.4\src\pugiconfig.hpp">
+      <Filter>pugixml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common\pugixml-1.4\src\pugixml.hpp">
+      <Filter>pugixml</Filter>
+    </ClInclude>
+    <ClInclude Include="PathParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileOp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MyBackup.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\MyBackup.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="ProjTemplate.xml" />
+  </ItemGroup>
+</Project>
