@@ -1,0 +1,21 @@
+
+<!--- 
+		This is a template project file.
+	-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<MyBackup name="360 杀毒">
+  <Item pathSrc=":HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\360sd.exe\Path:\savapi\" pathDst=".\360sd\" />
+  <Item pathSrc=":HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\360sd.exe\Path:\Plugins\" pathDst=".\360sd\" />
+  
+  <Item pathSrc=":HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\360sd.exe\Path:\repair.exe" pathDst=".\360sd\" />
+  <Item pathSrc=":HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\360sd.exe\Path:\360sdSetup.exe" pathDst=".\360sd\" />
+  <Item pathSrc=":HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\360sd.exe\Path:\360sdSetup32.exe" pathDst=".\360sd\" />
+  <Item pathSrc=":HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\360sd.exe\Path:\360sdSetup64.exe" pathDst=".\360sd\" />
+  <Item pathSrc=":HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\360sd.exe\Path:\setting.ini" pathDst=".\360sd\" />
+  <Item pathSrc=":HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\360sd.exe\Path:\bdardrv.dll" pathDst=".\360sd\" />
+  <Item pathSrc=":HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\360sd.exe\Path:\bdcore.dll" pathDst=".\360sd\" />
+  <Item pathSrc=":HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\360sd.exe\Path:\scan.dll" pathDst=".\360sd\" />
+  <Item pathSrc=":HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\360sd.exe\Path:\avxdisk.dll" pathDst=".\360sd\" />
+  <Item pathSrc=":HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\360sd.exe\Path:\vdbup.dll" pathDst=".\360sd\" />
+</MyBackup>

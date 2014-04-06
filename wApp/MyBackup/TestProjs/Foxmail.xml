@@ -1,0 +1,11 @@
+
+<!--- 
+		This is a template project file.
+	-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<MyBackup name="Foxmail">
+  <Item pathSrc=":HKEY_CURRENT_USER\Software\Aerofox\FoxmailPreview\Executable:\..\" pathDst=".\foxmail\7\" />
+  <Item pathSrc=":HKEY_CURRENT_USER\Software\Aerofox\Foxmail\Executable:\..\" pathDst=".\foxmail\6.2\" />
+  <Item pathSrc=":HKEY_CURRENT_USER\Software\Aerofox\Executable:\..\" pathDst=".\foxmail\6.1\" />
+</MyBackup>
