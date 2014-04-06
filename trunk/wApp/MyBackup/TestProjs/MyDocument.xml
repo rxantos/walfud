@@ -1,0 +1,9 @@
+
+<!--- 
+		This is a template project file.
+	-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<MyBackup name="我的文档">
+  <Item pathSrc="|CSIDL_MYDOCUMENTS|\" pathDst=".\MyDocument\" />
+</MyBackup>

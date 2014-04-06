@@ -1,0 +1,9 @@
+
+<!--- 
+		This is a template project file.
+	-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<MyBackup name="IE 收藏夹">
+  <Item pathSrc="|CSIDL_FAVORITES|\" pathDst=".\IEFavorites\" />
+</MyBackup>

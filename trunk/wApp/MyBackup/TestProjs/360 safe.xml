@@ -1,0 +1,10 @@
+
+<!--- 
+		This is a template project file.
+	-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<MyBackup name="360 安全卫士">
+  <Item pathSrc=":HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\360safe.exe\Path:\deepscan\QVM\" pathDst=".\360sd\" />
+  <Item pathSrc=":HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\360safe.exe\Path:\deepscan\SDEng\" pathDst=".\360sd\" />
+</MyBackup>

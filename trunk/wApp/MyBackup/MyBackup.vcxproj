@@ -136,6 +136,7 @@
     <ClCompile Include="..\Common\pugixml-1.4\src\pugixml.cpp" />
     <ClCompile Include="FileOp.cpp" />
     <ClCompile Include="MainDlg.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="MyBackup.cpp" />
     <ClCompile Include="PathParser.cpp" />
     <ClCompile Include="stdafx.cpp">

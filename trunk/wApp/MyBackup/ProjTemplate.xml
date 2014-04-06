@@ -1,31 +1,19 @@
-
 <!--- 
 		This is a template project file.
+    
+    `pathSrc` field:
+    Now we support 4 kinds of variable in path express:
+      1. Relative path express: `.\` -> current directory; `..\` -> parent directory; `\` in the front -> root directory.
+      2. Registry value: wrapped by `:`, such as `:HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\360safe.exe\Path:`. 
+    the last `Path` is the value name, while otherwise is key name.
+      3. CSIDL: wrapped by `|`, such as `|CSIDL_SYSTEM|` -> 'c:\windows'.
+      4. Environment variable: wrapped by `?`, such as `?windir?` -> 'c:\windows'.
 	-->
 
 <?xml version="1.0" encoding="UTF-8"?>
-<MyBackup>
-	<Proj name="">
-		<!--- 
-      Attr:
-			  pathType_src|pathType_dst = "file|dir|csidl"
-				  file: File fullpath, such as: 'c:\windows\system32\cmd.exe'.
-				  dir: Directory path, such as: 'c:\windows\'. Should '\' terminated.
-				  csidl: such as: 'CSIDL_MYDOCUMENTS'. To see the supported csidl, pls see the impl header file.
-			  path_src|path_dst:
-				  The content interpreted by `path_type` field.
-        preOper_src|preOper_dst = "del|rename:`newName`"
-          The external operation to source or destination object before or after this pattern is operated.
-          If value is `rename`, the new name is put in `newName` field.
-      Example:
-        1. Copy 'c:\windows\system32\cmd.exe' -> 'd:\cmd.exe', force replace target if file exists.
-        <Item pathType_src="file" path_src="c:\windows\system32\cmd.exe" pathType_dst="file" path_dst="d:\cmd.exe"
-              preOper_src="" postOper_src="" preOper_dst="del" postOper_dst=""/>
-        2. Cut diretory 'c:\test\' -> 'd:\xxx\test\'.
-        <Item pathType_src="dir" path_src="c:\test\" pathType_dst="dir" path_dst="d:\xxx\"
-              preOper_src="" postOper_src="del" preOper_dst="" postOper_dst=""/>
-        3. 
-        <Item pathType_src="csidl" path_src="CSIDL_DESKTOP" pathType_dst="dir" path_dst="d:\xxx\"/>
-			-->
-	</Proj>
+<MyBackup name="Template Proj">
+  <Item pathSrc="..\..\..\..\..\\..\.\..\a\.\b\.\..\c" pathDst="e:\" />
+  <Item pathSrc=":HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\360safe.exe\Path:" pathDst="e:\" />
+  <Item pathSrc="|CSIDL_SYSTEM|\cmd.exe" pathDst="e:\cmd.exe" />
+  <Item pathSrc="?windir?\explorer.exe" pathDst="e:\" />
 </MyBackup>
