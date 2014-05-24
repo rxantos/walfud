@@ -209,10 +209,10 @@ void CMainDlg::crashIt(int index)
 	char crasherFullpath[MAX_PATH] = {}, crasher64Fullpath[MAX_PATH] = {};
 	PathCombine(crasherFullpath, modulePath, "crasher.exe");
 	PathCombine(crasher64Fullpath, modulePath, "crasher64.exe");
-	runAndWait(crasherFullpath, "-pid:" + intToStr(pid), 0, false);
+	runAndWait(crasherFullpath, "-pid:" + intToStr(pid) + " " + "crashee.dll", 0, false);
 	if (isOs64())
 	{
-		runAndWait(crasher64Fullpath, "-pid:" + intToStr(pid), 0, false);
+		runAndWait(crasher64Fullpath, "-pid:" + intToStr(pid) + " " + "crashee64.dll", 0, false);
 	}
 }
 
