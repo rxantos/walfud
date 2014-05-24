@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by crachIt.rc
+// Used by crashIt.rc
 //
 #define IDR_MAINFRAME                   128
 #define IDD_MAINDLG                     129
