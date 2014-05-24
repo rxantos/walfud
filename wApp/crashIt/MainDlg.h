@@ -31,7 +31,9 @@ public:
 
 	LRESULT OnCancel(WORD /*wNotifyCode*/, WORD wID, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 	{
-		EndDialog(wID);
+		DestroyWindow();
+		::PostQuitMessage(wID);
+
 		return 0;
 	}
 
