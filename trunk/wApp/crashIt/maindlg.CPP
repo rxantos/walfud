@@ -58,6 +58,8 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	{
 	case VK_RETURN:
 		{
+			SendMessage(WM_LBUTTONDOWN, 0, 0);
+
 			auto focus = GetFocus();
 			if (focus == GetDlgItem(IDC_EDIT_TARGET_PROCNAME).m_hWnd)
 			{
