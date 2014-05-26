@@ -128,7 +128,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,1,0,0
+ FILEVERSION 3,2,0,0
  PRODUCTVERSION 0,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -145,7 +145,7 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "crashIt Module"
-            VALUE "FileVersion", "3.1.0.0"
+            VALUE "FileVersion", "3.2.0.0"
             VALUE "InternalName", "crashIt"
             VALUE "LegalCopyright", "Copyright 2014"
             VALUE "OriginalFilename", "crashIt.exe"
