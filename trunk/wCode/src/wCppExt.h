@@ -78,7 +78,7 @@
 namespace w
 {
 
-#define arrCnt(arr)	(sizeof(arr)/sizeof(arr[0]))
+#define COUNTOF(arr)	(sizeof(arr)/sizeof(arr[0]))
 
 #define MAX_INT_LEN		(32)
 #define CHARACTER_SIZE	(sizeof(char))

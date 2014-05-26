@@ -36,7 +36,7 @@ static vector<string> getSpecifiedFsDrivesName(const string &fs)
 			 {
 				 // Get volume information.
 				 char volName[MAX_PATH+1] = {}, fsName[MAX_PATH+1] = {};
-				 DWORD volNameLen = arrCnt(volName), fsNameLen = arrCnt(fsName);
+				 DWORD volNameLen = COUNTOF(volName), fsNameLen = COUNTOF(fsName);
 				 DWORD sn = 0, maxNameLen = 0, fsFlag = 0;
 				 GetVolumeInformation(w::strMakeRight(driveName, "\\").c_str(), volName, volNameLen, &sn, &maxNameLen, &fsFlag, fsName, fsNameLen);
 
@@ -95,11 +95,11 @@ DriveInfo getDriveInfo(const string &driveName)
 	DriveInfo di = {};
 
 	char ntName[MAX_PATH] = {};
-	QueryDosDevice(driveName.c_str(), ntName, arrCnt(ntName));
+	QueryDosDevice(driveName.c_str(), ntName, COUNTOF(ntName));
 
 	char volName[MAX_PATH] = {}, fsType[MAX_PATH] = {};
 	DWORD serialNum = 0;
-	GetVolumeInformation(driveName.c_str(), volName, arrCnt(volName), &serialNum, nullptr, nullptr, fsType, MAX_PATH);
+	GetVolumeInformation(driveName.c_str(), volName, COUNTOF(volName), &serialNum, nullptr, nullptr, fsType, MAX_PATH);
 
 	di.dosName = driveName;
 	di.ntName = ntName;

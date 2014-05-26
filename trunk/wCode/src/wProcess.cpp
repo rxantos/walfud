@@ -164,7 +164,7 @@ int getCurrentProcessId()
 string getCurrentProcessName()
 {
 	char moduleName[MAX_PATH] = {};
-	GetModuleFileName(nullptr, moduleName, arrCnt(moduleName));
+	GetModuleFileName(nullptr, moduleName, COUNTOF(moduleName));
 
 	return PathFindFileName(moduleName);
 }
@@ -255,7 +255,7 @@ bool TakeOwnership(const string &target)
 	if (SetPrivilege(SE_TAKE_OWNERSHIP_NAME, true))
 	{
 		char username[MAX_PATH] = {};
-		DWORD usernameLen = arrCnt(username);
+		DWORD usernameLen = COUNTOF(username);
 		char sid[1024] = {};
 		DWORD sidLen = sizeof(sid);
 		ZeroMemory(sid, sidLen);
