@@ -18,6 +18,9 @@ public:
 
 		NOTIFY_HANDLER(IDC_LIST_PROC, LVN_COLUMNCLICK, OnProcListHeadClick)
 		NOTIFY_HANDLER(IDC_LIST_PROC, NM_DBLCLK, OnProcListItemClick)
+
+		COMMAND_HANDLER(IDC_BUTTON_COPY_SVN, BN_CLICKED, OnBnClickedCopySvn)
+		COMMAND_HANDLER(IDC_BUTTON_OPEN_NEWEST_BIN, BN_CLICKED, OnBnClickedOpenNewestBinary)
 	END_MSG_MAP()
 
 // Handler prototypes (uncomment arguments if needed):
@@ -42,6 +45,9 @@ public:
 	LRESULT OnProcListItemClick(int /*idCtrl*/, LPNMHDR /*pNMHDR*/, BOOL& /*bHandled*/);
 
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+
+	LRESULT OnBnClickedCopySvn(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
+	LRESULT OnBnClickedOpenNewestBinary(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/);
 
 private:
 	// logic.

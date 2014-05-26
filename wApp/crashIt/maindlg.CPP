@@ -33,6 +33,10 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	auto checkRefresh = static_cast<CButton &>(GetDlgItem(IDC_CHECK_REFRESH_BEFORE_CRASH_IT));
 	checkRefresh.SetCheck(TRUE);
 
+	// 
+	GetDlgItem(IDC_EDIT_SVN).SetWindowText("http://walfud.googlecode.com/svn/trunk/wApp/crashIt");
+	GetDlgItem(IDC_EDIT_NEWEST_BINARY).SetWindowText("http://walfud.googlecode.com/svn/trunk/wApp/bin/crashIt");
+
 	return TRUE;
 }
 LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -58,8 +62,14 @@ LRESULT CMainDlg::OnKeyDown(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOO
 	{
 	case VK_RETURN:
 		{
-			SendMessage(WM_LBUTTONDOWN, 0, 0);
+			// Refresh if needed.
+			auto checkRefresh = static_cast<CButton &>(GetDlgItem(IDC_CHECK_REFRESH_BEFORE_CRASH_IT));
+			if (checkRefresh.GetCheck())
+			{
+				SendMessage(WM_LBUTTONDOWN, 0, 0);
+			}
 
+			// Kill by ??.
 			auto focus = GetFocus();
 			if (focus == GetDlgItem(IDC_EDIT_TARGET_PROCNAME).m_hWnd)
 			{
@@ -150,6 +160,20 @@ LRESULT CMainDlg::OnProcListItemClick(int /*idCtrl*/, LPNMHDR pNMHDR, BOOL& /*bH
 	//{
 	//	CloseHandle(hProc);
 	//}
+
+	return 0;
+}
+LRESULT CMainDlg::OnBnClickedCopySvn(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	CString strSvn;
+	GetDlgItem(IDC_EDIT_SVN).GetWindowText(strSvn);
+	copyStringToClipboard(strSvn.GetString());
+
+	return 0;
+}
+LRESULT CMainDlg::OnBnClickedOpenNewestBinary(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	ShellExecute(nullptr, "open", "http://walfud.googlecode.com/svn/trunk/wApp/bin/crashIt", nullptr, nullptr, SW_SHOW);
 
 	return 0;
 }
