@@ -31,6 +31,7 @@
     <ClCompile Include="src\wOtherUtil.cpp" />
     <ClCompile Include="src\wPipe.cpp" />
     <ClCompile Include="src\wProcess.cpp" />
+    <ClCompile Include="src\wReg.cpp" />
     <ClCompile Include="src\wRpc.cpp" />
     <ClCompile Include="src\wService.cpp" />
     <ClCompile Include="src\wStrUtil.cpp" />
@@ -51,6 +52,7 @@
     <ClInclude Include="src\wOtherUtil.h" />
     <ClInclude Include="src\wPipe.h" />
     <ClInclude Include="src\wProcess.h" />
+    <ClInclude Include="src\wReg.h" />
     <ClInclude Include="src\wRpc.h" />
     <ClInclude Include="src\wService.h" />
     <ClInclude Include="src\wStrUtil.h" />
