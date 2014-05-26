@@ -28,6 +28,8 @@ bool isVistaOrLater();
 bool isXpOrLater();
 bool is2000OrLater();
 
+bool isOs64();
+
 /**
  *		Enable or Disable privilege at target token.
  */

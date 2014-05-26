@@ -39,6 +39,20 @@ bool isXpOrLater()
 bool is2000OrLater()
 { return osVerCondition(5, 0, VER_GREATER_EQUAL); }
 
+bool isOs64()
+{
+    typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS)(HANDLE, PBOOL);
+
+	BOOL isWow64 = FALSE; 
+    auto fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(GetModuleHandle("kernel32"), "IsWow64Process"); 
+    if (NULL != fnIsWow64Process) 
+    { 
+        fnIsWow64Process(GetCurrentProcess(),&isWow64);
+    } 
+
+    return isWow64; 
+}
+
 bool setPrivilege(HANDLE hToken, const string &strPrivilege, bool bEnablePrivilege)
 {
 	bool res = false;
