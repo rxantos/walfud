@@ -22,9 +22,9 @@ int _tmain(int argc, _TCHAR* argv[])
 	PathRemoveFileSpec(curDir);
 	PathAppend(curDir, dll);
 
-	remoteCall(pid, (unsigned long (__stdcall *)(void *))LoadLibrary, (void *)curDir, sizeof(curDir), true);
+	int rtn = remoteCall(pid, (unsigned long (__stdcall *)(void *))LoadLibrary, (void *)curDir, sizeof(curDir), true)
+				? 0 : -1;
 	//remoteCall(pid, nullptr, nullptr, 0, false);
 
-	return 0;
+	return rtn;
 }
-
