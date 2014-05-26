@@ -92,4 +92,44 @@ bool setCurTokenPrivilege(const string &strPrivilege, bool bEnablePrivilege)
 	return res;
 }
 
+bool copyStringToClipboard(const string &str)
+{
+	bool res = false;
+
+	HGLOBAL hClipboard = nullptr;
+	if (OpenClipboard(nullptr))
+	{
+		EmptyClipboard();
+
+		hClipboard = GlobalAlloc(GMEM_MOVEABLE, str.length() + 1);
+		auto p = (char *)GlobalLock(hClipboard);
+		strcpy(p, str.c_str());
+		GlobalUnlock(hClipboard);
+
+		SetClipboardData(CF_TEXT, hClipboard);
+
+		CloseClipboard();
+
+		res = true;
+	}
+
+	return res;
+}
+string copyStringFromClipboard()
+{
+	string res;
+
+	if (OpenClipboard(nullptr))
+	{
+		HANDLE hClipboard = GetClipboardData(CF_TEXT);
+		auto p = (char *)GlobalLock(hClipboard);
+		res = p;
+		GlobalUnlock(hClipboard);
+
+		CloseClipboard();
+	}
+
+	return res;
+}
+
 }
