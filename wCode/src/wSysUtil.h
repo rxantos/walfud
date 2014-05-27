@@ -46,6 +46,11 @@ bool setCurTokenPrivilege(const std::string &strPrivilege, bool bEnablePrivilege
 bool copyStringToClipboard(const std::string &str);
 std::string copyStringFromClipboard();
 
+/**
+ *
+ */
+std::string expandEvnString(const std::string &str);
+
 }
 
 #endif // W_SYS_UTIL_H

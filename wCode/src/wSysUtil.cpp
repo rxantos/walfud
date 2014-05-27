@@ -132,4 +132,20 @@ string copyStringFromClipboard()
 	return res;
 }
 
+string expandEvnString(const string &str)
+{
+	string res;
+
+	auto needLen = ExpandEnvironmentStrings(str.c_str(), nullptr, 0);
+	if (needLen > 0)
+	{
+		unique_ptr<char> p(new char[needLen + 1]);
+		ExpandEnvironmentStrings(str.c_str(), p.get(), needLen + 1);
+
+		res = p.get();
+	}
+
+	return res;
+}
+
 }
