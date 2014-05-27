@@ -37,6 +37,10 @@ LRESULT CMainDlg::OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam
 	GetDlgItem(IDC_EDIT_SVN).SetWindowText("http://walfud.googlecode.com/svn/trunk/wApp/crashIt");
 	GetDlgItem(IDC_EDIT_NEWEST_BINARY).SetWindowText("http://walfud.googlecode.com/svn/trunk/wApp/bin/crashIt");
 
+	// 
+	GetDlgItem(IDC_EDIT_INJECTEE_FILENAME).SetWindowText("crashee.dll");
+	GetDlgItem(IDC_EDIT_INJECTEE_FILENAME64).SetWindowText("crashee64.dll");
+
 	return TRUE;
 }
 LRESULT CMainDlg::OnLButtonDown(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
@@ -232,13 +236,17 @@ void CMainDlg::crashIt(int index)
 	GetModuleFileName(nullptr, modulePath, _countof(modulePath));
 	PathRemoveFileSpec(modulePath);
 
+	CString crasheeFilename, crasheeFilename64;
+	GetDlgItem(IDC_EDIT_INJECTEE_FILENAME).GetWindowText(crasheeFilename);
+	GetDlgItem(IDC_EDIT_INJECTEE_FILENAME64).GetWindowText(crasheeFilename64);
+
 	char crasherFullpath[MAX_PATH] = {}, crasher64Fullpath[MAX_PATH] = {};
 	PathCombine(crasherFullpath, modulePath, "crasher.exe");
 	PathCombine(crasher64Fullpath, modulePath, "crasher64.exe");
-	runAndWait(crasherFullpath, "-pid:" + intToStr(pid) + " " + "crashee.dll", 0, false);
+	runAndWait(crasherFullpath, "-pid:" + intToStr(pid) + " " + crasheeFilename.GetString(), 0, false);
 	if (isOs64())
 	{
-		runAndWait(crasher64Fullpath, "-pid:" + intToStr(pid) + " " + "crashee64.dll", 0, false);
+		runAndWait(crasher64Fullpath, "-pid:" + intToStr(pid) + " " + crasheeFilename64.GetString(), 0, false);
 	}
 }
 

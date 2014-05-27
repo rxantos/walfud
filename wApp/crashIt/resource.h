@@ -16,6 +16,9 @@
 #define IDC_BUTTON_COPY_SVN             1009
 #define IDC_BUTTON2                     1010
 #define IDC_BUTTON_OPEN_NEWEST_BIN      1010
+#define IDC_EDIT_INJECTEE_FILENAME      1011
+#define IDC_EDIT_INJECTEE_FILENAME2     1012
+#define IDC_EDIT_INJECTEE_FILENAME64    1012
 
 // Next default values for new objects
 // 
@@ -23,7 +26,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        201
 #define _APS_NEXT_COMMAND_VALUE         32775
-#define _APS_NEXT_CONTROL_VALUE         1010
+#define _APS_NEXT_CONTROL_VALUE         1012
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
