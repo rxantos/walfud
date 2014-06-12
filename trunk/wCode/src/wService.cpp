@@ -27,18 +27,8 @@ static string getServiceDllByName(const string &name)
 {
 	string fullpath;
 
-	HKEY hKey;
-	LONG rtn = RegOpenKeyEx(HKEY_LOCAL_MACHINE, REG_PATH_SERVICE, 0, KEY_READ, &hKey);
-	if (rtn == ERROR_SUCCESS)
-	{
-		// Read register of that service, find key of "Parameters", value of "ServiceDll".
-		char buf[MAX_PATH] = {};
-		DWORD bufLen = sizeof(buf);
-		RegGetValue(hKey, (name + "\\Parameters").c_str(), REG_VALUE_SERVICE, REG_EXPAND_SZ,
-					NULL, buf, &bufLen);
-
-		fullpath = buf;
-	}
+	// Read register of that service, find key of "Parameters", value of "ServiceDll".
+	fullpath = getRegExpandSz(HKEY_LOCAL_MACHINE, string(REG_PATH_SERVICE) + "\\" + name + "\\Parameters", REG_VALUE_SERVICE);
 
 	return fullpath;
 }
