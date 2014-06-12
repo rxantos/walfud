@@ -154,6 +154,7 @@
     <ClCompile Include="..\..\wCode\src\wOtherUtil.cpp" />
     <ClCompile Include="..\..\wCode\src\wPipe.cpp" />
     <ClCompile Include="..\..\wCode\src\wProcess.cpp" />
+    <ClCompile Include="..\..\wCode\src\wReg.cpp" />
     <ClCompile Include="..\..\wCode\src\wRpc.cpp" />
     <ClCompile Include="..\..\wCode\src\wService.cpp" />
     <ClCompile Include="..\..\wCode\src\wSleeper.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="..\..\wCode\src\wOtherUtil.h" />
     <ClInclude Include="..\..\wCode\src\wPipe.h" />
     <ClInclude Include="..\..\wCode\src\wProcess.h" />
+    <ClInclude Include="..\..\wCode\src\wReg.h" />
     <ClInclude Include="..\..\wCode\src\wRpc.h" />
     <ClInclude Include="..\..\wCode\src\wService.h" />
     <ClInclude Include="..\..\wCode\src\wSleeper.h" />

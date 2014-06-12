@@ -87,6 +87,9 @@
     <ClInclude Include="..\..\..\wCode\src\wWindowsExt.h">
       <Filter>wCode</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\wCode\src\wReg.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -153,6 +156,9 @@
       <Filter>wCode</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\wCode\src\wWindowsExt.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\wCode\src\wReg.cpp">
       <Filter>wCode</Filter>
     </ClCompile>
   </ItemGroup>

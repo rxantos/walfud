@@ -27,7 +27,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v120_xp</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -148,6 +148,7 @@
     <ClInclude Include="..\..\..\wCode\src\wOtherUtil.h" />
     <ClInclude Include="..\..\..\wCode\src\wPipe.h" />
     <ClInclude Include="..\..\..\wCode\src\wProcess.h" />
+    <ClInclude Include="..\..\..\wCode\src\wReg.h" />
     <ClInclude Include="..\..\..\wCode\src\wRpc.h" />
     <ClInclude Include="..\..\..\wCode\src\wService.h" />
     <ClInclude Include="..\..\..\wCode\src\wSleeper.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="..\..\..\wCode\src\wOtherUtil.cpp" />
     <ClCompile Include="..\..\..\wCode\src\wPipe.cpp" />
     <ClCompile Include="..\..\..\wCode\src\wProcess.cpp" />
+    <ClCompile Include="..\..\..\wCode\src\wReg.cpp" />
     <ClCompile Include="..\..\..\wCode\src\wRpc.cpp" />
     <ClCompile Include="..\..\..\wCode\src\wService.cpp" />
     <ClCompile Include="..\..\..\wCode\src\wSleeper.cpp" />
