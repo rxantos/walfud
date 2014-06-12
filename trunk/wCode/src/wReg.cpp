@@ -120,4 +120,58 @@ bool setRegData(HKEY hKey, const string &subKey, const string &value,
 	return res;
 }
 
+// Other.
+vector<string> enumRegKey(HKEY hKey, const string &subKey)
+{
+	vector<string> res;
+
+	HKEY phkResult;
+	if (RegOpenKeyEx(hKey, subKey.c_str(), 0, KEY_QUERY_VALUE | KEY_ENUMERATE_SUB_KEYS, &phkResult)
+		== ERROR_SUCCESS)
+	{
+		DWORD subKeyCnt = 0, valueCnt = 0,
+				maxKeyLen = 0, maxValueLen = 0;
+		RegQueryInfoKey(phkResult, nullptr, nullptr, nullptr, &subKeyCnt, &maxKeyLen, nullptr, &valueCnt, &maxValueLen, nullptr, nullptr, nullptr);
+
+		for (auto i = 0u; i < subKeyCnt; ++i)
+		{
+			auto dataLen = maxKeyLen + 1;		// Terminal '\0'.
+			unique_ptr<char> p(new char[dataLen]);
+			RegEnumKeyEx(phkResult, i, p.get(), &dataLen, nullptr, nullptr, nullptr, nullptr);
+
+			res.push_back(p.get());
+		}
+
+		RegCloseKey(phkResult);
+	}
+
+	return res;
+}
+vector<string> enumRegValue(HKEY hKey, const string &subKey)
+{
+	vector<string> res;
+
+	HKEY phkResult;
+	if (RegOpenKeyEx(hKey, subKey.c_str(), 0, KEY_QUERY_VALUE, &phkResult)
+		== ERROR_SUCCESS)
+	{
+		DWORD subKeyCnt = 0, valueCnt = 0,
+				maxKeyLen = 0, maxValueLen = 0;
+		RegQueryInfoKey(phkResult, nullptr, nullptr, nullptr, &subKeyCnt, &maxKeyLen, nullptr, &valueCnt, &maxValueLen, nullptr, nullptr, nullptr);
+
+		for (auto i = 0u; i < valueCnt; ++i)
+		{
+			auto dataLen = maxValueLen + 1;		// Terminal '\0'.
+			unique_ptr<char> p(new char[dataLen]);
+			RegEnumValue(phkResult, i, p.get(), &dataLen, nullptr, nullptr, nullptr, nullptr);
+
+			res.push_back(p.get());
+		}
+
+		RegCloseKey(phkResult);
+	}
+
+	return res;
+}
+
 }
