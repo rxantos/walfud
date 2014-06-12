@@ -34,6 +34,10 @@ bool getRegData(HKEY hKey, const std::string &subKey, const std::string &value,
 bool setRegData(HKEY hKey, const std::string &subKey, const std::string &value,
 				DWORD type, const void *data, IN OUT int len);
 
+// Other.
+std::vector<std::string> enumRegKey(HKEY hKey, const std::string &subKey);
+std::vector<std::string> enumRegValue(HKEY hKey, const std::string &subKey);
+
 }
 
 #endif // W_REG_H
