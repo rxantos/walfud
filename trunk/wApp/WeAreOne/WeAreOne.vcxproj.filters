@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{709d9383-c589-4496-b4d3-01c1ca1733a7}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{1137f938-83b5-4932-a0ce-164eda0f5066}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{febeef21-5152-46c7-8334-bb6a91036d63}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;manifest</Extensions>
+    </Filter>
+    <Filter Include="wCode">
+      <UniqueIdentifier>{347922ad-2b02-43b8-9a71-4a4697ecc843}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="maindlg.CPP">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wConsole.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wCppExt.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wDir.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wDisk.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wFilePermission.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wHack.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wIniHelper.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wMath.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wOtherUtil.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wPipe.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wProcess.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wRpc.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wService.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wSleeper.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wSleeper2.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wStrUtil.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wSysUtil.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wTaskbarProgress.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wTimeMeasurer.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wWindowsExt.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+    <ClCompile Include="WeAreOne.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\wCode\src\wReg.cpp">
+      <Filter>wCode</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MainDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wConsole.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wCppExt.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wDir.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wDisk.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wFilePermission.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wHack.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wIniHelper.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wMath.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wOtherUtil.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wPipe.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wProcess.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wRpc.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wService.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wSleeper.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wSleeper2.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wStrUtil.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wSysUtil.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wTaskbarProgress.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wTimeMeasurer.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wWindowsExt.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\wCode\src\wReg.h">
+      <Filter>wCode</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="WeAreOne.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\WeAreOne.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
