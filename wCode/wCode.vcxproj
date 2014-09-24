@@ -41,6 +41,7 @@
     <ClCompile Include="src\wWindowsExt.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\wSerialize.h" />
     <ClInclude Include="src\wConsole.h" />
     <ClInclude Include="src\wCppExt.h" />
     <ClInclude Include="src\wDir.h" />
