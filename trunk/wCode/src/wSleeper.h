@@ -57,7 +57,7 @@ protected:
 	virtual void *createWaiter() = 0;
 	virtual void destroyWaiter(void *waiter) = 0;
 
-	virtual void tranlateToChildWaiter(void *waiter) {}
+	virtual void tranlateToChildWaiter(void * /*waiter*/) {}
 };
 
 // BusySleeper. Dreprecated. use `BusySleeper2` instead.
