@@ -124,5 +124,8 @@
     <ClInclude Include="src\wReg.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\wSerialize.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
